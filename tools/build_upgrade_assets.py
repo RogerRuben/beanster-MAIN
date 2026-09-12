@@ -19,6 +19,35 @@ MASTER = {}
 FRAME_SIZE = 256
 
 
+def stabilize_character_frames(asset_id, frames):
+    """Align a consistent cream face component, rather than props or swinging paws."""
+    from collections import deque
+    anchors=[]
+    for frame in frames:
+        a=np.array(frame);r,g,b=[a[:,:,i].astype(int) for i in range(3)]
+        mask=(a[:,:,3]>180)&(r>170)&(g>155)&(b>95)&(r-b<115)&(r>=g)&(g>=b)
+        mask[192:,:]=False
+        if asset_id=='character_monthly':mask[:,:128]=False
+        seen=np.zeros(mask.shape,bool);parts=[]
+        for y,x in zip(*np.where(mask)):
+            if seen[y,x]:continue
+            seen[y,x]=True;q=deque([(int(x),int(y))]);points=[]
+            while q:
+                xx,yy=q.popleft();points.append((xx,yy))
+                for nx,ny in ((xx-1,yy),(xx+1,yy),(xx,yy-1),(xx,yy+1)):
+                    if 0<=nx<256 and 0<=ny<256 and mask[ny,nx] and not seen[ny,nx]:
+                        seen[ny,nx]=True;q.append((nx,ny))
+            if len(points)>20:parts.append(points)
+        face=max(parts,key=len)
+        anchors.append(float(np.mean([p[0] for p in face])))
+    target=float(np.median(anchors));out=[];offsets=[]
+    for frame,anchor in zip(frames,anchors):
+        dx=round(target-anchor);bbox=frame.getchannel('A').getbbox()
+        dx=max(4-bbox[0],min(dx,252-bbox[2]))
+        fixed=Image.new('RGBA',(256,256));fixed.alpha_composite(frame,(dx,0));out.append(fixed);offsets.append(dx)
+    return out,dict(anchor='cream-face-component',xBefore=anchors,xAfter=[a+d for a,d in zip(anchors,offsets)],offsetsX=offsets)
+
+
 def remove_background(image, kind):
     """Remove only the generated intermediate matte, preserving interior artwork."""
     rgba = np.array(image.convert('RGBA'))
@@ -245,6 +274,8 @@ def expressions():
             frame.alpha_composite(crop, (12,12))
             frames.append(frame)
         asset_id = f'portrait_{mood}'
+        frames,alignment=stabilize_character_frames(asset_id,frames)
+        next(item for item in ASSETS if item['id']==asset_id)['alignment']=alignment
         master = frames[0]
         MASTER[asset_id] = master.resize((384,384), Image.Resampling.LANCZOS)
         for scale in (1,2,3):
@@ -300,9 +331,11 @@ def character_actions():
                 frame.alpha_composite(cut.crop(union).resize(size, Image.Resampling.LANCZOS),
                                       ((256-size[0])//2, (256-size[1])//2))
                 frames.append(frame)
+            frames,alignment=stabilize_character_frames(asset_id,frames)
             MASTER[asset_id] = frames[0].resize((384,384), Image.Resampling.LANCZOS)
             item = next(item for item in ASSETS if item['id'] == asset_id)
             item['source'] = dict(atlas=filename, row=row, columns=columns)
+            item['alignment']=alignment
             for scale in (1,2,3):
                 write_png(frames[0].resize((128*scale,128*scale), Image.Resampling.LANCZOS), item['png'][f'{scale}x'])
             durations = [240]*len(frames)

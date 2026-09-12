@@ -7,11 +7,10 @@ const UI = (() => {
   const arg = x => esc(JSON.stringify(String(x)));
   const path = (id, animated=false) => {
     const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-    if(animated&&!reduce)return ROOT+'webp/'+id+'.webp';
-    const category=categories[id] || (id.startsWith('icon_')?'icons':id.startsWith('drink_')?'drinks':id.startsWith('cup_')?'cups':id.startsWith('stamp_')?'stamps':id.startsWith('achievement_')?'achievements':id.startsWith('locked_')?'locked':id.startsWith('portrait_')?'portraits':'decorations');
+    const category=categories[id] || (id.startsWith('character_')?'characters':id.startsWith('icon_')?'icons':id.startsWith('drink_')?'drinks':id.startsWith('cup_')?'cups':id.startsWith('stamp_')?'stamps':id.startsWith('achievement_')?'achievements':id.startsWith('locked_')?'locked':id.startsWith('portrait_')?'portraits':'decorations');
     return ROOT+`png/${category}/${id}@2x.png`;
   };
-  const art=(id,cls='',animated=false,label='')=>`<img class="u-art ${cls}" src="${path(id,animated)}" alt="${esc(label)}" decoding="async">`;
+  const art=(id,cls='',animated=false,label='')=>`<img class="u-art ${cls}" src="${path(id)}" ${animated?`data-motion="${id}" role="button" tabindex="0" aria-label="${esc(label||'仓鼠表情')}，点击播放一次"`:''} alt="${esc(label)}" decoding="async">`;
   const icon=(id)=>art('icon_'+id,'u-icon');
   const arrow=(left=false)=>`<svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="${left?'m14 5-7 7 7 7':'m10 5 7 7-7 7'}"/></svg>`;
   const drinkId=type=>({'拿铁':'latte','生椰拿铁':'coconut_latte','美式':'americano','卡布奇诺':'cappuccino','摩卡':'mocha','冷萃':'cold_brew','手冲':'pour_over','Dirty':'coconut_latte','澳白':'latte'}[type]||'americano');
@@ -22,17 +21,17 @@ const UI = (() => {
 
   function today(){
     const now=new Date(),key=localKey(now),rs=dayRecords(key).sort((a,b)=>b.ts-a.ts),caf=sum(rs,'caffeine'),limit=Math.max(1,Number(settings.dailyLimit)||400),rem=Math.max(0,limit-caf),over=caf>limit;
-    const state=hamsterState(rs.length,caf),progress=clamp(caf/limit,0,1),hero=over?'empty_rest':rs.length>=3?'character_goal':rs.length?'character_burger':'character_coffee';
+    const state=hamsterState(rs.length,caf),progress=clamp(caf/limit,0,1),hero=/^character_/.test(settings.homeCharacter||'')&&window.BEANSTER_ART?.assets.some(a=>a.id===settings.homeCharacter)?settings.homeCharacter:over?'character_late_night':rs.length>=3?'character_goal':rs.length?'character_burger':'character_coffee';
     const title=over?'今天先休息一下':state.title,sub=over?'已超过你设置的日上限':state.sub;
     $('todayContent').innerHTML=`<div class="u-date"><b>${now.getMonth()+1}月${now.getDate()}日 <span>星期${'日一二三四五六'[now.getDay()]}</span></b><button onclick="UI.go('settings')">日上限 ${Math.round(limit)} mg</button></div>
       <div class="u-hero ${over?'is-over':''}"><div class="u-gauge" role="img" aria-label="今日摄入 ${Math.round(caf)} 毫克，日上限 ${Math.round(limit)} 毫克"><svg viewBox="0 0 220 220"><defs><linearGradient id="coffeeRing" x1="0" y1="1" x2="1" y2="0"><stop stop-color="#e1a76e"/><stop offset="1" stop-color="#70442e"/></linearGradient></defs><circle class="u-ring-track" cx="110" cy="110" r="91" pathLength="100"/><circle class="u-ring-fill" cx="110" cy="110" r="91" pathLength="100" stroke-dasharray="${progress*76} 100"/></svg><div class="u-gauge-copy"><strong>${Math.round(caf)}</strong><b>mg</b><span>${over?'已超过上限':'日上限剩余'}</span><em>${Math.round(over?caf-limit:rem)} <small>mg</small></em></div></div>${art(hero,'u-home-mascot',true,'咖啡仓鼠')}</div>
       <div class="u-metrics">${metric('cups',rs.length,'今日杯数')}${metric('calories',Math.round(sum(rs,'calories')),'kcal')}${metric('cost',money(sum(rs,'price')),'今日花费')}${metric('achievement',calcStreak(),'连续天数')}</div>
-      <button class="u-achievement-teaser" onclick="UI.achievements()">${art(over?'empty_rest':rs.length?'character_first_cup':'character_idle','',true)}<span><b>${title}</b><small>${sub}</small></span>${arrow()}</button>
+      <button class="u-achievement-teaser" onclick="UI.achievements()">${art(over?'empty_rest':rs.length?'character_first_cup':'character_idle')}<span><b>${title}</b><small>${sub}</small></span>${arrow()}</button>
       <button class="primary u-record-cta" onclick="openAdd()"><span class="u-plus">＋</span>记录一杯</button>
-      <div class="u-shortcuts"><button onclick="openSmartAdd('camera')">${icon('camera')}拍照识别</button><button onclick="openSmartAdd('gallery')">${icon('note')}相册 / 杯贴</button><button onclick="UI.achievements()">${icon('achievement')}我的成就</button></div>
+      <div class="u-shortcuts"><button onclick="openSmartAdd('camera')">${icon('camera')}拍照识别</button><button onclick="openSmartAdd('gallery')">${icon('note')}相册 / 杯贴</button><button onclick="UI.achievements()">${icon('achievement')}我的成就</button><button onclick="Motion.gallery()">${icon('more')}鼠鼠表情</button></div>
       ${section('今天的咖啡',`<span>${rs.length} 杯</span>`)}<div class="u-card">${entries(rs,true)}</div>
       ${templatesTodayHtml()}<details class="u-details u-home-more"><summary>睡眠与本月预算 ${arrow()}</summary>${dynamicBudgetHtml()}<div class="u-card u-budget"><span>本月花费 / 预算</span><b>${money(sum(monthRecords(),'price'))} / ${money(settings.monthlyBudget)}</b></div></details>
-      ${Date.now()<saveFxUntil?`<div class="u-save-sticker">${art('sticker_recorded','',true,'已记录')}</div>`:''}`;
+      <button class="u-text-btn" onclick="Motion.gallery()">查看全部鼠鼠表情 →</button>`;
     hydratePhotos($('todayContent'));
   }
 
@@ -113,7 +112,7 @@ Object.assign(UI, (()=>{
     const lines=[0,max/2,max].map(v=>`<line x1="${left}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#ece2d6"/><text x="1" y="${y(v)+3}">${Math.round(v)}</text>`).join('');
     return `<div class="u-card u-daily-chart"><div class="u-chart-title"><h3>每日摄入 <small>（mg）</small></h3><span><i></i>咖啡因 <em></em>日上限</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ref.getMonth()+1}月每日咖啡因摄入，日上限${limit}毫克">${lines}<line x1="${left}" x2="${W}" y1="${y(limit)}" y2="${y(limit)}" stroke="#cda17b" stroke-dasharray="3 3"/>${values.map((v,i)=>`<rect x="${left+i*step+step*.15}" y="${y(v)}" width="${step*.56}" height="${v?Math.max(1,bottom-y(v)):0}" rx="1.7" fill="${v>limit?'#b16143':i%3===1?'#c99b79':'#926248'}"><title>${i+1}日：${Math.round(v)} mg</title></rect>${[0,7,14,21,days-1].includes(i)?`<text x="${left+i*step}" y="154" text-anchor="${i===days-1?'end':'start'}">${ref.getMonth()+1}/${i+1}</text>`:''}`).join('')}</svg>${rs.length?'':'<p class="u-chart-empty">记录第一杯后，这里会显示摄入趋势。</p>'}</div>`;
   }
-  function calendar(ref){const year=ref.getFullYear(),mon=ref.getMonth(),offset=(new Date(year,mon,1).getDay()+6)%7,days=new Date(year,mon+1,0).getDate(),todayKey=localKey(new Date());let cells='<span></span>'.repeat(offset);for(let n=1;n<=days;n++){const key=localKey(new Date(year,mon,n)),rs=dayRecords(key),over=sum(rs,'caffeine')>settings.dailyLimit;cells+=`<button class="u-calendar-day ${key===todayKey?'is-today':''}" aria-label="${mon+1}月${n}日，${rs.length}杯${over?'，超过日上限':''}" onclick="UI.openDay('${key}')"><span>${n}</span>${rs.length?art(over?'stamp_over':rs.length>=4?'stamp_4plus':'stamp_'+rs.length):''}</button>`}return section('咖啡月历','<span>点击日期查看记录</span>')+`<div class="u-card u-calendar"><div class="u-weekdays">${'一二三四五六日'.split('').map(x=>`<span>${x}</span>`).join('')}</div><div class="u-calendar-grid">${cells}</div></div>`}
+  function calendar(ref){const year=ref.getFullYear(),mon=ref.getMonth(),offset=(new Date(year,mon,1).getDay()+6)%7,days=new Date(year,mon+1,0).getDate(),todayKey=localKey(new Date());let cells='<span></span>'.repeat(offset);for(let n=1;n<=days;n++){const key=localKey(new Date(year,mon,n)),rs=dayRecords(key),over=sum(rs,'caffeine')>settings.dailyLimit;cells+=`<button class="u-calendar-day ${key===todayKey?'is-today':''}" aria-label="${mon+1}月${n}日，${rs.length}杯${over?'，超过日上限':''}" onclick="UI.openDay('${key}')"><span>${n}</span>${rs.length?art(over||rs.length>3?'stamp_over':'stamp_'+rs.length):''}</button>`}return section('咖啡月历','<span>点击日期查看记录</span>')+`<div class="u-card u-calendar"><div class="u-weekdays">${'一二三四五六日'.split('').map(x=>`<span>${x}</span>`).join('')}</div><div class="u-calendar-grid">${cells}</div></div>`}
   function distribution(rs,key,title){
     const groups=countBy(rs,key),total=rs.length;let position=0;
     const shown=groups.length>5?[...groups.slice(0,4),['其他',groups.slice(4).reduce((s,x)=>s+x[1],0)]]:groups;
@@ -187,7 +186,7 @@ closeAdd=function(){UI.legacy.closeAdd();if(!document.querySelector('.u-overlay'
 applyCatalog=function(...args){UI.legacy.applyCatalog(...args);UI.syncForm()};
 renderWhatIf=function(){UI.legacy.renderWhatIf();UI.syncForm()};
 saveRecord=async function(){if(UI.saving)return;const ts=new Date($('fDate').value+'T'+($('fTime').value||'12:00')+':00').getTime();if(!Number.isFinite(ts))return notify('请填写有效的日期和时间',true);for(const id of ['fSize','fShots','fCaf','fCal','fPrice']){if(!$(id).checkValidity()){ $('uExtraDetails').open=true;$(id).reportValidity();return }}UI.saving=true;$('uSave').disabled=true;try{await UI.legacy.saveRecord()}finally{UI.saving=false;$('uSave').disabled=false}};
-renderSettings=function(){UI.legacy.renderSettings();$('settingsContent').insertAdjacentHTML('afterbegin',`<button class="u-achievement-teaser" onclick="UI.achievements()">${UI.art('achievement_month')}<span><b>我的成就</b><small>每一杯，都有自己的纪念</small></span>${UI.arrow()}</button>`);$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V18.0'};
+renderSettings=function(){UI.legacy.renderSettings();$('settingsContent').insertAdjacentHTML('afterbegin',`<button class="u-achievement-teaser" onclick="UI.achievements()">${UI.art('achievement_month')}<span><b>我的成就</b><small>每一杯，都有自己的纪念</small></span>${UI.arrow()}</button>`);$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V18.1'};
 renderPhotos=async function(){await UI.legacy.renderPhotos();if(!records.some(r=>r.photoId||r.photoPreview||r.nativePhotoPath))$('photoContent').innerHTML=`<div class="u-empty u-photo-empty">${UI.art('empty_no_coffee')}<b>把咖啡时光，留在这里。</b><span>记录时添加照片，慢慢积攒你的咖啡相册。</span><button class="primary" onclick="openSmartAdd('camera')">${UI.icon('camera')}拍下第一杯</button></div>`};
 const oldSmartAdd=openSmartAdd;
 openSmartAdd=function(which){oldSmartAdd(which);$('uPhotoDetails').open=true};

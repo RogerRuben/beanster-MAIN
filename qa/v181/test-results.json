@@ -1,0 +1,150 @@
+{
+  "passed": true,
+  "checks": [
+    "entry animation plays once",
+    "smaller mascot and click replay",
+    "all 14 expressions exposed; global single player",
+    "home character preference",
+    "reduced motion honored",
+    "32 text cases including non-coffee negatives",
+    "old backups preserve local edits and distinct IDs; original photos, attachments and corrections restored",
+    "shot count respected independent of milk volume and brand",
+    "entire order including middle preserved",
+    "cancelled and stale reads do not overwrite edits; at most two attempts",
+    "replacement photo native-save failure preserves new original in IndexedDB, never old path"
+  ],
+  "parsing": {
+    "positive": [
+      [
+        "埃塞瑰夏拿铁(杯)",
+        "埃塞瑰夏拿铁"
+      ],
+      [
+        "瑞幸咖啡\n生椰拿铁\n少冰",
+        "生椰拿铁"
+      ],
+      [
+        "订单详情\n实付 19.9\n澳白",
+        "澳白"
+      ],
+      [
+        "冰美式",
+        "冰美式"
+      ],
+      [
+        "Dirty",
+        "Dirty"
+      ],
+      [
+        "燕麦拿铁",
+        "燕麦拿铁"
+      ],
+      [
+        "香草拿铁",
+        "香草拿铁"
+      ],
+      [
+        "摩卡",
+        "摩卡"
+      ],
+      [
+        "卡布奇诺",
+        "卡布奇诺"
+      ],
+      [
+        "冷萃",
+        "冷萃"
+      ],
+      [
+        "手冲",
+        "手冲"
+      ],
+      [
+        "加浓美式",
+        "加浓美式"
+      ],
+      [
+        "低因咖啡",
+        "低因咖啡"
+      ],
+      [
+        "桂花米酿拿铁",
+        "桂花米酿拿铁"
+      ],
+      [
+        "拿铁\n大杯 450ml",
+        "拿铁大"
+      ],
+      [
+        "Manner\n拿铁",
+        "拿铁"
+      ]
+    ],
+    "negative": [
+      [
+        "机械键盘",
+        ""
+      ],
+      [
+        "人像照片",
+        ""
+      ],
+      [
+        "山川风景",
+        ""
+      ],
+      [
+        "手机壳",
+        ""
+      ],
+      [
+        "卡布奇诺蛋糕",
+        ""
+      ],
+      [
+        "拿铁饼干",
+        ""
+      ],
+      [
+        "咖啡杯",
+        ""
+      ],
+      [
+        "咖啡机",
+        ""
+      ],
+      [
+        "咖啡豆",
+        ""
+      ],
+      [
+        "细吸管",
+        ""
+      ],
+      [
+        "不额外加糖",
+        ""
+      ],
+      [
+        "TEL: 15203880541",
+        ""
+      ],
+      [
+        "付款成功\n订单号169",
+        ""
+      ],
+      [
+        "配件 Z",
+        ""
+      ],
+      [
+        "普通电脑屏幕",
+        ""
+      ],
+      [
+        "牛肉汉堡",
+        ""
+      ]
+    ]
+  }
+}

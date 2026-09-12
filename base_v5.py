@@ -386,6 +386,12 @@ def make_dex():
     WVC='Landroid/webkit/WebViewClient;'; WCC='Landroid/webkit/WebChromeClient;'; FCP='Landroid/webkit/WebChromeClient$FileChooserParams;'; VC='Landroid/webkit/ValueCallback;'; JPR='Landroid/webkit/JsPromptResult;'
     CV='Landroid/content/ContentValues;'; PAR='Landroid/os/Parcelable;'; CLIP='Landroid/content/ClipData;'; MSM='Landroid/provider/MediaStore$Images$Media;'; B64='Landroid/util/Base64;'; BAOS='Ljava/io/ByteArrayOutputStream;'; AM='Landroid/content/res/AssetManager;'; SYS='Ljava/lang/System;'; INTEGER='Ljava/lang/Integer;'; TJNI='Ldev/ffmpegkit/tesseract/TesseractJNI;'; FILE='Ljava/io/File;'; FOS='Ljava/io/FileOutputStream;'; FIS='Ljava/io/FileInputStream;'; IS='Ljava/io/InputStream;'; UUID='Ljava/util/UUID;'
     URIARR='[Landroid/net/Uri;'; BYTEARR='[B'; STRARR='[Ljava/lang/String;'; INTARR='[I'
+    READER='Lcom/beanster/bridge/NativeReader;'
+    r_start=p.method(READER,'start',STR,(OBJ,BYTEARR,STR))
+    r_poll=p.method(READER,'poll',STR,(STR,))
+    r_cancel=p.method(READER,'cancel',STR,(STR,))
+    r_caps=p.method(READER,'capabilities',STR,())
+    f_ocr_image=p.field(MA,'pendingOcrImage',BAOS)
     # Fields
     f_upload=p.field(MA,'upload',VC); f_pending=p.field(MA,'pendingData',STR); f_camera=p.field(MA,'cameraUri',URI); f_image=p.field(MA,'pendingImage',BAOS); f_lastpath=p.field(MA,'lastPhotoPath',STR); f_exportpath=p.field(MA,'exportPhotoPath',STR); f_keeporiginal=p.field(MA,'keepOriginalPhoto',STR)
     f_ch_act=p.field(CH,'activity',MA); f_cl_act=p.field(CL,'activity',MA); f_external=p.field(MSM,'EXTERNAL_CONTENT_URI',URI)
@@ -438,6 +444,7 @@ def make_dex():
     t_version=p.method(TJNI,'nativeGetVersion',STR,())
     x_wvc_init=p.method(WVC,'<init>','V',()); x_uriparse=p.method(URI,'parse',URI,(STR,)); x_scheme=p.method(URI,'getScheme',STR,()); x_host=p.method(URI,'getHost',STR,()); x_query=p.method(URI,'getQueryParameter',STR,(STR,)); x_equals=p.method(STR,'equals','Z',(OBJ,)); x_concat=p.method(STR,'concat',STR,(STR,))
     # String constants
+    for s in ['ocrcapabilities','ocrpoll','ocrcancel','meta','id']:p.st(s)
     for s in ['file:///android_asset/index.html','android.intent.action.CREATE_DOCUMENT','android.intent.action.OPEN_DOCUMENT','android.intent.category.OPENABLE','android.intent.extra.TITLE','UTF-8','导出成功','文件已保存','coffeelog','export','exportimage','exportimagebegin','exportimagechunk','exportimagefinish','sipsqueak','imagebegin','imagechunk','imagefinish','restorefinish','','data','mime','name','android.media.action.IMAGE_CAPTURE','android.permission.CAMERA','output','_display_name','CoffeeLog_capture.jpg','SipSqueak_capture.jpg','mime_type','image/jpeg','image/*','Beanster Sips','notification','notify','title','body','photos','.img','file://','preparephoto','photopath','keep','savepath','path','1','ocrbegin','ocrchunk','ocrfinish','w','h','psm','tesseract','tesseract173','tesseract174','tesseract176','tessdata','chi_sim.traineddata','ocr/chi_sim.traineddata','c++_shared','leptonica','tesseract_jni','chi_sim','__BEANSTER_OCR_INIT_FAILED__','__BEANSTER_OCR_BUFFER_FAILED__','__BEANSTER_OCR_CHUNK_FAILED__','0']:
         p.st(s)
     # MainActivity constructor
@@ -563,6 +570,7 @@ def make_dex():
         I('invoke-virtual',[1],x_nbuild),I('move-result-object',1),I('const/16',2,3001),I('invoke-virtual',[0,2,1],x_nnotify),L('nend'),I('return-void')]
     md_notify=MethodDef(m_notify,ACC_PUBLIC,7,3,sn)
     c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_ocr,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
+    c_ma.fields.append((f_ocr_image,ACC_PUBLIC))
     d.add_class(c_ma)
     # CoffeeChrome: capture input -> actual system camera with MediaStore EXTRA_OUTPUT; normal input -> system document/photo picker
     ch_init=[I('invoke-direct',[0],x_wcc_init),I('iput-object',1,0,f_ch_act),I('return-void')]
@@ -578,15 +586,20 @@ def make_dex():
         # Native OCR begin/chunk/finish. OCR chunks use the URI query path (same proven bridge as image backup),
         # and every chunk returns the exact native cumulative byte count as an ACK.
         I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrbegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrchunk'),
-        I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_image),I('const-string',3,'0'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_ocr_image),I('const-string',3,'0'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_ocrchunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrchunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrfinish'),
-        I('const-string',3,'data'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('iget-object',4,6,f_ch_act),I('iget-object',2,4,f_image),I('if-eqz',2,'jp_ocrchunk_fail'),I('if-eqz',1,'jp_ocrchunk_fail'),I('const/4',3,0),I('invoke-static',[1,3],x_b64),I('move-result-object',1),I('if-eqz',1,'jp_ocrchunk_fail'),I('invoke-virtual',[2,1],x_baos_write),I('invoke-virtual',[2],x_baos_size),I('move-result',3),I('invoke-static',[3],x_intstr),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        I('const-string',3,'data'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('iget-object',4,6,f_ch_act),I('iget-object',2,4,f_ocr_image),I('if-eqz',2,'jp_ocrchunk_fail'),I('if-eqz',1,'jp_ocrchunk_fail'),I('const/4',3,0),I('invoke-static',[1,3],x_b64),I('move-result-object',1),I('if-eqz',1,'jp_ocrchunk_fail'),I('invoke-virtual',[2,1],x_baos_write),I('invoke-virtual',[2],x_baos_size),I('move-result',3),I('invoke-static',[3],x_intstr),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_ocrchunk_fail'),I('const-string',3,'__BEANSTER_OCR_CHUNK_FAILED__'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
-        L('jp_ocrfinish'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrfinish'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_imagebegin'),
-        I('const-string',3,'w'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('invoke-static',[1],x_parseint),I('move-result',1),
-        I('const-string',3,'h'),I('invoke-virtual',[0,3],x_query),I('move-result-object',2),I('invoke-static',[2],x_parseint),I('move-result',2),
-        I('const-string',3,'psm'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],x_parseint),I('move-result',3),
-        I('iget-object',4,6,f_ch_act),I('iget-object',5,4,f_image),I('if-eqz',5,'jp_confirm'),I('invoke-virtual',[5],x_baos_toarray),I('move-result-object',5),I('invoke-virtual',[4,5,1,2,3],m_ocr),I('move-result-object',5),I('invoke-virtual',[11,5],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrfinish'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrfinish'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrcaps'),
+        I('const-string',3,'meta'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),
+        I('iget-object',4,6,f_ch_act),I('iget-object',5,4,f_ocr_image),I('if-eqz',5,'jp_confirm'),I('invoke-virtual',[5],x_baos_toarray),I('move-result-object',5),
+        I('const/4',2,0),I('iput-object',2,4,f_ocr_image),I('invoke-static',[4,5,1],r_start),I('move-result-object',5),I('invoke-virtual',[11,5],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrcaps'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrcapabilities'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrpoll'),
+        I('invoke-static',[],r_caps),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrpoll'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrpoll'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrcancel'),
+        I('const-string',3,'id'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],r_poll),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrcancel'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrcancel'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_imagebegin'),
+        I('const-string',3,'id'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],r_cancel),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_imagebegin'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'imagebegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_chunk'),
         I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_image),I('const-string',3,''),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_chunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'imagechunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_finish'),

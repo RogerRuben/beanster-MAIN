@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='18.0'
-VERSION_CODE=41
+APP_VERSION='18.1'
+VERSION_CODE=42
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -88,6 +88,8 @@ def main():
     for script in ['app_v5.js','ui_upgrade.js']:
         if f'src="{script}"' not in html: raise ValueError(f'Entrypoint must reference current {script}')
     manifest=V5Axml().build_manifest(); dex=base.make_dex(); arsc=build_resources_arsc()
+    from tools.build_native_reader import build as build_reader
+    reader_dex=build_reader()
     (OUT/'AndroidManifest.xml').write_bytes(manifest); (OUT/'classes.dex').write_bytes(dex); (OUT/'resources.arsc').write_bytes(arsc); (OUT/'index_packed.html').write_text(html,encoding='utf-8')
     aar=OUT/'tesseract-android-5.5.0.aar'
     expected='5928f0f271057dc303fce71f013900031635a3f7739782ce4df76726bfd032d4'
@@ -96,14 +98,17 @@ def main():
     unsigned=OUT/f'Beanster-Sips-V{APP_VERSION}-unsigned.apk'
     with zipfile.ZipFile(unsigned,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         z.writestr('AndroidManifest.xml',manifest); z.writestr('classes.dex',dex); z.writestr('resources.arsc',arsc)
+        z.write(reader_dex,'classes2.dex')
         z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js']:
             z.write(OUT/name,'assets/'+name)
         art_root=OUT/'art'/'upgrade-v1'
         # Runtime formats only. Do not ship source atlases, QA previews or GIF duplicates.
         art_files=sorted((art_root/'png').rglob('*@2x.png'))+sorted((art_root/'webp').glob('*.webp'))
+        art_files+=[art_root/'manifest.js']
+        art_files+=sorted((art_root/'frames').glob('character_*/*.png'))+sorted((art_root/'frames').glob('portrait_*/*.png'))
         if not art_files: raise FileNotFoundError('Upgrade art assets are missing')
         for asset in art_files:
             z.write(asset,'assets/art/upgrade-v1/'+asset.relative_to(art_root).as_posix(),compress_type=zipfile.ZIP_STORED)

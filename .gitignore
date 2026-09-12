@@ -21,6 +21,10 @@ local.properties
 *.idsig
 AndroidManifest.xml
 classes.dex
+classes2.dex
+native-build/
+*.class
+qa/private/
 resources.arsc
 index_packed.html
 

@@ -11,7 +11,7 @@
       "id": "character_coffee",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "208bf1784754ac554ecc094f578addf68e856568dba34b760e2a932e8432932a",
+      "sha256": "112bf181fcbc2cc160417963cff7954e918ff207b7e1ba8cefdce7918454e33e",
       "gifFrames": 5,
       "distinctFrames": 5,
       "gifTransparent": true
@@ -20,7 +20,7 @@
       "id": "character_burger",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "b8aa557f01131cc5bdb6be932abdca88642f3a25dc3f6a862e7a383dbe6ea315",
+      "sha256": "a25cf2e35c4fa7de51a69f9166906f0cb37e67aa98ec2fae51c96ef2895c949a",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -29,7 +29,7 @@
       "id": "character_first_cup",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "9e80b9ed8893330c6a87b8ee79c36762e0d91167709599982b64ffdce3bad109",
+      "sha256": "40fda0a0b3737dc26ba051680c578b5805e46853ac8f8b51020e874c0eb4dd2b",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -38,7 +38,7 @@
       "id": "character_recording",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "554c8a573d3659665f2c5045f1ab71543663544c72455a6c5e2eb7e327a481e0",
+      "sha256": "fa5f4f685a6da29d9a8557d33c8f60226a647f3c9a3a609bad5571081c5618b9",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -47,7 +47,7 @@
       "id": "character_late_night",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "fadb9eba588c2d23b1759745a3a6f5d878120ed243632a50a6ff686c19cfb18f",
+      "sha256": "06baae17cee54afbb17a14bb1bad0a04bdf2fe2784ffbb6bbd24e243ee63dbcf",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -56,7 +56,7 @@
       "id": "character_goal",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "ee86ab62bc206400a75766bb226c7b761e3bacceaaf2f9f6a7238839cf9ad751",
+      "sha256": "a6ed998acf8f21a5fb4d358bdf767d2bbe6de982a9e06b723323139ff4f09730",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -65,7 +65,7 @@
       "id": "character_takeaway",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "b71d36cd89061896d61e8a50825b251393dd5cbe1ebe1f9d6d4147b608385184",
+      "sha256": "5fe61408b75f77c74aef29f14ddad126f524a4ce129221a28622068ac98313f1",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -74,7 +74,7 @@
       "id": "character_monthly",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "122bc18e5e4a9a538d260cfad1751bea99d748d58bc2401a7e7b9040f8141e2e",
+      "sha256": "d253d9267aa6a7ebaae7a1d5ebfd1aa377f9927b8e95d71e96a1c30fb2582bb2",
       "gifFrames": 5,
       "distinctFrames": 5,
       "gifTransparent": true
@@ -83,7 +83,7 @@
       "id": "character_idle",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "b957a83473f9650bfb34d57cb39902bea40025ca03605775ab01c60111d06a38",
+      "sha256": "06c7ae75c10c5d6dc2970663217188ac020403054e28a86958950af79dc1679e",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -92,7 +92,7 @@
       "id": "character_wave",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "0257e076c2a45a51a0fe5e0bd4c434e0b28791846029f1a69425a6d575d8300b",
+      "sha256": "466dde3caf1408a69ceb566756fbd86fc227a1ef88ceb9ad9d108b8d0ac539e3",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -101,7 +101,7 @@
       "id": "portrait_happy",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "916aa073fcb77beb5fdbda267be37ed818208c5c694f79db2438927075370fbd",
+      "sha256": "4ca5bfffbb9db005f419fec9b1f0ccfcdeacff4e4948c5dbe4e87d52ae5b0b5c",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -119,7 +119,7 @@
       "id": "portrait_sleepy",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "67ee1a8c1b4c185b1b9452a0e17f2b638b415f7c126312139e5b536e8c27e753",
+      "sha256": "33ed891f924d06458c1b64b4bd65d639b52eb4eb39975becf32e2b8701552e41",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
@@ -128,7 +128,7 @@
       "id": "portrait_excited",
       "alpha": true,
       "clearBorder": true,
-      "sha256": "8c1c8cdaf42503906d50d2c3e56f3374d4ce8fb4e1ea95629c30e219676d545c",
+      "sha256": "5a8aead7fa4f6c719933a29c30a0acc4a350a60f0c92fb7178d87de889f0a699",
       "gifFrames": 6,
       "distinctFrames": 6,
       "gifTransparent": true
