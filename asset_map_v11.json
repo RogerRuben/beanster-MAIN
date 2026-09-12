@@ -1,0 +1,16 @@
+{
+  "mascot_states": {
+    "idle": "mascots/state_idle_strip.png",
+    "cup1": "mascots/state_cup1_strip.png",
+    "cup2": "mascots/state_cup2_strip.png",
+    "cup3": "mascots/state_cup3_strip.png",
+    "over": "mascots/state_over_strip.png"
+  },
+  "stamps": {
+    "1": "mascots/stamp_1.png",
+    "2": "mascots/stamp_2.png",
+    "3": "mascots/stamp_3.png",
+    "over": "mascots/stamp_over.png"
+  },
+  "icon": "icon.png"
+}

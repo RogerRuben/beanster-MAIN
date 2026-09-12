@@ -1,0 +1,25 @@
+# Python caches
+__pycache__/
+*.py[cod]
+.pytest_cache/
+.venv/
+venv/
+
+# Local configuration and signing credentials
+.env
+.env.*
+!.env.example
+*.keystore
+*.jks
+*.p12
+*.pfx
+local.properties
+
+# Generated packages
+*.apk
+*.aab
+*.idsig
+
+# Operating system files
+.DS_Store
+Thumbs.db
