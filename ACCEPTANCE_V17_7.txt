@@ -1,0 +1,78 @@
+Beanster Sips V17.7 Acceptance Report
+=====================================
+
+Device evidence from V17.6
+--------------------------
+The on-device self-test reported: 图片没有传完整.
+This means the final native grayscale byte[] length did not equal width*height before JNI.
+Therefore the failure is before Tesseract recognition, in WebView -> Android image transport.
+
+Root transport difference found
+-------------------------------
+V17.6 OCR transport:
+  prompt('sipsqueak://ocrchunk', base64Chunk)
+  -> chunk carried in onJsPrompt defaultValue.
+
+Beanster's established image/backup transport:
+  sipsqueak://imagechunk?data=<percent-encoded-base64>
+  -> chunk carried in URI query parameter.
+
+V17.7 change
+------------
+1. OCR now uses the same URI-query transport style as the established image bridge.
+2. First transfer uses 3000 raw bytes/chunk.
+3. Each Android chunk write returns ByteArrayOutputStream.size().
+4. JavaScript compares every ACK with the exact cumulative expected byte count.
+5. Any mismatch resets the entire native buffer and retries from byte 0 at 900 raw bytes/chunk.
+6. Android still checks final byte[] length == width*height before JNI.
+7. Label preprocessing width reduced to 600 px to reduce transfer volume while preserving Chinese text readability.
+
+Transport stress test
+---------------------
+Payload: 542,376 bytes (representative 648 x 837 grayscale label)
+3000-byte mode: 181 chunks, max encoded URI ~4278 chars, exact reconstruction PASS
+900-byte mode: 603 chunks, max encoded URI ~1306 chars, exact reconstruction PASS
+
+A larger 748 x 1327 / 992,596-byte payload was also round-tripped exactly in development testing.
+
+OCR runtime checks
+------------------
+Tesseract: 5.5.0
+Leptonica: 1.84.1
+Local self-test image OCR: 拿铁 -> PASS
+Current 桂花杯贴 crop PSM11 raw OCR contains: 桂花米酸拿铁* -> OCR engine PASS
+The Beanster product repair layer maps this close reading to built-in product 桂花米酿拿铁.
+
+APK checks
+----------
+package: com.beanstersips.v11
+versionCode: 40
+versionName: 17.7
+schema: 15
+APK SHA-256: ac63d15785947e107bb4760c02b9a63c678328872a0a49b1a95af6d0a8eaf175
+Signing certificate SHA-256:
+84:D4:A0:DD:47:06:4B:81:94:44:13:1B:F3:44:D2:D5:C8:B6:E7:91:A2:26:52:DE:59:3C:E4:74:49:7A:70:18
+
+DEX native bridge: PASS
+ByteArrayOutputStream.size ACK method reference: PASS
+Integer.toString ACK conversion method reference: PASS
+Base64.decode method reference: PASS
+Tesseract.createWorker in packaged HTML: 0
+cdn.jsdelivr in packaged HTML: 0
+
+AAR -> APK arm64 native library byte hashes
+-------------------------------------------
+libc++_shared.so: MATCH
+libleptonica.so: MATCH
+libtesseract.so: MATCH
+libtesseract_jni.so: MATCH
+chi_sim.traineddata: PRESENT (2,469,156 bytes)
+selftest.png: PRESENT
+APK ZIP integrity: PASS
+
+Important limitation
+--------------------
+This environment still cannot execute the APK on the user's physical ARM64 Android phone.
+V17.7 therefore adds byte-level acknowledgements so the phone itself can prove whether the transport is complete.
+The first test after installation should be '检查读取功能'.
+Expected result: 读取功能正常.

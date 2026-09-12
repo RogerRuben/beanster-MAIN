@@ -40,22 +40,22 @@ def build_resources_arsc():
     pkg+=type_pool+key_pool+type_spec+type_chunk
     table_size=12+len(global_pool)+len(pkg); return struct.pack('<HHII',RES_TABLE_TYPE,12,table_size,1)+global_pool+pkg
 
-base.RID.update({'icon':0x01010002,'versionCode':0x0101021b,'versionName':0x0101021c})
+base.RID.update({'icon':0x01010002,'versionCode':0x0101021b,'versionName':0x0101021c,'extractNativeLibs':0x010104ea})
 class V5Axml(base.Axml):
     def build_manifest(self):
         self.s('android'); self.s(base.ANDROID_URI)
         for x in ['manifest','uses-sdk','uses-permission','application','activity','intent-filter','action','category']: self.s(x)
-        self.s('package'); self.s('com.beanstersips.v11'); self.s('鼠鼠今天喝了啥'); self.s('17.1'); self.s('com.sipsqueak.v7.MainActivity')
+        self.s('package'); self.s('com.beanstersips.v11'); self.s('鼠鼠今天喝了啥'); self.s('17.7'); self.s('com.sipsqueak.v7.MainActivity')
         for perm in ['android.permission.INTERNET','android.permission.VIBRATE','android.permission.POST_NOTIFICATIONS']: self.s(perm)
         self.s('android.intent.action.MAIN'); self.s('android.intent.category.LAUNCHER')
         for n in base.RID: self.attr_name(n)
         body=[self.ns(True)]
-        body.append(self.start('manifest',[(base.NO_INDEX,self.s('package'),self.s('com.beanstersips.v11'),base.TYPE_STRING,self.s('com.beanstersips.v11')),self.attr('versionCode',34,'int'),self.attr('versionName','17.1')]))
+        body.append(self.start('manifest',[(base.NO_INDEX,self.s('package'),self.s('com.beanstersips.v11'),base.TYPE_STRING,self.s('com.beanstersips.v11')),self.attr('versionCode',40,'int'),self.attr('versionName','17.7')]))
         body.append(self.start('uses-sdk',[self.attr('minSdkVersion',29,'int'),self.attr('targetSdkVersion',29,'int')])); body.append(self.end('uses-sdk'))
         for perm in ['android.permission.INTERNET','android.permission.VIBRATE','android.permission.POST_NOTIFICATIONS']:
             body.append(self.start('uses-permission',[self.attr('name',perm)])); body.append(self.end('uses-permission'))
         icon_attr=(self.s(base.ANDROID_URI),self.attr_name('icon'),base.NO_INDEX,TYPE_REFERENCE,ICON_RES_ID)
-        body.append(self.start('application',[self.attr('label','鼠鼠今天喝了啥'),icon_attr]))
+        body.append(self.start('application',[self.attr('label','鼠鼠今天喝了啥'),self.attr('extractNativeLibs',True,'bool'),icon_attr]))
         body.append(self.start('activity',[self.attr('name','com.sipsqueak.v7.MainActivity'),self.attr('exported',True,'bool')]))
         body.append(self.start('intent-filter'))
         body.append(self.start('action',[self.attr('name','android.intent.action.MAIN')])); body.append(self.end('action'))
@@ -77,18 +77,30 @@ def main():
         html=html[:start+8]+'\n'+js+'\n'+html[end:]
     manifest=V5Axml().build_manifest(); dex=base.make_dex(); arsc=build_resources_arsc()
     (OUT/'AndroidManifest.xml').write_bytes(manifest); (OUT/'classes.dex').write_bytes(dex); (OUT/'resources.arsc').write_bytes(arsc); (OUT/'index_packed.html').write_text(html,encoding='utf-8')
-    unsigned=OUT/'Beanster-Sips-V17.1-unsigned.apk'
+    aar=OUT/'tesseract-android-5.5.0.aar'
+    expected='5928f0f271057dc303fce71f013900031635a3f7739782ce4df76726bfd032d4'
+    if not aar.exists(): raise FileNotFoundError('tesseract-android-5.5.0.aar is required')
+    if hashlib.sha256(aar.read_bytes()).hexdigest()!=expected: raise ValueError('Unexpected Tesseract Android AAR hash')
+    unsigned=OUT/'Beanster-Sips-V17.7-unsigned.apk'
     with zipfile.ZipFile(unsigned,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         z.writestr('AndroidManifest.xml',manifest); z.writestr('classes.dex',dex); z.writestr('resources.arsc',arsc)
         z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        # V16 keeps the main Chinese reading data inside the APK in uncompressed form for faster startup.
-        for name in ('chi_sim.traineddata','chi_sim.traineddata.gz','eng.traineddata.gz','tesseract.min.js','worker.min.js'):
-            ocr=OUT/'ocr'/name
-            if ocr.exists(): z.write(ocr,'assets/ocr/'+name,compress_type=zipfile.ZIP_STORED)
+        # Chinese OCR data is bundled locally and copied to app-private storage on first recognition.
+        ocr=OUT/'ocr'/'chi_sim.traineddata'
+        if not ocr.exists(): raise FileNotFoundError('ocr/chi_sim.traineddata is required')
+        z.write(ocr,'assets/ocr/chi_sim.traineddata',compress_type=zipfile.ZIP_STORED)
+        selftest=OUT/'ocr'/'selftest.png'
+        if not selftest.exists(): raise FileNotFoundError('ocr/selftest.png is required')
+        z.write(selftest,'assets/ocr/selftest.png',compress_type=zipfile.ZIP_STORED)
+        # Native runtime comes directly from the verified official Tesseract Android AAR.
+        with zipfile.ZipFile(aar,'r') as az:
+            for n in az.namelist():
+                if n.startswith('jni/arm64-v8a/') and n.endswith('.so'):
+                    z.writestr('lib/arm64-v8a/'+Path(n).name,az.read(n),compress_type=zipfile.ZIP_DEFLATED)
         z.writestr('assets/index.html',html.encode('utf-8'))
-    final=OUT/'Beanster-Sips-V17.1.apk'; shutil.copy2(unsigned,final); ks=ensure_key()
+    final=OUT/'Beanster-Sips-V17.7.apk'; shutil.copy2(unsigned,final); ks=ensure_key()
     subprocess.run(['jarsigner','-keystore',str(ks),'-storepass','beanster-v11','-keypass','beanster-v11','-sigalg','SHA256withRSA','-digestalg','SHA-256',str(final),'sipsqueak'],check=True,stdout=subprocess.PIPE,stderr=subprocess.STDOUT,text=True)
     print('manifest',len(manifest),'dex',len(dex),'arsc',len(arsc),'apk',final.stat().st_size)
     print('sha256',hashlib.sha256(final.read_bytes()).hexdigest()); print(final)

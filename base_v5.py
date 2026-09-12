@@ -130,7 +130,7 @@ class Axml:
 
 # --------------------- DEX builder ---------------------
 ACC_PUBLIC=0x1; ACC_PRIVATE=0x2; ACC_PROTECTED=0x4; ACC_STATIC=0x8; ACC_FINAL=0x10
-ACC_SUPER=0x20; ACC_CONSTRUCTOR=0x10000
+ACC_SUPER=0x20; ACC_NATIVE=0x100; ACC_CONSTRUCTOR=0x10000
 
 @dataclass(frozen=True)
 class Proto:
@@ -172,16 +172,16 @@ class Pool:
         self.mi={m:i for i,m in enumerate(self.methods_sorted)}
 
 class InsnAssembler:
-    OP={'return-void':0x0e,'return':0x0f,'return-object':0x11,'move-result':0x0a,'move-result-object':0x0c,
-        'const/4':0x12,'const/16':0x13,'const':0x14,'const-string':0x1a,'check-cast':0x1f,'new-instance':0x22,'new-array':0x23,
-        'if-ne':0x33,'if-eqz':0x38,'if-lez':0x3d,'goto/16':0x29,'aput-object':0x4d,'iget-object':0x54,'iput-object':0x5b,'sget-object':0x62,
-        'invoke-virtual':0x6e,'invoke-super':0x6f,'invoke-direct':0x70,'invoke-static':0x71,'invoke-interface':0x72}
+    OP={'return-void':0x0e,'return':0x0f,'return-object':0x11,'move/from16':0x02,'move-object/from16':0x08,'move-result':0x0a,'move-result-wide':0x0b,'move-result-object':0x0c,
+        'const/4':0x12,'const/16':0x13,'const':0x14,'const-wide/16':0x16,'const-string':0x1a,'check-cast':0x1f,'array-length':0x21,'new-instance':0x22,'new-array':0x23,
+        'cmp-long':0x31,'if-ne':0x33,'if-eqz':0x38,'if-lez':0x3d,'goto/16':0x29,'aput-object':0x4d,'iget-object':0x54,'iput-object':0x5b,'sget-object':0x62,
+        'invoke-virtual':0x6e,'invoke-super':0x6f,'invoke-direct':0x70,'invoke-static':0x71,'invoke-interface':0x72,'invoke-virtual/range':0x74,'mul-int':0x90}
     def __init__(self,pool): self.p=pool
     def length(self,x):
         op=x[0]
         if op=='label': return 0
-        if op in ('return-void','return','return-object','move-result','move-result-object','const/4'): return 1
-        if op in ('const/16','const-string','check-cast','new-instance','new-array','if-ne','if-eqz','if-lez','goto/16','iget-object','iput-object','sget-object'): return 2
+        if op in ('return-void','return','return-object','move-result','move-result-wide','move-result-object','const/4','array-length'): return 1
+        if op in ('move/from16','move-object/from16','const/16','const-wide/16','cmp-long','const-string','check-cast','new-instance','new-array','if-ne','if-eqz','if-lez','goto/16','iget-object','iput-object','sget-object','mul-int'): return 2
         if op=='const': return 3
         if op=='aput-object': return 2
         if op.startswith('invoke-'): return 3
@@ -197,12 +197,20 @@ class InsnAssembler:
             if op=='label': continue
             code=self.OP[op]
             if op=='return-void': words=[code]
-            elif op in ('return','return-object','move-result','move-result-object'):
+            elif op in ('return','return-object','move-result','move-result-wide','move-result-object'):
                 a=x[1]; words=[code | (a<<8)]
+            elif op in ('move/from16','move-object/from16'):
+                a,b=x[1],x[2]; words=[code|(a<<8),b&0xffff]
+            elif op=='array-length':
+                a,b=x[1],x[2]; words=[code|(a<<8)|(b<<12)]
             elif op=='const/4':
                 a,lit=x[1],x[2]; words=[code | (a<<8) | ((lit & 0xf)<<12)]
-            elif op=='const/16':
+            elif op in ('const/16','const-wide/16'):
                 a,lit=x[1],x[2]; words=[code|(a<<8),lit&0xffff]
+            elif op=='cmp-long':
+                a,b,c=x[1],x[2],x[3]; words=[code|(a<<8),b|(c<<8)]
+            elif op=='mul-int':
+                a,b,c=x[1],x[2],x[3]; words=[code|(a<<8),b|(c<<8)]
             elif op=='const':
                 a,lit=x[1],x[2]; words=[code|(a<<8),lit&0xffff,(lit>>16)&0xffff]
             elif op=='const-string':
@@ -227,6 +235,8 @@ class InsnAssembler:
                 words=[code|(a<<8),d&0xffff]
             elif op=='goto/16':
                 label=x[1]; d=labels[label]-off; words=[code,d&0xffff]
+            elif op=='invoke-virtual/range':
+                start,count,m=x[1],x[2],x[3]; max_out=max(max_out,count); words=[code|(count<<8),self.p.mi[m],start&0xffff]
             elif op.startswith('invoke-'):
                 regs,m=x[1],x[2]; max_out=max(max_out,len(regs)); cnt=len(regs)
                 if cnt>5 or any(r>15 for r in regs): raise ValueError((op,regs))
@@ -281,9 +291,10 @@ class DexBuilder:
         code_off={}; first_code=None
         all_mdefs=[]
         for c in self.classes: all_mdefs += c.direct+c.virtual
+        coded_mdefs=[md for md in all_mdefs if md.items is not None]
         # Deterministic by method index
-        all_mdefs.sort(key=lambda md:p.mi[md.ref])
-        for md in all_mdefs:
+        coded_mdefs.sort(key=lambda md:p.mi[md.ref])
+        for md in coded_mdefs:
             pad(4)
             if first_code is None: first_code=data_abs()
             code_off[md.ref]=data_abs()
@@ -304,10 +315,10 @@ class DexBuilder:
                 idx=p.fi[f]; data.extend(uleb(idx-prev)); data.extend(uleb(acc)); prev=idx
             prev=0
             for md in dirs:
-                idx=p.mi[md.ref]; data.extend(uleb(idx-prev)); data.extend(uleb(md.access)); data.extend(uleb(code_off[md.ref])); prev=idx
+                idx=p.mi[md.ref]; data.extend(uleb(idx-prev)); data.extend(uleb(md.access)); data.extend(uleb(code_off.get(md.ref,0))); prev=idx
             prev=0
             for md in virs:
-                idx=p.mi[md.ref]; data.extend(uleb(idx-prev)); data.extend(uleb(md.access)); data.extend(uleb(code_off[md.ref])); prev=idx
+                idx=p.mi[md.ref]; data.extend(uleb(idx-prev)); data.extend(uleb(md.access)); data.extend(uleb(code_off.get(md.ref,0))); prev=idx
         # map list at end, 4-aligned
         pad(4); map_off=data_abs()
         maps=[(0x0000,1,0)]
@@ -318,7 +329,7 @@ class DexBuilder:
         if p.methods_sorted: maps.append((0x0005,len(p.methods_sorted),method_ids_off))
         if self.classes: maps.append((0x0006,len(self.classes),class_defs_off))
         if typelist_off: maps.append((0x1001,len(typelist_off),first_tl))
-        if all_mdefs: maps.append((0x2001,len(all_mdefs),first_code))
+        if coded_mdefs: maps.append((0x2001,len(coded_mdefs),first_code))
         if p.strings_sorted: maps.append((0x2002,len(p.strings_sorted),first_string_off))
         if self.classes: maps.append((0x2000,len(self.classes),first_cd))
         maps.append((0x1000,1,map_off))
@@ -373,7 +384,7 @@ def make_dex():
     CR='Landroid/content/ContentResolver;'; OS='Ljava/io/OutputStream;'; STR='Ljava/lang/String;'; OBJ='Ljava/lang/Object;'; CS='Ljava/lang/CharSequence;'
     TOAST='Landroid/widget/Toast;'; NOTIF='Landroid/app/Notification;'; NB='Landroid/app/Notification$Builder;'; NM='Landroid/app/NotificationManager;'
     WVC='Landroid/webkit/WebViewClient;'; WCC='Landroid/webkit/WebChromeClient;'; FCP='Landroid/webkit/WebChromeClient$FileChooserParams;'; VC='Landroid/webkit/ValueCallback;'; JPR='Landroid/webkit/JsPromptResult;'
-    CV='Landroid/content/ContentValues;'; PAR='Landroid/os/Parcelable;'; CLIP='Landroid/content/ClipData;'; MSM='Landroid/provider/MediaStore$Images$Media;'; B64='Landroid/util/Base64;'; BAOS='Ljava/io/ByteArrayOutputStream;'; FILE='Ljava/io/File;'; FOS='Ljava/io/FileOutputStream;'; FIS='Ljava/io/FileInputStream;'; IS='Ljava/io/InputStream;'; UUID='Ljava/util/UUID;'
+    CV='Landroid/content/ContentValues;'; PAR='Landroid/os/Parcelable;'; CLIP='Landroid/content/ClipData;'; MSM='Landroid/provider/MediaStore$Images$Media;'; B64='Landroid/util/Base64;'; BAOS='Ljava/io/ByteArrayOutputStream;'; AM='Landroid/content/res/AssetManager;'; SYS='Ljava/lang/System;'; INTEGER='Ljava/lang/Integer;'; TJNI='Ldev/ffmpegkit/tesseract/TesseractJNI;'; FILE='Ljava/io/File;'; FOS='Ljava/io/FileOutputStream;'; FIS='Ljava/io/FileInputStream;'; IS='Ljava/io/InputStream;'; UUID='Ljava/util/UUID;'
     URIARR='[Landroid/net/Uri;'; BYTEARR='[B'; STRARR='[Ljava/lang/String;'; INTARR='[I'
     # Fields
     f_upload=p.field(MA,'upload',VC); f_pending=p.field(MA,'pendingData',STR); f_camera=p.field(MA,'cameraUri',URI); f_image=p.field(MA,'pendingImage',BAOS); f_lastpath=p.field(MA,'lastPhotoPath',STR); f_exportpath=p.field(MA,'exportPhotoPath',STR); f_keeporiginal=p.field(MA,'keepOriginalPhoto',STR)
@@ -390,6 +401,7 @@ def make_dex():
     m_copyphoto=p.method(MA,'copyPhotoToPrivate',STR,(URI,))
     m_restorephoto=p.method(MA,'savePendingPhotoToPrivate',STR,(STR,))
     m_exportpath=p.method(MA,'beginPathImageExport','V',(STR,STR,STR))
+    m_ocr=p.method(MA,'ocrRecognize',STR,(BYTEARR,'I','I','I'))
     m_ch_init=p.method(CH,'<init>','V',(MA,))
     m_ch_file=p.method(CH,'onShowFileChooser','Z',(WV,VC,FCP)); m_ch_prompt=p.method(CH,'onJsPrompt','Z',(WV,STR,STR,STR,JPR))
     m_cl_init=p.method(CL,'<init>','V',(MA,))
@@ -408,16 +420,25 @@ def make_dex():
     x_setclient=p.method(WV,'setWebViewClient','V',(WVC,)); x_setchrome=p.method(WV,'setWebChromeClient','V',(WCC,)); x_load=p.method(WV,'loadUrl','V',(STR,))
     x_int_init=p.method(INTENT,'<init>','V',(STR,)); x_addcat=p.method(INTENT,'addCategory',INTENT,(STR,)); x_settype=p.method(INTENT,'setType',INTENT,(STR,))
     x_putextra_str=p.method(INTENT,'putExtra',INTENT,(STR,STR)); x_putextra_par=p.method(INTENT,'putExtra',INTENT,(STR,PAR)); x_addflags=p.method(INTENT,'addFlags',INTENT,('I',)); x_setclip=p.method(INTENT,'setClipData',INTENT,(CLIP,)); x_getdata=p.method(INTENT,'getData',URI,()); x_clipraw=p.method(CLIP,'newRawUri',CLIP,('Ljava/lang/CharSequence;',URI))
-    x_getcr=p.method(CTX,'getContentResolver',CR,()); x_openos=p.method(CR,'openOutputStream',OS,(URI,)); x_openis=p.method(CR,'openInputStream',IS,(URI,)); x_insert=p.method(CR,'insert',URI,(URI,CV)); x_getfiles=p.method(CTX,'getFilesDir',FILE,())
+    x_getcr=p.method(CTX,'getContentResolver',CR,()); x_openos=p.method(CR,'openOutputStream',OS,(URI,)); x_openis=p.method(CR,'openInputStream',IS,(URI,)); x_insert=p.method(CR,'insert',URI,(URI,CV)); x_getfiles=p.method(CTX,'getFilesDir',FILE,()); x_getassets=p.method(CTX,'getAssets',AM,()); x_assetopen=p.method(AM,'open',IS,(STR,))
     x_getbytes=p.method(STR,'getBytes',BYTEARR,(STR,)); x_write=p.method(OS,'write','V',(BYTEARR,)); x_write3=p.method(OS,'write','V',(BYTEARR,'I','I')); x_close=p.method(OS,'close','V',()); x_read=p.method(IS,'read','I',(BYTEARR,)); x_closeis=p.method(IS,'close','V',())
-    x_file_init=p.method(FILE,'<init>','V',(FILE,STR)); x_file_init_path=p.method(FILE,'<init>','V',(STR,)); x_mkdirs=p.method(FILE,'mkdirs','Z',()); x_abspath=p.method(FILE,'getAbsolutePath',STR,()); x_fos_init=p.method(FOS,'<init>','V',(FILE,)); x_fis_init=p.method(FIS,'<init>','V',(FILE,)); x_uuid=p.method(UUID,'randomUUID',UUID,()); x_uuidstr=p.method(UUID,'toString',STR,());
-    x_cv_init=p.method(CV,'<init>','V',()); x_cv_put=p.method(CV,'put','V',(STR,STR)); x_b64=p.method(B64,'decode',BYTEARR,(STR,'I')); x_baos_init=p.method(BAOS,'<init>','V',()); x_baos_write=p.method(BAOS,'write','V',(BYTEARR,)); x_baos_writeto=p.method(BAOS,'writeTo','V',(OS,)); x_baos_close=p.method(BAOS,'close','V',()); x_prompt_confirm=p.method(JPR,'confirm','V',(STR,))
+    x_file_init=p.method(FILE,'<init>','V',(FILE,STR)); x_file_init_path=p.method(FILE,'<init>','V',(STR,)); x_mkdirs=p.method(FILE,'mkdirs','Z',()); x_exists=p.method(FILE,'exists','Z',()); x_abspath=p.method(FILE,'getAbsolutePath',STR,()); x_fos_init=p.method(FOS,'<init>','V',(FILE,)); x_fis_init=p.method(FIS,'<init>','V',(FILE,)); x_uuid=p.method(UUID,'randomUUID',UUID,()); x_uuidstr=p.method(UUID,'toString',STR,());
+    x_cv_init=p.method(CV,'<init>','V',()); x_cv_put=p.method(CV,'put','V',(STR,STR)); x_b64=p.method(B64,'decode',BYTEARR,(STR,'I')); x_baos_init=p.method(BAOS,'<init>','V',()); x_baos_write=p.method(BAOS,'write','V',(BYTEARR,)); x_baos_size=p.method(BAOS,'size','I',()); x_baos_writeto=p.method(BAOS,'writeTo','V',(OS,)); x_baos_toarray=p.method(BAOS,'toByteArray',BYTEARR,()); x_baos_close=p.method(BAOS,'close','V',()); x_prompt_confirm=p.method(JPR,'confirm','V',(STR,)); x_parseint=p.method(INTEGER,'parseInt','I',(STR,)); x_intstr=p.method(INTEGER,'toString',STR,('I',)); x_loadlib=p.method(SYS,'loadLibrary','V',(STR,)); x_obj_init=p.method(OBJ,'<init>','V',())
     x_toast=p.method(TOAST,'makeText',TOAST,(CTX,CS,'I')); x_show=p.method(TOAST,'show','V',())
     x_getsys=p.method(CTX,'getSystemService',OBJ,(STR,)); x_nb_init=p.method(NB,'<init>','V',(CTX,)); x_nicon=p.method(NB,'setSmallIcon',NB,('I',)); x_ntitle=p.method(NB,'setContentTitle',NB,(CS,)); x_ntext=p.method(NB,'setContentText',NB,(CS,)); x_nauto=p.method(NB,'setAutoCancel',NB,('Z',)); x_nbuild=p.method(NB,'build',NOTIF,()); x_nnotify=p.method(NM,'notify','V',('I',NOTIF))
     x_wcc_init=p.method(WCC,'<init>','V',()); x_capture=p.method(FCP,'isCaptureEnabled','Z',()); x_createchooser=p.method(FCP,'createIntent',INTENT,()); x_parse=p.method(FCP,'parseResult',URIARR,('I',INTENT)); x_receive=p.method(VC,'onReceiveValue','V',(OBJ,))
+    t_init_ctor=p.method(TJNI,'<init>','V',())
+    t_native_init=p.method(TJNI,'nativeInit','J',(STR,STR,'I'))
+    t_set_psm=p.method(TJNI,'nativeSetPageSegMode','V',('J','I'))
+    t_set_image=p.method(TJNI,'nativeSetImage','V',('J',BYTEARR,'I','I','I','I'))
+    t_get_text=p.method(TJNI,'nativeGetUTF8Text',STR,('J',))
+    t_get_conf=p.method(TJNI,'nativeGetMeanConfidence','I',('J',))
+    t_get_words=p.method(TJNI,'nativeGetWords',STR,('J',))
+    t_end=p.method(TJNI,'nativeEnd','V',('J',))
+    t_version=p.method(TJNI,'nativeGetVersion',STR,())
     x_wvc_init=p.method(WVC,'<init>','V',()); x_uriparse=p.method(URI,'parse',URI,(STR,)); x_scheme=p.method(URI,'getScheme',STR,()); x_host=p.method(URI,'getHost',STR,()); x_query=p.method(URI,'getQueryParameter',STR,(STR,)); x_equals=p.method(STR,'equals','Z',(OBJ,)); x_concat=p.method(STR,'concat',STR,(STR,))
     # String constants
-    for s in ['file:///android_asset/index.html','android.intent.action.CREATE_DOCUMENT','android.intent.action.OPEN_DOCUMENT','android.intent.category.OPENABLE','android.intent.extra.TITLE','UTF-8','导出成功','文件已保存','coffeelog','export','exportimage','exportimagebegin','exportimagechunk','exportimagefinish','sipsqueak','imagebegin','imagechunk','imagefinish','restorefinish','','data','mime','name','android.media.action.IMAGE_CAPTURE','android.permission.CAMERA','output','_display_name','CoffeeLog_capture.jpg','SipSqueak_capture.jpg','mime_type','image/jpeg','image/*','Beanster Sips','notification','notify','title','body','photos','.img','file://','preparephoto','photopath','keep','savepath','path','1']:
+    for s in ['file:///android_asset/index.html','android.intent.action.CREATE_DOCUMENT','android.intent.action.OPEN_DOCUMENT','android.intent.category.OPENABLE','android.intent.extra.TITLE','UTF-8','导出成功','文件已保存','coffeelog','export','exportimage','exportimagebegin','exportimagechunk','exportimagefinish','sipsqueak','imagebegin','imagechunk','imagefinish','restorefinish','','data','mime','name','android.media.action.IMAGE_CAPTURE','android.permission.CAMERA','output','_display_name','CoffeeLog_capture.jpg','SipSqueak_capture.jpg','mime_type','image/jpeg','image/*','Beanster Sips','notification','notify','title','body','photos','.img','file://','preparephoto','photopath','keep','savepath','path','1','ocrbegin','ocrchunk','ocrfinish','w','h','psm','tesseract','tesseract173','tesseract174','tesseract176','tessdata','chi_sim.traineddata','ocr/chi_sim.traineddata','c++_shared','leptonica','tesseract_jni','chi_sim','__BEANSTER_OCR_INIT_FAILED__','__BEANSTER_OCR_BUFFER_FAILED__','__BEANSTER_OCR_CHUNK_FAILED__','0']:
         p.st(s)
     # MainActivity constructor
     md_init=MethodDef(m_ma_init,ACC_PUBLIC|ACC_CONSTRUCTOR,1,1,[I('invoke-direct',[0],x_act_init),I('return-void')])
@@ -470,6 +491,40 @@ def make_dex():
     # regs6 params v2=this,v3=path,v4=name,v5=mime
     bp=[I('iput-object',3,2,f_exportpath),I('new-instance',0,INTENT),I('const-string',1,'android.intent.action.CREATE_DOCUMENT'),I('invoke-direct',[0,1],x_int_init),I('const-string',1,'android.intent.category.OPENABLE'),I('invoke-virtual',[0,1],x_addcat),I('invoke-virtual',[0,5],x_settype),I('const-string',1,'android.intent.extra.TITLE'),I('invoke-virtual',[0,1,4],x_putextra_str),I('const/16',1,46),I('invoke-virtual',[2,0,1],x_start),I('return-void')]
     md_exportpath=MethodDef(m_exportpath,ACC_PUBLIC,6,4,bp)
+    # Native OCR bridge. Parameters: grayscale bytes, width, height, page segmentation mode.
+    # regs16 params v11=this,v12=bytes,v13=w,v14=h,v15=psm
+    oc=[
+        # Verify grayscale buffer length equals width*height before JNI.
+        I('array-length',6,12),I('mul-int',7,13,14),I('if-ne',6,7,'ocr_buffer_failed'),
+        # Ensure app-private tessdata exists.
+        I('invoke-virtual',[11],x_getfiles),I('move-result-object',0),I('new-instance',1,FILE),I('const-string',2,'tesseract176'),I('invoke-direct',[1,0,2],x_file_init),I('invoke-virtual',[1],x_mkdirs),
+        I('new-instance',2,FILE),I('const-string',3,'tessdata'),I('invoke-direct',[2,1,3],x_file_init),I('invoke-virtual',[2],x_mkdirs),
+        I('new-instance',3,FILE),I('const-string',4,'chi_sim.traineddata'),I('invoke-direct',[3,2,4],x_file_init),I('invoke-virtual',[3],x_exists),I('move-result',4),I('if-ne',4,4,'ocr_after_copy'),
+        # The previous if-ne is intentionally replaced below after construction; placeholder kept structurally simple.
+    ]
+    # Replace the impossible self-compare with an if-eqz/goto pair.
+    oc=oc[:-1]+[I('if-eqz',4,'ocr_copy'),I('goto/16','ocr_after_copy'),
+        L('ocr_copy'),I('invoke-virtual',[11],x_getassets),I('move-result-object',4),I('const-string',5,'ocr/chi_sim.traineddata'),I('invoke-virtual',[4,5],x_assetopen),I('move-result-object',4),
+        I('new-instance',5,FOS),I('invoke-direct',[5,3],x_fos_init),I('const/16',6,8192),I('new-array',6,6,BYTEARR),
+        L('ocr_copy_loop'),I('invoke-virtual',[4,6],x_read),I('move-result',7),I('if-lez',7,'ocr_copy_done'),I('const/4',8,0),I('invoke-virtual',[5,6,8,7],x_write3),I('goto/16','ocr_copy_loop'),
+        L('ocr_copy_done'),I('invoke-virtual',[4],x_closeis),I('invoke-virtual',[5],x_close),
+        L('ocr_after_copy'),
+        # Tesseract 5.5.0 native Init expects the tessdata directory itself.
+        I('invoke-virtual',[2],x_abspath),I('move-result-object',0),
+        I('const-string',1,'leptonica'),I('invoke-static',[1],x_loadlib),
+        I('const-string',1,'tesseract'),I('invoke-static',[1],x_loadlib),
+        I('const-string',1,'tesseract_jni'),I('invoke-static',[1],x_loadlib),
+        I('new-instance',7,TJNI),I('invoke-direct',[7],t_init_ctor),I('const-string',1,'chi_sim'),I('const/4',2,3),
+        I('invoke-virtual',[7,0,1,2],t_native_init),I('move-result-wide',8),I('const-wide/16',4,0),I('cmp-long',6,8,4),I('if-eqz',6,'ocr_init_failed'),
+        I('invoke-virtual',[7,8,9,15],t_set_psm),
+        # Arrange nativeSetImage receiver + wide handle + args contiguously in v7..v14.
+        I('move-object/from16',10,12),I('move/from16',11,13),I('move/from16',12,14),I('const/4',13,1),I('move/from16',14,11),
+        I('invoke-virtual/range',7,8,t_set_image),
+        I('invoke-virtual',[7,8,9],t_get_text),I('move-result-object',0),I('invoke-virtual',[7,8,9],t_end),I('return-object',0),
+        L('ocr_init_failed'),I('const-string',0,'__BEANSTER_OCR_INIT_FAILED__'),I('return-object',0),
+        L('ocr_buffer_failed'),I('const-string',0,'__BEANSTER_OCR_BUFFER_FAILED__'),I('return-object',0)
+    ]
+    md_ocr=MethodDef(m_ocr,ACC_PUBLIC,16,5,oc)
     # runtime permission callback: after CAMERA is granted, resume the pending camera capture.
     pr=[I('invoke-super',[4,5,6,7],x_superperm),I('const/16',0,61),I('if-ne',5,0,'perm_end'),I('const-string',0,'android.permission.CAMERA'),I('invoke-virtual',[4,0],x_checkperm),I('move-result',0),
         I('const/4',1,0),I('if-ne',0,1,'perm_denied'),I('iget-object',0,4,f_upload),I('if-eqz',0,'perm_end'),I('invoke-virtual',[4],m_launch),I('goto/16','perm_end'),
@@ -507,7 +562,7 @@ def make_dex():
         I('invoke-virtual',[1,5],x_ntitle),I('invoke-virtual',[1,6],x_ntext),I('const/4',2,1),I('invoke-virtual',[1,2],x_nauto),
         I('invoke-virtual',[1],x_nbuild),I('move-result-object',1),I('const/16',2,3001),I('invoke-virtual',[0,2,1],x_nnotify),L('nend'),I('return-void')]
     md_notify=MethodDef(m_notify,ACC_PUBLIC,7,3,sn)
-    c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
+    c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_ocr,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
     d.add_class(c_ma)
     # CoffeeChrome: capture input -> actual system camera with MediaStore EXTRA_OUTPUT; normal input -> system document/photo picker
     ch_init=[I('invoke-direct',[0],x_wcc_init),I('iput-object',1,0,f_ch_act),I('return-void')]
@@ -520,7 +575,19 @@ def make_dex():
     # Reliable image-save bridge. JS calls prompt() synchronously so every base64 chunk reaches native code in order.
     # regs12 params v6=this,v7=wv,v8=url,v9=message,v10=default,v11=result
     jp=[I('invoke-static',[9],x_uriparse),I('move-result-object',0),I('invoke-virtual',[0],x_scheme),I('move-result-object',1),I('const-string',2,'sipsqueak'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_false'),
-        I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'imagebegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_chunk'),
+        # Native OCR begin/chunk/finish. OCR chunks use the URI query path (same proven bridge as image backup),
+        # and every chunk returns the exact native cumulative byte count as an ACK.
+        I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrbegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrchunk'),
+        I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_image),I('const-string',3,'0'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrchunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrchunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrfinish'),
+        I('const-string',3,'data'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('iget-object',4,6,f_ch_act),I('iget-object',2,4,f_image),I('if-eqz',2,'jp_ocrchunk_fail'),I('if-eqz',1,'jp_ocrchunk_fail'),I('const/4',3,0),I('invoke-static',[1,3],x_b64),I('move-result-object',1),I('if-eqz',1,'jp_ocrchunk_fail'),I('invoke-virtual',[2,1],x_baos_write),I('invoke-virtual',[2],x_baos_size),I('move-result',3),I('invoke-static',[3],x_intstr),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrchunk_fail'),I('const-string',3,'__BEANSTER_OCR_CHUNK_FAILED__'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocrfinish'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrfinish'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_imagebegin'),
+        I('const-string',3,'w'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('invoke-static',[1],x_parseint),I('move-result',1),
+        I('const-string',3,'h'),I('invoke-virtual',[0,3],x_query),I('move-result-object',2),I('invoke-static',[2],x_parseint),I('move-result',2),
+        I('const-string',3,'psm'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],x_parseint),I('move-result',3),
+        I('iget-object',4,6,f_ch_act),I('iget-object',5,4,f_image),I('if-eqz',5,'jp_confirm'),I('invoke-virtual',[5],x_baos_toarray),I('move-result-object',5),I('invoke-virtual',[4,5,1,2,3],m_ocr),I('move-result-object',5),I('invoke-virtual',[11,5],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_imagebegin'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'imagebegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_chunk'),
         I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_image),I('const-string',3,''),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_chunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'imagechunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_finish'),
         I('const-string',3,'data'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('iget-object',4,6,f_ch_act),I('iget-object',2,4,f_image),I('if-eqz',2,'jp_confirm'),I('if-eqz',1,'jp_confirm'),I('const/4',3,0),I('invoke-static',[1,3],x_b64),I('move-result-object',1),I('invoke-virtual',[2,1],x_baos_write),I('goto/16','jp_confirm'),
@@ -566,5 +633,14 @@ def make_dex():
         L('false'),I('const/4',0,0),I('return',0)]
     md_cl_url=MethodDef(m_cl_url,ACC_PUBLIC,9,3,cu)
     d.add_class(ClassDef(CL,WVC,ACC_PUBLIC|ACC_SUPER,[md_cl_init],[md_cl_url],[(f_cl_act,ACC_PUBLIC)]))
+    # Minimal Java declaration matching the official AAR JNI symbol names. This avoids dragging Kotlin/coroutines into the custom APK.
+    md_t_ctor=MethodDef(t_init_ctor,ACC_PUBLIC|ACC_CONSTRUCTOR,1,1,[I('invoke-direct',[0],x_obj_init),I('return-void')])
+    native_acc=ACC_PUBLIC|ACC_FINAL|ACC_NATIVE
+    native_methods=[
+        MethodDef(t_native_init,native_acc,0,0,None),MethodDef(t_set_psm,native_acc,0,0,None),MethodDef(t_set_image,native_acc,0,0,None),
+        MethodDef(t_get_text,native_acc,0,0,None),MethodDef(t_get_conf,native_acc,0,0,None),MethodDef(t_get_words,native_acc,0,0,None),
+        MethodDef(t_end,native_acc,0,0,None),MethodDef(t_version,native_acc,0,0,None)
+    ]
+    d.add_class(ClassDef(TJNI,OBJ,ACC_PUBLIC|ACC_FINAL|ACC_SUPER,[md_t_ctor],native_methods,[]))
     return d.build()
 
