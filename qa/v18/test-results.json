@@ -1,0 +1,23 @@
+{
+  "passed": true,
+  "checks": [
+    "empty state",
+    "live gauge",
+    "type/brand/size selectors",
+    "custom brand persistence",
+    "record create/edit/delete/undo",
+    "reload persistence",
+    "monthly totals and tabs",
+    "day navigation and notes",
+    "backdated record",
+    "24 real achievements",
+    "runtime asset loading",
+    "backup data preservation",
+    "duplicate import",
+    "320px layout",
+    "reduced motion",
+    "nested dialog Escape",
+    "photo and source attachment preservation"
+  ],
+  "pageErrors": []
+}

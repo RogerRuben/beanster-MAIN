@@ -19,6 +19,10 @@ local.properties
 *.apk
 *.aab
 *.idsig
+AndroidManifest.xml
+classes.dex
+resources.arsc
+index_packed.html
 
 # Operating system files
 .DS_Store

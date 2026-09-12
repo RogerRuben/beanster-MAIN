@@ -1,0 +1,31 @@
+"""Validate that the APK ships the exact UI source and runtime-only art assets."""
+from pathlib import Path
+import json
+import zipfile
+import sys
+
+ROOT=Path(__file__).resolve().parents[1]
+with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V18.0-unsigned.apk') as z:
+    assert z.testzip() is None
+    names=set(z.namelist())
+    for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css']:
+        assert z.read('assets/'+name)==(ROOT/name).read_bytes(), name
+    html=z.read('assets/index.html').decode('utf-8')
+    assert html==(ROOT/'index_v5.html').read_text(encoding='utf-8')
+    assert 'src="app_v5.js"' in html and 'src="ui_upgrade.js"' in html
+    manifest=json.loads((ROOT/'art/upgrade-v1/manifest.json').read_text(encoding='utf-8'))
+    for asset in manifest['assets']:
+        assert 'assets/art/upgrade-v1/'+asset['png']['2x'] in names, asset['id']
+        if 'animation' in asset:
+            assert 'assets/art/upgrade-v1/'+asset['animation']['webp'] in names, asset['id']
+            path=asset['animation']['webp']
+            assert z.read('assets/art/upgrade-v1/'+path)==(ROOT/'art/upgrade-v1'/path).read_bytes(), asset['id']
+        if asset['category']=='characters':
+            assert asset['animation']['type']=='generated-character-frames', asset['id']
+    assert not any('source-atlases' in n or '/qa/' in n or '@3x' in n for n in names)
+    for lib in ['libleptonica.so','libtesseract.so','libtesseract_jni.so']:
+        assert 'lib/arm64-v8a/'+lib in names, lib
+    assert 'assets/ocr/chi_sim.traineddata' in names
+    binary_manifest=z.read('AndroidManifest.xml')
+    assert b'com.beanstersips.v11' in binary_manifest and b'18.0' in binary_manifest
+    print(f'PASS: APK entrypoint, {len(manifest["assets"])} PNG assets, animation assets, native OCR and package identity.')

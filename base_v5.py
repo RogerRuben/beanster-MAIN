@@ -2,7 +2,7 @@ import os, struct, hashlib, zlib, zipfile, textwrap, json, html
 from dataclasses import dataclass
 from pathlib import Path
 
-OUT = Path('/mnt/data/CoffeeLogAndroidV3')
+OUT = Path(__file__).resolve().parent
 OUT.mkdir(parents=True, exist_ok=True)
 
 # --------------------- helpers ---------------------
@@ -643,4 +643,3 @@ def make_dex():
     ]
     d.add_class(ClassDef(TJNI,OBJ,ACC_PUBLIC|ACC_FINAL|ACC_SUPER,[md_t_ctor],native_methods,[]))
     return d.build()
-

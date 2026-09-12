@@ -1,0 +1,673 @@
+{
+  "assetCount": 96,
+  "animationCount": 27,
+  "pngScales": [
+    1,
+    2,
+    3
+  ],
+  "checks": [
+    {
+      "id": "character_coffee",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "208bf1784754ac554ecc094f578addf68e856568dba34b760e2a932e8432932a",
+      "gifFrames": 5,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_burger",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b8aa557f01131cc5bdb6be932abdca88642f3a25dc3f6a862e7a383dbe6ea315",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_first_cup",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "9e80b9ed8893330c6a87b8ee79c36762e0d91167709599982b64ffdce3bad109",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_recording",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "554c8a573d3659665f2c5045f1ab71543663544c72455a6c5e2eb7e327a481e0",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_late_night",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "fadb9eba588c2d23b1759745a3a6f5d878120ed243632a50a6ff686c19cfb18f",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_goal",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "ee86ab62bc206400a75766bb226c7b761e3bacceaaf2f9f6a7238839cf9ad751",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_takeaway",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b71d36cd89061896d61e8a50825b251393dd5cbe1ebe1f9d6d4147b608385184",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_monthly",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "122bc18e5e4a9a538d260cfad1751bea99d748d58bc2401a7e7b9040f8141e2e",
+      "gifFrames": 5,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_idle",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b957a83473f9650bfb34d57cb39902bea40025ca03605775ab01c60111d06a38",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "character_wave",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "0257e076c2a45a51a0fe5e0bd4c434e0b28791846029f1a69425a6d575d8300b",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "portrait_happy",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "916aa073fcb77beb5fdbda267be37ed818208c5c694f79db2438927075370fbd",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "portrait_calm",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "ebf3030440c4a78d33ec37537de46cad722b064da8f8ca89ef1474ccdd72e7f4",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "portrait_sleepy",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "67ee1a8c1b4c185b1b9452a0e17f2b638b415f7c126312139e5b536e8c27e753",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "portrait_excited",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "8c1c8cdaf42503906d50d2c3e56f3374d4ce8fb4e1ea95629c30e219676d545c",
+      "gifFrames": 6,
+      "distinctFrames": 6,
+      "gifTransparent": true
+    },
+    {
+      "id": "stamp_1",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "868318f91d80144bee00fc01c136439394dbbad76927e397fafec2f250b8ee45"
+    },
+    {
+      "id": "stamp_2",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "95c749991cc9feb17da17eb7e360eb6e1c2c535d0dd9b265eba1dd428e843531"
+    },
+    {
+      "id": "stamp_3",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "564c90bf06034593d2752c7c1094e4adab869d3e89b3a27502c11ea35b2b4e12"
+    },
+    {
+      "id": "stamp_4plus",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "48ffed4bf54bb44b657527f83c2c3e5ce02af049bfaf2cb6c59d00bcba2afeee"
+    },
+    {
+      "id": "stamp_over",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7ad67183c79ec51026118ef35abeebf49a0c593c5c9b3612c4be62caa7108510"
+    },
+    {
+      "id": "achievement_first_cup",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b6f589fcfeaebf56ddb54880ac037aeefe06cb78e948e377857f6d73aa4182b4"
+    },
+    {
+      "id": "achievement_week",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "0914ef391548cbe940fab1399aef6acd5ec8ad070998aa32690f6ed0e1a59d28"
+    },
+    {
+      "id": "achievement_month",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "1c213ec005d157b522183e0f7c0c0fc40d31dc7068910a382e7492f00f5d0cd3"
+    },
+    {
+      "id": "achievement_expert",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "80963b4db5acd19a8292476db101e3eb96914b7da3dfa8186479ffc063ce5a95"
+    },
+    {
+      "id": "achievement_night",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "db5c48f682f1051c265e4e59f72b03f49ac7119d821d50dac78fe64498b3b0e3"
+    },
+    {
+      "id": "achievement_morning",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7583773841835343420faa66bcea346112b2227b3cf78d3b91387be3e3ce5b24"
+    },
+    {
+      "id": "sticker_recorded",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "97898c060e6f7a6fb27ecab30d84df6826f854ff8cb13e72537cd455e9de3f93",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "sticker_done",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3efbf49e544885f5beb4cd662421d591ca49f599021c1ce1cb6a1dc238b13645",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "sticker_cheer",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "38965b51daa97f9378a3c9bcd6b0772c0438a9688e4e514af2a9baaa54db68b2",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "sticker_sleep",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "167b2c34aaf3082a86f0929a3a53906ee895dc51a74369e0e4ee6581ccd0a0b6",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "sticker_good",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "f127d6ce142a6a27b796f392fdfc1a523405937aeafd90e05157ecd9c17a66da",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "sticker_goal",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "d51b6ee05eccde1ecb0b8e04659cc90a00af2803e328dcd05b4c8580dd6c0c0f",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "locked_week",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7fb74526dac94aee540b43d1b221f5262b380fb3e080927429c91f9d71e54425"
+    },
+    {
+      "id": "locked_month",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "43d25fef99d98ff3abc1ae39ee7f7b83ea9a5a24f16b0585d99996c5c7674c65"
+    },
+    {
+      "id": "locked_expert",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3527dfb81a9dc86d7ecfe0f74753462857ec711c27931b0a3504308417f8a50b"
+    },
+    {
+      "id": "drink_latte",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "84455cfdd1a323f3db8ffda3f43a49c038a526132889a7404f61471535ccaebb"
+    },
+    {
+      "id": "drink_americano",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "f83cfde30305e0e12995105911ac4fa4dbfb83d4770014f15549cc8021c05b2b"
+    },
+    {
+      "id": "drink_cold_brew",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "82f244cb4a644f6730a47125411fc6db24e75fdbf8a36cffcd7e24b0aaf7b491"
+    },
+    {
+      "id": "drink_cappuccino",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "84611f8930dc6287fb9fdc7c6a70b5fa13d85d7421c56a6ce4f26cd9c05a8727"
+    },
+    {
+      "id": "drink_mocha",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "8fdcc5caf691e1d83483458a8c6f10dc2a2390c363814089355a0e1766f85d4e"
+    },
+    {
+      "id": "drink_coconut_latte",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "708251e9b7035ec362f31797faeb87337c059d3a03b82fb1baa7c50e3e283acf"
+    },
+    {
+      "id": "drink_iced_americano",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "99edf9eb0766b8dc418cbfb50316e4a53cbe5718073ae1be7ecc53af42117383"
+    },
+    {
+      "id": "drink_pour_over",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "cff883638e6452af9bc5c3d91e9a1fe43a42c1e04bfc80891e1f8f647637b792"
+    },
+    {
+      "id": "cup_small",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "00898b2fa275067b8e5bc506c994bc1ff8432f1ae60b00d941a64f7e18dc7521"
+    },
+    {
+      "id": "cup_medium",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "e718b84814db59d54da1f4da7af5c44364988abbb2f6c4043d1f43b45620d0be"
+    },
+    {
+      "id": "cup_large",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "02fb92998f73d71d366392b09c9d36c955c4f831165c938b0bf51ae383c37120"
+    },
+    {
+      "id": "cup_extra_large",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "5a6d517587a9ef825d0ec1de307d664f7ea43986a24ad130d39619266e435b3e"
+    },
+    {
+      "id": "cup_custom",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7548c556d251d41917a4063376ff248ddb5a2e13125fb678e170244954aa08fe"
+    },
+    {
+      "id": "icon_caffeine",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "66b5c115b1c9386498e2012c3d64ec430730cb536eb0a1ef0df498e55e79e60a"
+    },
+    {
+      "id": "icon_calories",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "73869eba89e978516e119f94025e9e4fa13781b8635271ae0aa01653a4358b12"
+    },
+    {
+      "id": "icon_cost",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "57a2eb4e4eefca4ff9f35e4bf09533c4ea21f34e53af49e110b4ecf3dc05e0bd"
+    },
+    {
+      "id": "icon_time",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b74a2eacbe50535986ec58a5b05c6f657e718977ca42082f5bec4203eb51f39a"
+    },
+    {
+      "id": "icon_brand",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "eda9ca3a25f7a6fbe4f042591b885983d578f62dc4740c704e3e8ea8dcc356af"
+    },
+    {
+      "id": "icon_cups",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "e76806352217330a90582f61f4510bc58f1324209161dc98c2798761c2edffa4"
+    },
+    {
+      "id": "icon_sleep",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3d85dfe18095b39a685380fcabd8b627733f3a38faa5b01194561c27cd9f909c"
+    },
+    {
+      "id": "icon_goal",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "f16646ba0e7bcb5c27b2ec615c1073c2d4f772a5bdb55fb5da6a85f67c427f66"
+    },
+    {
+      "id": "icon_note",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "9c2e88ae2d54f80595ff67b128fd2ef59662171052001cd94e16a8edf4d48020"
+    },
+    {
+      "id": "icon_camera",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "fbf7f3097eb9242d10552b8742faa0eb6492211d3a97fa9919f623b7ddfc9bf5"
+    },
+    {
+      "id": "icon_add",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "bfa1f63482ca36e54e20be1b854142aa6837bfb1c9533630420469c46897d803"
+    },
+    {
+      "id": "icon_edit",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "1f8322ce5806e62d8c737d7229b5a5336204ad2916f35a33ec17b9928eeb783a"
+    },
+    {
+      "id": "icon_delete",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "cca92e152075314a450a9d3378467d44a268db49ea63624a0648c96529ba6e25"
+    },
+    {
+      "id": "icon_share",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "1302956b7cd825f9722b00d55fc86ce75a19f6266b2e8d70649f499742ab09e4"
+    },
+    {
+      "id": "icon_filter",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "1fd3252058ca81b554a2f51d61645ea7935ab5c0d0398140f2678a5d101a4a9f"
+    },
+    {
+      "id": "icon_calendar",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b98ea0ced2ebdbf8f58f5ffa2bb161951c8b9360b446c545827cfe36ced76f25"
+    },
+    {
+      "id": "icon_monthly",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "9661beffb555d1c53e966c4c6b68380f3904dba6c88af20c89b48a3c238aabba"
+    },
+    {
+      "id": "icon_achievement",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "d92379c612de736e50129e41cc45a9b1021d37b812d8ac530a0a62f9bcb8354e"
+    },
+    {
+      "id": "icon_settings",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b21f1ce1a3883736adfe198607ecacce992ff736b97ae10a2dd325a928e25f2f"
+    },
+    {
+      "id": "icon_back",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7b1dc9fb2aadd7efb25fc6fd014e96a4b2f501bef0dae9740b47d82f62b91c9a"
+    },
+    {
+      "id": "icon_more",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "bc3a7c5e519d61efd0c829600de45fdcd8db300d3ca86e23ec3c43032f6bdd28"
+    },
+    {
+      "id": "detail_beans",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "2cc22ab8b9eb2bcee9c65470e05842a6d12fbd8884ee95a2f713da6a4f38408f"
+    },
+    {
+      "id": "detail_sparkles",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "e0550f68be575de34360c0b5f13dd14b428be30e30b56eca6cdc6cb2382180ae"
+    },
+    {
+      "id": "empty_no_coffee",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "4f56df38069e4d97bff9d1a9441781a26ebe376b6d70845e612ea37491a27382",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "empty_goal",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "6f3347a1503e1fe3ee0384e6bfb407b581e3b9430df9c469f557a17cb92e6420",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "empty_first_record",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "5c0824184f7ee18ee6775819837e3021adcbe984479d0efe9b0548d19219eadd",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "empty_rest",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "5d34770ca7accfbc8b176f1ef004f9041fe437b6fe14edc9aada4ce731935403",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "detail_paw",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b2a0e45e7cba88414585545c3e70abca3ce529bdc7815659eea203444156634b"
+    },
+    {
+      "id": "detail_trend_arrows",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "06e259f6cb71adff44751e1b7b8605f47dab7526cf9511f242e4e05cf55ff80e"
+    },
+    {
+      "id": "deco_bean_dark",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "ddf0766db7b389592eb860bfd261a0c766e7c9883d3bb1c46bef65c4cf3cd8c7"
+    },
+    {
+      "id": "deco_bean_medium",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "f41436d8706f911cafc85b2b6b448796f0136f056ba4ece365a36872a3fdcb43"
+    },
+    {
+      "id": "deco_bean_light",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3be510baaebbd42ecd2c84b5ddd67ae81a149f65a321115d45e922b5a41e7656"
+    },
+    {
+      "id": "deco_bean_green",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "7640d70a39f21b020172735a423b4c9f8500a6d0abab559da3acfaf2ba1cbec8"
+    },
+    {
+      "id": "deco_bean_pair",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "99605cc594b454a5d55bb12eded211351935c771b1b7f1ca9165d3bf4cab000a"
+    },
+    {
+      "id": "deco_steam",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "edf601dcd4eb18702bbfc5b0b08f6d1ac77576391f97e022afb8c0fbdb058b5c"
+    },
+    {
+      "id": "deco_sparkles",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3898363a4afe7d98aad218113eb783c28090b94c2e43f534f3d0fc05b257b3e0"
+    },
+    {
+      "id": "deco_paw_orange",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "f203dbae765c3c736afe97f2bfebd3c08f7b0474d3f55f76389965a3d637d1b1"
+    },
+    {
+      "id": "deco_paw_beige",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "6e2e203442fd78e2576c4f4710ae3260915ea07d9262ef35d60e9e4d181b54b5"
+    },
+    {
+      "id": "deco_stars",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "8b2c0dba06bead1e5f66c7188b692fb2eae224c609f37f0ca2763a203544b740"
+    },
+    {
+      "id": "deco_hearts",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "479b2b63278b73062e691c4ed82718323401fbb1514f803207fa4cd4083da10a"
+    },
+    {
+      "id": "deco_glints",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "8ed2cfa732556998d4e099feb705769681a506d8c37edcb4246e2db46599dd6b"
+    },
+    {
+      "id": "deco_leaves",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "5b4d38266ed92196b521428a808c726678c730cd3b9fc3737d47702fd40a9127"
+    },
+    {
+      "id": "deco_flowers",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "b3f82f39a15f561ef024e35ba3d78ebdb3987822a118007c128ac3dfb41c8c8b"
+    },
+    {
+      "id": "deco_bow",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "bd552e7c62092e32d0bd5eb834be4d53a924ffe6599b867cb219b5bb036d4a8d"
+    },
+    {
+      "id": "deco_bunting",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "a65047675ae141f6414035aa5b1a7d91248fc0a55b8e5beec3201a695669ca39"
+    },
+    {
+      "id": "deco_confetti",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "c98ca9cda40ca89c59f86187b834279bb256da0012a3ec55dfecff653dfd61a4"
+    },
+    {
+      "id": "label_add_cup",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "3805b9b795c9350797e02af195e475bc42742c8a70ac5bb84ef3f58335254de7",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "label_success",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "48112e69d889923320a81056b3635c6dd61de31b5e0c440d6dfdf3296a408886",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    },
+    {
+      "id": "label_keep_going",
+      "alpha": true,
+      "clearBorder": true,
+      "sha256": "ba16fb49a427f4ca2d575eeca577dd0a082544ec64c5e193a3c3120c3e3fafa6",
+      "gifFrames": 9,
+      "distinctFrames": 5,
+      "gifTransparent": true
+    }
+  ],
+  "notes": [
+    "GIF uses binary transparency; use PNG frames or lossless WebP for soft alpha edges.",
+    "Ten characters and four portraits use generated sequential poses; stickers, empty states and labels use UI float motion.",
+    "Export scaling does not add detail beyond the source atlas."
+  ]
+}
