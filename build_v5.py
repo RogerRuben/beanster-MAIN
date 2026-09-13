@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='18.2'
-VERSION_CODE=43
+APP_VERSION='18.3'
+VERSION_CODE=44
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -84,6 +84,9 @@ def main():
     parser.add_argument('--java',default='java',help='Java 17+ executable with source launcher support.')
     args=parser.parse_args()
     ks=None if args.unsigned else Path(args.keystore) if args.apksig and args.keystore else ensure_key(args.keystore)
+    import json
+    for name,digest in json.loads((OUT/'vision/checksums.json').read_text()).items():
+        if hashlib.sha256((OUT/name).read_bytes()).hexdigest()!=digest:raise ValueError('Unexpected vision dependency: '+name)
     html=(OUT/'index_v5.html').read_text(encoding='utf-8')
     for script in ['app_v5.js','ui_upgrade.js']:
         if f'src="{script}"' not in html: raise ValueError(f'Entrypoint must reference current {script}')
@@ -102,7 +105,7 @@ def main():
         z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js']:
             z.write(OUT/name,'assets/'+name)
         art_root=OUT/'art'/'upgrade-v1'
         # Runtime formats only. Do not ship source atlases, QA previews or GIF duplicates.
@@ -124,6 +127,13 @@ def main():
             for n in az.namelist():
                 if n.startswith('jni/arm64-v8a/') and n.endswith('.so'):
                     z.writestr('lib/arm64-v8a/'+Path(n).name,az.read(n),compress_type=zipfile.ZIP_DEFLATED)
+        for asset in (OUT/'vision').iterdir():
+            if asset.is_file():z.write(asset,'assets/vision/'+asset.name)
+        for aar in (OUT/'vendor/vision').glob('*.aar'):
+            with zipfile.ZipFile(aar) as az:
+                for name in az.namelist():
+                    if name.startswith('jni/arm64-v8a/') and name.endswith('.so'):
+                        z.writestr('lib/arm64-v8a/'+Path(name).name,az.read(name))
         z.writestr('assets/index.html',html.encode('utf-8'))
     final=unsigned
     if not args.unsigned:

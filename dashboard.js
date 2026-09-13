@@ -1,0 +1,25 @@
+/* Custom dashboards share Motion's one-player lifecycle. */
+const Dashboard={styles:{ring:'统计圆环',cup:'经典咖啡杯',number:'简洁数字',bar:'刻度进度'},colors:{coffee:['咖啡棕','#805036','#c99363'],caramel:['焦糖金','#9a631d','#e6b969'],forest:['森林绿','#356554','#83ad91']},
+  config(){return {style:this.styles[settings.dashboardStyle]?settings.dashboardStyle:'ring',color:this.colors[settings.dashboardColor]?settings.dashboardColor:'coffee',mascot:settings.dashboardMascot!==false}},
+  stats(){const value=Math.round(sum(dayRecords(),'caffeine')),limit=Math.max(1,Number(settings.dailyLimit)||400);return {value,limit,fill:clamp(value/limit,0,1),remaining:Math.max(0,limit-value),over:Math.max(0,value-limit)}},
+  render(){const hero=document.querySelector('.u-hero');if(!hero)return;const c=this.config(),s=this.stats(),colors=this.colors[c.color];hero.dataset.dashboardStyle=c.style;hero.style.setProperty('--dash-main',colors[1]);hero.style.setProperty('--dash-light',colors[2]);
+    const mascot=hero.querySelector('.u-home-mascot');if(mascot&&!c.mascot)mascot.remove();hero.classList.toggle('u-no-mascot',!c.mascot);
+    if(c.style!=='ring'){const gauge=hero.querySelector('.u-gauge'),copy=`<strong>${s.value}<small> mg</small></strong><span>${s.over?'超出日上限':'日上限剩余'} <b>${s.over||s.remaining} mg</b></span>`;
+      if(c.style==='cup')gauge.outerHTML=`<button class="u-dashboard-cup" data-dashboard="cup" data-fill="${s.fill}" aria-label="今日 ${s.value} 毫克，点击播放咖啡灌注"><div class="u-cup-glass"><div class="u-cup-liquid" style="height:${s.fill*100}%"><i class="u-cup-surface"></i><i class="u-cup-bubble b-one"></i><i class="u-cup-bubble b-two"></i><i class="u-cup-bubble b-three"></i></div><div class="u-cup-reading"><b>${s.value}</b><span>mg</span></div></div><div class="u-cup-saucer"></div><p>${s.over?'超出':'剩余'} ${s.over||s.remaining} mg</p></button>`;
+      else if(c.style==='number')gauge.outerHTML=`<div class="u-dashboard-number"><small>今日咖啡因</small>${copy}<em>日上限 ${s.limit} mg</em></div>`;
+      else gauge.outerHTML=`<div class="u-dashboard-bar"><small>今日摄入</small>${copy}<div class="u-dash-track"><i style="width:${s.fill*100}%"></i></div><div class="u-dash-scale"><span>0</span><span>${Math.round(s.limit/2)}</span><span>${s.limit} mg</span></div></div>`;
+    }
+    if(!document.getElementById('uDashboardCustomize'))hero.insertAdjacentHTML('afterend','<button class="u-text-btn u-dashboard-customize" id="uDashboardCustomize" onclick="Dashboard.open()">自定义仪表盘</button>');
+  },
+  mini(style){return style==='cup'?'<i class="u-mini-cup"></i>':style==='ring'?'<i class="u-mini-ring"></i>':style==='bar'?'<i class="u-mini-bar"></i>':'<strong class="u-mini-number">160<small> mg</small></strong>'},
+  open(){const c=this.config();UI.overlay('uDashboard','自定义仪表盘',`<div class="u-dashboard-options">${Object.entries(this.styles).map(([id,label])=>`<button class="u-dashboard-option ${id===c.style?'selected':''}" aria-pressed="${id===c.style}" onclick="Dashboard.set('style','${id}')">${this.mini(id)}<b>${label}</b></button>`).join('')}</div><div class="u-dashboard-prefs"><h3>配色</h3><div class="u-dashboard-colors">${Object.entries(this.colors).map(([id,a])=>`<button aria-pressed="${id===c.color}" style="--swatch:${a[1]}" onclick="Dashboard.set('color','${id}')"><i></i>${a[0]}${id===c.color?' ✓':''}</button>`).join('')}</div><label><input type="checkbox" ${c.mascot?'checked':''} onchange="Dashboard.set('mascot',this.checked)"> 显示仪表盘旁的仓鼠</label><p>咖啡杯进入时灌注一次，点击可重播。气泡和仓鼠不会同时播放。</p><button class="primary" onclick="UI.closeOverlay('uDashboard')">完成</button></div>`);},
+  set(key,value){if(key==='style'&&!this.styles[value]||key==='color'&&!this.colors[value])return;settings[{style:'dashboardStyle',color:'dashboardColor',mascot:'dashboardMascot'}[key]]=value;persist();renderToday();this.open()},
+  play(el){Motion.stop();if(!el?.isConnected||matchMedia('(prefers-reduced-motion: reduce)').matches||Number(el.dataset.fill)<=0)return;const token=Motion.token,start=performance.now();Motion.active=el;el.dataset.playing='true';el.classList.add('u-pouring');const tick=now=>{if(token!==Motion.token)return;if(!el.isConnected||document.hidden||now-start>=2100){Motion.stop();return}Motion.raf=requestAnimationFrame(tick)};Motion.raf=requestAnimationFrame(tick)}
+};
+const dashboardToday=renderToday;renderToday=function(){dashboardToday();Dashboard.render()};
+const dashboardSettings=renderSettings;renderSettings=function(){dashboardSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="Dashboard.open()"><span><b>首页仪表盘</b><small>咖啡杯、圆环、数字与刻度，自由搭配</small></span>'+UI.arrow()+'</button>')};
+const dashboardMotionPlay=Motion.play.bind(Motion),dashboardMotionStop=Motion.stop.bind(Motion);
+Motion.play=function(el){return el?.dataset.dashboard?Dashboard.play(el):dashboardMotionPlay(el)};
+Motion.stop=function(){this.active?.classList.remove('u-pouring');dashboardMotionStop()};
+document.addEventListener('click',e=>{const el=e.target.closest('[data-dashboard]');if(el){e.preventDefault();e.stopPropagation();Motion.play(el)}},true);
+renderToday();Motion.scope=null;Motion.sync();

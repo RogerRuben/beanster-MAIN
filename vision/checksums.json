@@ -1,0 +1,6 @@
+{
+  "vision/mobilenet_v1_224_quant.tflite": "ecc3a67c47c5a609ec35f6a58a7d97532834e43df4cb7d3f1204a8164b7d20dd",
+  "vision/labels.txt": "536feacc519de3d418de26b2effb4d75694a8c4c0063e36499a46fa8061e2da9",
+  "vendor/vision/tensorflow-lite-2.16.1.aar": "34b065817e294e7dd3569504e8b9454938ceae453b6a459da54d5f6e45d3c94e",
+  "vendor/vision/tensorflow-lite-api-2.16.1.aar": "885b95bc9e47a4aa5cf8e71523aed9b05e397cfef1ea09773f13fea8b649fcee"
+}

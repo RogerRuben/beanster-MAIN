@@ -104,7 +104,9 @@ smartMediaChanged=async function(e){
     if(screen){draftPhoto=null;draftSourceAttachment=makeSourceAttachment(im,file,raw);draftKeepSource=true;draftSmartKind='document';}
     else{draftPhoto=makePhotoVersions(im,file,raw);draftPhoto.nativePath='';if(settings.photoQuality!=='compressed')draftPhoto._rawOriginal=raw;draftSourceKind='photo';draftSmartKind='photo';}
     // Never infer a drink category from color or texture when no readable product is present.
-    await ocrSmartSource(file,screen?'document':'label',im);
+    const pending=ocrSmartSource(file,screen?'document':'label',im),readGeneration=Reader.generation;
+    const got=await pending;
+    if(!screen&&readGeneration===Reader.generation&&!got?.result?.productName&&typeof LocalVision!=='undefined')await LocalVision.offer(im,readGeneration);
   }catch(error){notify('无法读取这张图片',true)}
 };
 $('fCamera').onchange=smartMediaChanged;$('fGallery').onchange=smartMediaChanged;

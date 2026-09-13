@@ -1,0 +1,12 @@
+{
+  "passed": true,
+  "checks": [
+    "four dashboard choices; cup one-shot; cup and mascot mutually exclusive",
+    "style color and mascot preference persist",
+    "bar handles zero configured limit",
+    "reduced motion stops cup animation",
+    "native classification evidence gate rejects strong non-drink and weak matches",
+    "OCR miss offers native vision suggestions; OCR hit skips vision; no silent field changes",
+    "visual choice requires confirmation before replacing a name"
+  ]
+}

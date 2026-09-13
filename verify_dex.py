@@ -63,3 +63,10 @@ if b'AppNav.back' in d:
  assert ('Landroid/webkit/WebView;','evaluateJavascript') in back_calls
  assert ('Landroid/app/Activity;','moveTaskToBack') in prompt_calls
  print('DEX_BACK_DISPATCH=PASS: native Back enters app navigation, root can background task')
+
+with zipfile.ZipFile(apk) as z:
+ if 'assets/vision/mobilenet_v1_224_quant.tflite' in z.namelist():
+  for method in ['start','poll','cancel','capabilities']:
+   assert ('Lcom/beanster/bridge/NativeVision;',method) in prompt_calls,method
+  assert b'Lcom/beanster/bridge/NativeVision;' in z.read('classes2.dex')
+  print('DEX_VISION_DISPATCH=PASS: independent native RGB transfer and bundled interpreter')

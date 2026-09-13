@@ -391,6 +391,13 @@ def make_dex():
     r_poll=p.method(READER,'poll',STR,(STR,))
     r_cancel=p.method(READER,'cancel',STR,(STR,))
     r_caps=p.method(READER,'capabilities',STR,())
+    VISION='Lcom/beanster/bridge/NativeVision;'
+    v_start=p.method(VISION,'start',STR,(OBJ,BYTEARR,STR))
+    v_poll=p.method(VISION,'poll',STR,(STR,))
+    v_cancel=p.method(VISION,'cancel',STR,(STR,))
+    v_caps=p.method(VISION,'capabilities',STR,())
+    f_vision_image=p.field(MA,'pendingVisionImage',BAOS)
+    for name in ['visionbegin','visionchunk','visionfinish','visioncapabilities','visionpoll','visioncancel']:p.st(name)
     f_webview=p.field(MA,'webView',WV)
     m_back=p.method(MA,'onBackPressed','V',())
     x_evaluate=p.method(WV,'evaluateJavascript','V',(STR,VC))
@@ -578,6 +585,7 @@ def make_dex():
     md_notify=MethodDef(m_notify,ACC_PUBLIC,7,3,sn)
     c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_back,md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_ocr,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
     c_ma.fields.append((f_ocr_image,ACC_PUBLIC))
+    c_ma.fields.append((f_vision_image,ACC_PUBLIC))
     c_ma.fields.append((f_webview,ACC_PUBLIC))
     d.add_class(c_ma)
     # CoffeeChrome: capture input -> actual system camera with MediaStore EXTRA_OUTPUT; normal input -> system document/photo picker
@@ -594,6 +602,22 @@ def make_dex():
         I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'background'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_reader'),I('iget-object',4,6,f_ch_act),I('const/4',2,1),I('invoke-virtual',[4,2],x_background),I('goto/16','jp_confirm'),L('jp_reader'),
         # Native OCR begin/chunk/finish. OCR chunks use the URI query path (same proven bridge as image backup),
         # and every chunk returns the exact native cumulative byte count as an ACK.
+        I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visionbegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_visionchunk'),
+        I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_vision_image),I('const-string',3,'0'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visionchunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visionchunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_visionfinish'),
+        I('const-string',3,'data'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),I('iget-object',4,6,f_ch_act),I('iget-object',2,4,f_vision_image),I('if-eqz',2,'jp_visionchunk_fail'),I('if-eqz',1,'jp_visionchunk_fail'),I('const/4',3,0),I('invoke-static',[1,3],x_b64),I('move-result-object',1),I('if-eqz',1,'jp_visionchunk_fail'),I('invoke-virtual',[2,1],x_baos_write),I('invoke-virtual',[2],x_baos_size),I('move-result',3),I('invoke-static',[3],x_intstr),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visionchunk_fail'),I('const-string',3,'__BEANSTER_OCR_CHUNK_FAILED__'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visionfinish'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visionfinish'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_visioncaps'),
+        I('const-string',3,'meta'),I('invoke-virtual',[0,3],x_query),I('move-result-object',1),
+        I('iget-object',4,6,f_ch_act),I('iget-object',5,4,f_vision_image),I('if-eqz',5,'jp_confirm'),I('invoke-virtual',[5],x_baos_toarray),I('move-result-object',5),
+        I('const/4',2,0),I('iput-object',2,4,f_vision_image),I('invoke-static',[4,5,1],v_start),I('move-result-object',5),I('invoke-virtual',[11,5],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visioncaps'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visioncapabilities'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_visionpoll'),
+        I('invoke-static',[],v_caps),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visionpoll'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visionpoll'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_visioncancel'),
+        I('const-string',3,'id'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],v_poll),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_visioncancel'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'visioncancel'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocr_entry'),
+        I('const-string',3,'id'),I('invoke-virtual',[0,3],x_query),I('move-result-object',3),I('invoke-static',[3],v_cancel),I('move-result-object',3),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
+        L('jp_ocr_entry'),
         I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrbegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrchunk'),
         I('iget-object',4,6,f_ch_act),I('new-instance',2,BAOS),I('invoke-direct',[2],x_baos_init),I('iput-object',2,4,f_ocr_image),I('const-string',3,'0'),I('invoke-virtual',[11,3],x_prompt_confirm),I('const/4',0,1),I('return',0),
         L('jp_ocrchunk'),I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrchunk'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrfinish'),
