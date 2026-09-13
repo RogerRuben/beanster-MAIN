@@ -10,7 +10,7 @@
     "old backups preserve local edits and distinct IDs; original photos, attachments and corrections restored",
     "shot count respected independent of milk volume and brand",
     "entire order including middle preserved",
-    "cancelled and stale reads do not overwrite edits; at most two attempts",
+    "cancelled and stale reads do not overwrite edits; one full-document pass",
     "cancel during grayscale conversion never enters native transfer",
     "replacement photo native-save failure preserves new original in IndexedDB, never old path"
   ],
@@ -30,7 +30,7 @@
       ],
       [
         "冰美式",
-        "冰美式"
+        "美式"
       ],
       [
         "Dirty",
@@ -74,7 +74,7 @@
       ],
       [
         "拿铁\n大杯 450ml",
-        "拿铁大"
+        "拿铁"
       ],
       [
         "Manner\n拿铁",

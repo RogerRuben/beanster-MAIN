@@ -5,40 +5,22 @@ import java.lang.reflect.*;
 import java.util.concurrent.*;
 import java.util.concurrent.atomic.AtomicBoolean;
 
-/** Asynchronous, offline Tesseract bridge. No Android UI work on the reader thread. */
+/** Asynchronous, offline PP-OCRv5 bridge. No Android UI work on the reader thread. */
 public final class NativeReader {
     private static final ExecutorService WORKER=Executors.newSingleThreadExecutor();
     private static final AtomicBoolean BUSY=new AtomicBoolean();
     private static final ConcurrentHashMap<String,String> RESULTS=new ConcurrentHashMap<>();
-    private static Object engine;
-    private static Class<?> api;
-    private static long handle;
-    private static String version="";
+    private static PaddleReader engine;
     public static String capabilities(){return "native-async-1";}
-    private static Object call(Object o,String name,Class<?>[] types,Object... args) throws Exception {
-        return o.getClass().getMethod(name,types).invoke(o,args);
-    }
-    private static synchronized void initialize(Object activity) throws Exception {
-        if(handle!=0)return;
-        File files=(File)call(activity,"getFilesDir",new Class<?>[0]);
-        File dir=new File(files,"reader181/tessdata");
-        if(!dir.isDirectory()&&!dir.mkdirs())throw new IOException("data-directory");
-        File data=new File(dir,"chi_sim.traineddata");
-        if(!data.isFile()){
-            Object assets=call(activity,"getAssets",new Class<?>[0]);
-            File temp=new File(dir,"chi_sim.tmp");
-            try(InputStream in=(InputStream)call(assets,"open",new Class<?>[]{String.class},"ocr/chi_sim.traineddata");
-                OutputStream out=new FileOutputStream(temp)){
-                byte[] block=new byte[65536];int n;while((n=in.read(block))!=-1)out.write(block,0,n);
+    private static synchronized void initialize(final Object activity) throws Exception {
+        if(engine!=null)return;
+        engine=new PaddleReader(name->{
+            Object assets=activity.getClass().getMethod("getAssets").invoke(activity);
+            try(InputStream in=(InputStream)assets.getClass().getMethod("open",String.class).invoke(assets,name);
+                ByteArrayOutputStream out=new ByteArrayOutputStream()){
+                byte[] chunk=new byte[65536];int n;while((n=in.read(chunk))!=-1)out.write(chunk,0,n);return out.toByteArray();
             }
-            if(!temp.renameTo(data))throw new IOException("data-copy");
-        }
-        System.loadLibrary("c++_shared");System.loadLibrary("leptonica");System.loadLibrary("tesseract");System.loadLibrary("tesseract_jni");
-        api=Class.forName("dev.ffmpegkit.tesseract.TesseractJNI");
-        engine=api.getConstructor().newInstance();
-        handle=(Long)api.getMethod("nativeInit",String.class,String.class,int.class).invoke(engine,dir.getAbsolutePath(),"chi_sim",1);
-        if(handle==0)throw new IOException("reader-init");
-        version=String.valueOf(api.getMethod("nativeGetVersion").invoke(engine));
+        });
     }
     public static String start(final Object activity,final byte[] pixels,String metadata){
         try {
@@ -53,16 +35,21 @@ public final class NativeReader {
                 long started=System.nanoTime();String result;
                 try{
                     initialize(activity);
-                    api.getMethod("nativeSetPageSegMode",long.class,int.class).invoke(engine,handle,psm);
-                    api.getMethod("nativeSetImage",long.class,byte[].class,int.class,int.class,int.class,int.class)
-                        .invoke(engine,handle,pixels,w,h,1,w);
-                    String text=String.valueOf(api.getMethod("nativeGetUTF8Text",long.class).invoke(engine,handle));
-                    result="{\"status\":\"done\",\"text\":"+quote(text)+",\"engine\":"+quote("Tesseract "+version)+
-                        ",\"elapsedMs\":"+((System.nanoTime()-started)/1000000)+"}";
+                    java.util.List<PaddleReader.Line> lines=engine.read(pixels,w,h,()->{
+                        if(!RESULTS.containsKey(id))throw new InterruptedException("cancelled");
+                        if((System.nanoTime()-started)/1000000>22000)throw new InterruptedException("timeout");
+                    });
+                    StringBuilder text=new StringBuilder(),items=new StringBuilder("[");
+                    for(PaddleReader.Line line:lines){
+                        if(text.length()>0)text.append('\n');text.append(line.text);
+                        if(items.length()>1)items.append(',');
+                        items.append("{\"text\":").append(quote(line.text)).append(",\"confidence\":").append(line.score).append(",\"box\":").append(java.util.Arrays.toString(line.box)).append('}');
+                    }
+                    items.append(']');
+                    result="{\"status\":\"done\",\"text\":"+quote(text.toString())+",\"lines\":"+items+",\"engine\":\"PP-OCRv5 mobile / ONNX CPU\",\"elapsedMs\":"+((System.nanoTime()-started)/1000000)+"}";
                 }catch(Throwable error){
                     result="{\"status\":\"error\",\"error\":"+quote(error.getClass().getSimpleName())+"}";
-                    if(handle!=0)try{api.getMethod("nativeEnd",long.class).invoke(engine,handle);}catch(Throwable ignored){}
-                    handle=0;
+                    if(engine!=null)try{engine.close();}catch(Throwable ignored){}engine=null;
                 }finally{BUSY.set(false);}
                 RESULTS.replace(id,result);
             }});

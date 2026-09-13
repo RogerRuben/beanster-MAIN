@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "evidence gates: exact, correction, partial, non-drink, low confidence, ambiguous names",
+    "exact OCR wins without visual inference or irrelevant text",
+    "correction is shown cleanly and requires confirmation",
+    "OCR miss uses one visual fallback with honest manual category choices",
+    "documents do not trigger photo classification",
+    "late exact result cannot overwrite programmatic or manual edits",
+    "stop cancels both result paths",
+    "manual text entry never exposes raw OCR",
+    "real transferred pixels -> NativeReader async -> PP-OCRv5 -> filtered UI (desktop native harness, not Android runtime)"
+  ]
+}

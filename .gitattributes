@@ -2,3 +2,5 @@
 vision/labels.txt -text
 vision/*.tflite -text
 vendor/vision/*.aar -text
+ocr/paddle/* -text
+vendor/ocr/*.aar -text

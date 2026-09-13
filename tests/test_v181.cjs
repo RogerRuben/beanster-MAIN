@@ -37,7 +37,7 @@ const stale=await page.evaluate(async()=>{openAdd();const previous=nativeRecogni
  const edited=ocrSmartSource(null,'document',im);setTimeout(()=>{$('fProductName').value='自己输入的名字'},30);await edited;
  const kept=$('fProductName').value==='自己输入的名字';let count=0;nativeRecognizeBlob=async()=>{count++;return '无关文字'};await ocrSmartSource(null,'document',im);
  nativeRecognizeBlob=previous;if(typeof AppNav!=="undefined")AppNav.discard();else closeAdd();return {unchanged,kept,count};});
-assert.deepEqual(stale,{unchanged:true,kept:true,count:2});checks.push('cancelled and stale reads do not overwrite edits; at most two attempts');
+assert.deepEqual(stale,{unchanged:true,kept:true,count:1});checks.push('cancelled and stale reads do not overwrite edits; one full-document pass');
 const cancelledTransfer=await page.evaluate(async()=>{
  const oldGray=blobToGrayPixels,oldPrompt=window.prompt;let calls=0;
  window.prompt=()=>{calls++;return ''};

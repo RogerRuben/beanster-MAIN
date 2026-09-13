@@ -8,7 +8,7 @@ def build():
     if not R8.is_file(): raise FileNotFoundError('Set BEANSTER_R8 to Google r8-8.3.37.jar')
     out=ROOT/'native-build';out.mkdir(exist_ok=True)
     deps=[]
-    for aar in sorted((ROOT/'vendor/vision').glob('*.aar')):
+    for aar in sorted((ROOT/'vendor/vision').glob('*.aar'))+sorted((ROOT/'vendor/ocr').glob('*.aar')):
         target=out/(aar.stem+'.jar')
         with zipfile.ZipFile(aar) as z:target.write_bytes(z.read('classes.jar'))
         deps.append(str(target))

@@ -5,10 +5,10 @@ import zipfile
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V18.3.1-unsigned.apk') as z:
+with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V18.4-unsigned.apk') as z:
     assert z.testzip() is None
     names=set(z.namelist())
-    for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js']:
+    for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js']:
         assert z.read('assets/'+name)==(ROOT/name).read_bytes(), name
     html=z.read('assets/index.html').decode('utf-8')
     assert html==(ROOT/'index_v5.html').read_text(encoding='utf-8')
@@ -34,7 +34,15 @@ with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Si
     assert b'Lorg/tensorflow/lite/Interpreter;' in z.read('classes2.dex')
     with zipfile.ZipFile(ROOT/'vendor/vision/tensorflow-lite-2.16.1.aar') as aar:
         assert z.read('lib/arm64-v8a/libtensorflowlite_jni.so')==aar.read('jni/arm64-v8a/libtensorflowlite_jni.so')
+    for name in ['det.onnx','rec.onnx','keys.txt']:
+        assert z.read('assets/ocr/paddle/'+name)==(ROOT/'ocr/paddle'/name).read_bytes()
+    assert b'Lai/onnxruntime/OrtSession;' in z.read('classes2.dex')
+    assert b'Lcom/beanster/bridge/PaddleReader;' in z.read('classes2.dex')
+    with zipfile.ZipFile(ROOT/'vendor/ocr/onnxruntime-android-1.21.1.aar') as aar:
+        for name in aar.namelist():
+            if name.startswith('jni/arm64-v8a/') and name.endswith('.so'):
+                assert z.read('lib/arm64-v8a/'+Path(name).name)==aar.read(name)
     binary_manifest=z.read('AndroidManifest.xml')
-    assert b'com.beanstersips.v11' in binary_manifest and b'18.3.1' in binary_manifest
+    assert b'com.beanstersips.v11' in binary_manifest and b'18.4' in binary_manifest
     assert z.read('classes2.dex')==(ROOT/'native-build/classes.dex').read_bytes()
     print(f'PASS: APK entrypoint, {len(manifest["assets"])} PNG assets, animation assets, native OCR and package identity.')
