@@ -3615,6 +3615,78 @@
           "frames/label_keep_going/11.png"
         ]
       }
+    },
+    {
+      "id": "achievement_cups10",
+      "label": "十杯小记",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cups10@1x.png",
+        "2x": "png/achievements/achievement_cups10@2x.png",
+        "3x": "png/achievements/achievement_cups10@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v182/achievement_cups10.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_cups30",
+      "label": "三十杯回忆",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cups30@1x.png",
+        "2x": "png/achievements/achievement_cups30@2x.png",
+        "3x": "png/achievements/achievement_cups30@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v182/achievement_cups30.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_photo1",
+      "label": "第一张照片",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_photo1@1x.png",
+        "2x": "png/achievements/achievement_photo1@2x.png",
+        "3x": "png/achievements/achievement_photo1@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v182/achievement_photo1.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_photo10",
+      "label": "照片日记",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_photo10@1x.png",
+        "2x": "png/achievements/achievement_photo10@2x.png",
+        "3x": "png/achievements/achievement_photo10@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v182/achievement_photo10.png"
+      },
+      "alpha": true
     }
   ]
 }

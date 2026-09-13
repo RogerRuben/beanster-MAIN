@@ -1,0 +1,13 @@
+{
+  "passed": true,
+  "checks": [
+    "time slots and stable entry selection",
+    "portraits can be used as companion avatars",
+    "day detail to month to home; only root delegates exit",
+    "nested achievement detail preserves parent",
+    "picker first; dirty form keeps or discards without losing parent",
+    "photo preview returns to form",
+    "real saves use excited for unlock and happy otherwise; single animation",
+    "five distinct achievement mappings with existing stable IDs"
+  ]
+}

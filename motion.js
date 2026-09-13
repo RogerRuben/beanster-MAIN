@@ -16,7 +16,7 @@ const Motion={active:null,token:0,scope:null,raf:0,
   sync(){
     const overlay=[...document.querySelectorAll('.u-overlay')].at(-1),form=$('addModal').classList.contains('show')?$('addModal'):null;
     const scope=overlay||form||document.querySelector('.page.active'),key=scope?.id;
-    if(key!==this.scope){this.stop();this.scope=key;const first=scope?.querySelector('[data-motion]');if(first)this.play(first)}
+    if(key!==this.scope){this.stop();this.scope=key;const first=key==='today'&&typeof Companion!=='undefined'&&Companion.feedback?document.querySelector('.u-companion-avatar'):scope?.querySelector('[data-motion]');if(first)this.play(first)}
     else if(this.active&&!this.active.isConnected)this.stop();
   },
   gallery(){const assets=window.BEANSTER_ART.assets.filter(a=>['characters','portraits'].includes(a.category));

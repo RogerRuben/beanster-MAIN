@@ -149,8 +149,8 @@ Object.assign(UI, (()=>{
       ['night','夜猫记录者','记录一杯 20 点后的咖啡','night',s=>s.hour>=20],
       ['morning','早起打卡','记录一杯 9 点前的咖啡','morning',s=>s.hour<9],
       ['streak30','连续 30 天','连续 30 天留下咖啡记录','week',s=>s.streak>=30],
-      ['cups10','十杯小记','累计记录 10 杯','first_cup',s=>s.n>=10],
-      ['cups30','三十杯回忆','累计记录 30 杯','first_cup',s=>s.n>=30],
+      ['cups10','十杯小记','累计记录 10 杯','cups10',s=>s.n>=10],
+      ['cups30','三十杯回忆','累计记录 30 杯','cups30',s=>s.n>=30],
       ['cups50','五十杯收藏','累计记录 50 杯','expert',s=>s.n>=50],
       ['cups100','百杯纪念','累计记录 100 杯','month',s=>s.n>=100],
       ['cups365','365 杯故事','累计记录 365 杯','month',s=>s.n>=365],
@@ -158,8 +158,8 @@ Object.assign(UI, (()=>{
       ['types8','风味收藏家','尝试 8 种咖啡','expert',s=>s.types>=8],
       ['brands3','品牌漫游','记录 3 个品牌','morning',s=>s.brands>=3],
       ['brands5','城市咖啡地图','记录 5 个品牌','morning',s=>s.brands>=5],
-      ['photo1','第一张照片','用照片记下一杯','first_cup',s=>s.photos>=1],
-      ['photo10','照片日记','累计 10 条带照片的记录','first_cup',s=>s.photos>=10],
+      ['photo1','第一张照片','用照片记下一杯','photo1',s=>s.photos>=1],
+      ['photo10','照片日记','累计 10 条带照片的记录','photo10',s=>s.photos>=10],
       ['pour','手冲时光','记录一杯手冲','expert',s=>s.type==='手冲'],
       ['cold','冷萃初体验','记录一杯冷萃','expert',s=>s.type==='冷萃'],
       ['decaf','轻松一杯','记录一杯低因咖啡','night',s=>s.type==='低因咖啡'],
@@ -170,7 +170,7 @@ Object.assign(UI, (()=>{
     rs.forEach((r,i)=>{const d=new Date(r.ts),key=localKey(d),mon=key.slice(0,7);if(key!==lastDay){const prev=new Date(d);prev.setDate(prev.getDate()-1);streak=localKey(prev)===lastDay?streak+1:1;bestStreak=Math.max(bestStreak,streak);lastDay=key}days.set(key,true);if(!months.has(mon))months.set(mon,new Set());months.get(mon).add(key);types.add(r.type);if(r.brand)brands.add(r.brand);if(r.photoId||r.photoPreview||r.nativePhotoPath)photos++;const s={n:i+1,streak:bestStreak,monthDays:months.get(mon).size,types:types.size,brands:brands.size,photos,type:r.type,hour:d.getHours(),months:months.size};defs.forEach(a=>{if(!a.at&&a.test(s))a.at=r.ts})});return defs;
   }
   function achievements(){UI.overlay('uAchievements','我的成就','<div id="uAchievementContent"></div>');renderAchievements()}
-  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art('character_first_cup','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}" onclick="UI.achievementDetail('${a.id}')">${art('achievement_'+a.badge)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
+  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art(defs.some(a=>a.at)?'character_goal':'character_first_cup','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}" onclick="UI.achievementDetail('${a.id}')">${art('achievement_'+a.badge)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
   function achievementDetail(id){const a=achievementList().find(x=>x.id===id);if(!a)return;UI.overlay('uBadgeDetail',a.title,`<div class="u-badge-detail ${a.at?'':'locked'}">${art('achievement_'+a.badge)}<h3>${a.title}</h3><p>${a.desc}</p><span>${a.at?'解锁于 '+dateLabel(localKey(new Date(a.at))):'慢慢记录，等待点亮。'}</span></div>`,'u-small-overlay')}
   return {analysis,month,tab,dailyChart,distribution,timeChart,openDay,renderDay,selectDay,shiftDay,saveDayNote,addOnDay,achievementList,achievements,renderAchievements,achievementDetail};
 })());
@@ -186,7 +186,7 @@ closeAdd=function(){UI.legacy.closeAdd();if(!document.querySelector('.u-overlay'
 applyCatalog=function(...args){UI.legacy.applyCatalog(...args);UI.syncForm()};
 renderWhatIf=function(){UI.legacy.renderWhatIf();UI.syncForm()};
 saveRecord=async function(){if(UI.saving)return;const ts=new Date($('fDate').value+'T'+($('fTime').value||'12:00')+':00').getTime();if(!Number.isFinite(ts))return notify('请填写有效的日期和时间',true);for(const id of ['fSize','fShots','fCaf','fCal','fPrice']){if(!$(id).checkValidity()){ $('uExtraDetails').open=true;$(id).reportValidity();return }}UI.saving=true;$('uSave').disabled=true;try{await UI.legacy.saveRecord()}finally{UI.saving=false;$('uSave').disabled=false}};
-renderSettings=function(){UI.legacy.renderSettings();$('settingsContent').insertAdjacentHTML('afterbegin',`<button class="u-achievement-teaser" onclick="UI.achievements()">${UI.art('achievement_month')}<span><b>我的成就</b><small>每一杯，都有自己的纪念</small></span>${UI.arrow()}</button>`);$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V18.1'};
+renderSettings=function(){UI.legacy.renderSettings();$('settingsContent').insertAdjacentHTML('afterbegin',`<button class="u-achievement-teaser" onclick="UI.achievements()">${UI.art('achievement_month')}<span><b>我的成就</b><small>每一杯，都有自己的纪念</small></span>${UI.arrow()}</button>`);$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V18.2'};
 renderPhotos=async function(){await UI.legacy.renderPhotos();if(!records.some(r=>r.photoId||r.photoPreview||r.nativePhotoPath))$('photoContent').innerHTML=`<div class="u-empty u-photo-empty">${UI.art('empty_no_coffee')}<b>把咖啡时光，留在这里。</b><span>记录时添加照片，慢慢积攒你的咖啡相册。</span><button class="primary" onclick="openSmartAdd('camera')">${UI.icon('camera')}拍下第一杯</button></div>`};
 const oldSmartAdd=openSmartAdd;
 openSmartAdd=function(which){oldSmartAdd(which);$('uPhotoDetails').open=true};

@@ -391,6 +391,12 @@ def make_dex():
     r_poll=p.method(READER,'poll',STR,(STR,))
     r_cancel=p.method(READER,'cancel',STR,(STR,))
     r_caps=p.method(READER,'capabilities',STR,())
+    f_webview=p.field(MA,'webView',WV)
+    m_back=p.method(MA,'onBackPressed','V',())
+    x_evaluate=p.method(WV,'evaluateJavascript','V',(STR,VC))
+    x_background=p.method(ACT,'moveTaskToBack','Z',('Z',))
+    back_script="if(!window.AppNav||!AppNav.back()){prompt('sipsqueak://background','')}"
+    p.st(back_script);p.st('background')
     f_ocr_image=p.field(MA,'pendingOcrImage',BAOS)
     # Fields
     f_upload=p.field(MA,'upload',VC); f_pending=p.field(MA,'pendingData',STR); f_camera=p.field(MA,'cameraUri',URI); f_image=p.field(MA,'pendingImage',BAOS); f_lastpath=p.field(MA,'lastPhotoPath',STR); f_exportpath=p.field(MA,'exportPhotoPath',STR); f_keeporiginal=p.field(MA,'keepOriginalPhoto',STR)
@@ -452,12 +458,13 @@ def make_dex():
     # onCreate: regs 6, params v4=this v5=bundle
     oncreate=[
         I('invoke-super',[4,5],x_oncreate), I('const/4',2,1), I('invoke-virtual',[4,2],x_reqwin),
-        I('new-instance',0,WV), I('invoke-direct',[0,4],x_wv_init), I('invoke-virtual',[4,0],x_setcv),
+        I('new-instance',0,WV), I('invoke-direct',[0,4],x_wv_init), I('iput-object',0,4,f_webview), I('invoke-virtual',[4,0],x_setcv),
         I('invoke-virtual',[0],x_getset), I('move-result-object',1), I('const/4',2,1),
         I('invoke-virtual',[1,2],x_setjs),I('invoke-virtual',[1,2],x_setdom),I('invoke-virtual',[1,2],x_setfile),I('invoke-virtual',[1,2],x_setcontent),I('invoke-virtual',[1,2],x_universal),I('invoke-virtual',[1,2],x_fileurls),
         I('new-instance',1,CL),I('invoke-direct',[1,4],m_cl_init),I('invoke-virtual',[0,1],x_setclient),
         I('new-instance',1,CH),I('invoke-direct',[1,4],m_ch_init),I('invoke-virtual',[0,1],x_setchrome),
         I('const-string',1,'file:///android_asset/index.html'),I('invoke-virtual',[0,1],x_load),I('return-void')]
+    md_back=MethodDef(m_back,ACC_PUBLIC,4,1,[I('iget-object',0,3,f_webview),I('if-eqz',0,'back_exit'),I('const-string',1,back_script),I('const/4',2,0),I('invoke-virtual',[0,1,2],x_evaluate),I('return-void'),L('back_exit'),I('const/4',0,1),I('invoke-virtual',[3,0],x_background),I('return-void')])
     md_oncreate=MethodDef(m_oncreate,ACC_PROTECTED,6,2,oncreate)
     # beginExport: regs7 params v3=this v4=data v5=mime v6=name
     be=[I('iput-object',4,3,f_pending),I('new-instance',0,INTENT),I('const-string',1,'android.intent.action.CREATE_DOCUMENT'),I('invoke-direct',[0,1],x_int_init),
@@ -569,8 +576,9 @@ def make_dex():
         I('invoke-virtual',[1,5],x_ntitle),I('invoke-virtual',[1,6],x_ntext),I('const/4',2,1),I('invoke-virtual',[1,2],x_nauto),
         I('invoke-virtual',[1],x_nbuild),I('move-result-object',1),I('const/16',2,3001),I('invoke-virtual',[0,2,1],x_nnotify),L('nend'),I('return-void')]
     md_notify=MethodDef(m_notify,ACC_PUBLIC,7,3,sn)
-    c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_ocr,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
+    c_ma=ClassDef(MA,ACT,ACC_PUBLIC|ACC_SUPER,[md_init],[md_back,md_oncreate,md_export,md_exportimg,md_launch,md_copyphoto,md_restorephoto,md_exportpath,md_ocr,md_result,md_perm,md_notify],[(f_upload,ACC_PUBLIC),(f_pending,ACC_PUBLIC),(f_camera,ACC_PUBLIC),(f_image,ACC_PUBLIC),(f_lastpath,ACC_PUBLIC),(f_exportpath,ACC_PUBLIC),(f_keeporiginal,ACC_PUBLIC)])
     c_ma.fields.append((f_ocr_image,ACC_PUBLIC))
+    c_ma.fields.append((f_webview,ACC_PUBLIC))
     d.add_class(c_ma)
     # CoffeeChrome: capture input -> actual system camera with MediaStore EXTRA_OUTPUT; normal input -> system document/photo picker
     ch_init=[I('invoke-direct',[0],x_wcc_init),I('iput-object',1,0,f_ch_act),I('return-void')]
@@ -583,6 +591,7 @@ def make_dex():
     # Reliable image-save bridge. JS calls prompt() synchronously so every base64 chunk reaches native code in order.
     # regs12 params v6=this,v7=wv,v8=url,v9=message,v10=default,v11=result
     jp=[I('invoke-static',[9],x_uriparse),I('move-result-object',0),I('invoke-virtual',[0],x_scheme),I('move-result-object',1),I('const-string',2,'sipsqueak'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_false'),
+        I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'background'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_reader'),I('iget-object',4,6,f_ch_act),I('const/4',2,1),I('invoke-virtual',[4,2],x_background),I('goto/16','jp_confirm'),L('jp_reader'),
         # Native OCR begin/chunk/finish. OCR chunks use the URI query path (same proven bridge as image backup),
         # and every chunk returns the exact native cumulative byte count as an ACK.
         I('invoke-virtual',[0],x_host),I('move-result-object',1),I('const-string',2,'ocrbegin'),I('invoke-virtual',[2,1],x_equals),I('move-result',1),I('if-eqz',1,'jp_ocrchunk'),
