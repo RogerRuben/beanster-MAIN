@@ -2,6 +2,7 @@
 const Reader={generation:0,activeId:'',deadline:0,trace:[],lastNative:null,
   pause:ms=>new Promise(resolve=>setTimeout(resolve,ms)),
   log(event,data={}){this.trace.push({event,at:performance.now(),...data});this.trace=this.trace.slice(-40)},
+  check(generation){if(generation!==this.generation)throw new Error('reader-cancelled');if(this.deadline&&performance.now()>this.deadline)throw new Error('reader-timeout')},
   cancel(){this.generation++;if(this.activeId)prompt('sipsqueak://ocrcancel?id='+this.activeId,'');this.activeId='';this.deadline=0;},
   async image(file){const url=URL.createObjectURL(file),im=new Image();try{await new Promise((res,rej)=>{im.onload=res;im.onerror=rej;im.src=url});return im}finally{URL.revokeObjectURL(url)}},
   regions(im){
@@ -34,9 +35,10 @@ prepareSmartOcrImage=async function(file,kind='document',sourceImg=null,forcedRe
   Reader.log('crop',{kind,rect,width:c.width,height:c.height});
   return new Promise(resolve=>c.toBlob(resolve,'image/png'));
 };
-nativeOcrTransfer=async function(g,psm,step=3000){
+nativeOcrTransfer=async function(g,psm,step=3000,generation=Reader.generation){
+  Reader.check(generation);
   if(prompt('sipsqueak://ocrcapabilities','')!=='native-async-1')throw new Error('reader-unavailable');
-  const generation=Reader.generation,deadline=Reader.deadline||performance.now()+8000;
+  const deadline=Reader.deadline||performance.now()+8000;
   const check=()=>{if(generation!==Reader.generation)throw new Error('reader-cancelled');if(performance.now()>deadline)throw new Error('reader-timeout')};
   if(prompt('sipsqueak://ocrbegin','')!=='0')throw new Error('reader-transfer-begin');
   let expected=0;
@@ -47,12 +49,12 @@ nativeOcrTransfer=async function(g,psm,step=3000){
   check();const id='r'+Date.now().toString(36)+'_'+generation;Reader.activeId=id;
   const status=prompt('sipsqueak://ocrfinish?meta='+encodeURIComponent([id,g.w,g.h,psm].join(',')),'');
   if(status!=='pending'){Reader.activeId='';throw new Error('reader-'+status)}
-  try{while(true){check();await Reader.pause(50);const result=JSON.parse(prompt('sipsqueak://ocrpoll?id='+id,'')||'{}');
+  try{while(true){check();await Reader.pause(50);check();const result=JSON.parse(prompt('sipsqueak://ocrpoll?id='+id,'')||'{}');
     if(result.status==='done'){Reader.lastNative=result;Reader.log('native',{...result,psm});return result.text||''}
     if(result.status!=='pending')throw new Error('reader-'+(result.error||result.status));
   }}finally{prompt('sipsqueak://ocrcancel?id='+id,'');if(Reader.activeId===id)Reader.activeId=''}
 };
-nativeRecognizeBlob=async function(blob,psm=6){const g=await blobToGrayPixels(blob);const text=await nativeOcrTransfer(g,psm);orderOcrState='ready';return text};
+nativeRecognizeBlob=async function(blob,psm=6,generation=Reader.generation){Reader.check(generation);const g=await blobToGrayPixels(blob);Reader.check(generation);const text=await nativeOcrTransfer(g,psm,3000,generation);Reader.check(generation);orderOcrState='ready';return text};
 const readerParse=parseOrderText;
 parseOrderText=function(text){const original=String(text||'');const r=readerParse(original.split(/[\r\n]+/).filter(line=>!(/蛋糕|饼干|面包|汉堡|咖啡豆|吸管|咖啡机|咖啡杯|键盘|手机壳/.test(line))).join('\n'));r.text=original;
   if(r.productName&&(/蛋糕|饼干|面包|汉堡|咖啡豆|吸管|咖啡机|咖啡杯|键盘|手机壳/.test(r.productName)||(!canonicalTypeForName(r.productName,'')&&!/^[\u4e00-\u9fffA-Za-z ]{0,16}咖啡$/.test(r.productName))))r.productName='';
@@ -65,6 +67,7 @@ ocrSmartSource=async function(file,kindHint='',sourceImg=null,forcedRect=null){
   const initialName=$('fProductName').value,initialType=$('fType').value;
   try{
     const im=sourceImg||await Reader.image(file),kind=kindHint||'document',label=['label','package'].includes(kind),regions=forcedRect?[forcedRect]:Reader.regions(im);
+    Reader.check(generation);
     Reader.log('input',{width:im.width,height:im.height,kind,regions});
     const rect=regions[0]||{x:0,y:0,w:1,h:1};
     // The upper part of a detected physical label includes product/options but excludes most QR/footer clutter.
@@ -75,7 +78,8 @@ ocrSmartSource=async function(file,kindHint='',sourceImg=null,forcedRect=null){
       if(i&&performance.now()+1200>Reader.deadline)break;
       setOrderProgress(.15+i*.4,label?'正在看杯贴…':'正在读文字…');
       const attempt=attempts[i],blob=await prepareSmartOcrImage(file,kind,im,attempt.rect);
-      const text=await nativeRecognizeBlob(blob,attempt.psm);if(text)candidates.push(text);
+      Reader.check(generation);
+      const text=await nativeRecognizeBlob(blob,attempt.psm,generation);Reader.check(generation);if(text)candidates.push(text);
       const chosen=bestOcrCandidate(candidates);best={text:chosen.text,kind:kind==='document'?classifyTextSource(chosen.text):kind,result:parseOrderText(chosen.text)};
       if(best.result.productName)break;
     }

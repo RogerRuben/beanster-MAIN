@@ -38,6 +38,15 @@ const stale=await page.evaluate(async()=>{openAdd();const previous=nativeRecogni
  const kept=$('fProductName').value==='自己输入的名字';let count=0;nativeRecognizeBlob=async()=>{count++;return '无关文字'};await ocrSmartSource(null,'document',im);
  nativeRecognizeBlob=previous;closeAdd();return {unchanged,kept,count};});
 assert.deepEqual(stale,{unchanged:true,kept:true,count:2});checks.push('cancelled and stale reads do not overwrite edits; at most two attempts');
+const cancelledTransfer=await page.evaluate(async()=>{
+ const oldGray=blobToGrayPixels,oldPrompt=window.prompt;let calls=0;
+ window.prompt=()=>{calls++;return ''};
+ blobToGrayPixels=async()=>{await Reader.pause(40);return {data:new Uint8Array(4),w:2,h:2}};
+ try{const pending=nativeRecognizeBlob(new Blob(),6);setTimeout(()=>Reader.cancel(),10);
+  let message='';try{await pending}catch(e){message=e.message}return {calls,message};
+ }finally{blobToGrayPixels=oldGray;window.prompt=oldPrompt}
+});
+assert.deepEqual(cancelledTransfer,{calls:0,message:'reader-cancelled'});checks.push('cancel during grayscale conversion never enters native transfer');
 const replacement=await page.evaluate(async()=>{settings.systemNotifications=false;settings.photoQuality='original';openAdd();editingId='replace';records=[{id:'replace',ts:Date.now(),type:'拿铁',nativePhotoPath:'/old/photo.img'}];
  const c=document.createElement('canvas');c.width=500;c.height=700;const raw=c.toDataURL('image/png'),im=new Image();im.src=raw;await im.decode();
  draftPhoto=makePhotoVersions(im,{type:'image/png'},raw);draftPhoto._rawOriginal=raw;draftPhoto.nativePath='';

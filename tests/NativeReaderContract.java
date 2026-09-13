@@ -13,6 +13,8 @@ class NativeReaderContract {
     public static void main(String[] args) throws Exception {
         check(NativeReader.capabilities().equals("native-async-1"),"capabilities");
         check(NativeReader.start(new ActivityStub(),new byte[1],"bad,20,20,6").equals("invalid"),"length validation");
+        check(NativeReader.poll(null).contains("missing"),"missing poll id");
+        check(NativeReader.cancel(null).equals("cancelled"),"missing cancel id");
         long start=System.nanoTime();
         check(NativeReader.start(new ActivityStub(),new byte[1024],"first,32,32,6").equals("pending"),"start");
         check((System.nanoTime()-start)/1000000<200,"recognition blocks caller");

@@ -11,6 +11,7 @@
     "shot count respected independent of milk volume and brand",
     "entire order including middle preserved",
     "cancelled and stale reads do not overwrite edits; at most two attempts",
+    "cancel during grayscale conversion never enters native transfer",
     "replacement photo native-save failure preserves new original in IndexedDB, never old path"
   ],
   "parsing": {

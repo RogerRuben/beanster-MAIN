@@ -70,11 +70,12 @@ public final class NativeReader {
         }catch(Throwable error){return "invalid";}
     }
     public static String poll(String id){
+        if(id==null)return "{\"status\":\"missing\"}";
         String result=RESULTS.get(id);if(result==null)return "{\"status\":\"missing\"}";
-        if(!result.contains("\"pending\""))RESULTS.remove(id);
+        if(!result.equals("{\"status\":\"pending\"}"))RESULTS.remove(id,result);
         return result;
     }
-    public static String cancel(String id){RESULTS.remove(id);return "cancelled";}
+    public static String cancel(String id){if(id!=null)RESULTS.remove(id);return "cancelled";}
     static String quote(String s){
         StringBuilder b=new StringBuilder("\"");
         for(char c:s.toCharArray()){if(c=='"'||c=='\\')b.append('\\').append(c);

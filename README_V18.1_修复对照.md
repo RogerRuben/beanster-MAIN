@@ -31,7 +31,7 @@
 ## 已执行的验证
 
 - `node tests/test_ui_upgrade.cjs`：原有 17 项界面与数据回归。
-- `node tests/test_v181.cjs`：11 组新回归，含单次动效、全局互斥、14 个表情入口、32 条文本、取消与手填保护、完整订单、新原图保存回退、备份合并及估算。
+- `node tests/test_v181.cjs`：12 组新回归，含单次动效、全局互斥、14 个表情入口、32 条文本、取消与手填保护、完整订单、新原图保存回退、备份合并及估算。
 - `node tests/test_reader_desktop.cjs <完整输入路径>`：实际灰度传输和桌面 OCR 的完整截图诊断，首轮回填目标名称；使用相同 `chi_sim.traineddata`，桌面引擎 5.5.2 与 APK 5.5.0 不同，不能替代真机验证。
 - `java --class-path native-build tests/NativeReaderContract.java`：原生后台调度合约；使用失败桩检查异常和取消，不用于证明 OCR 准确率。
 - `python tests/test_v177_transport.py`：分块传输兼容。
@@ -56,6 +56,10 @@ python build_v5.py --keystore "原 keystore 路径" --apksig "apksig-8.13.0.jar 
 
 后台类由 `tools/build_native_reader.py` 使用 javac/D8 编译；`BEANSTER_JAVA`、`BEANSTER_R8` 可指定工具路径。D8 来自 Google Maven 的 `com.android.tools:r8:8.3.37`。默认开发机路径位于仓库外的 `.build-tools`。
 
-正式签名验收包 SHA-256：`15a2399538388d561489296695b11ba3fa00dfe70821f4163c5cecf75b2f98e5`。
+正式签名验收包 SHA-256：`01a668321895422b27327ed28c31261d995295df03febe083876331a4519eb3c`。
 
 签名证书 SHA-256：`84:D4:A0:DD:47:06:4B:81:94:44:13:1B:F3:44:D2:D5:C8:B6:E7:91:A2:26:52:DE:59:3C:E4:74:49:7A:70:18`。
+
+## OCR follow-up review
+
+Cancelled image preprocessing and grayscale conversion now preserve the originating request generation before entering the native transfer. Polling rechecks cancellation after its asynchronous wait. Native poll/cancel tolerate missing IDs and consume only completed results. The additional cancellation regression, native contract, transport, APK payload and DEX checks passed. Device recognition remains pending user testing.
