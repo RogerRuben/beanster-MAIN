@@ -1,0 +1,4 @@
+# Model labels are checksum-verified; preserve upstream bytes on Windows too.
+vision/labels.txt -text
+vision/*.tflite -text
+vendor/vision/*.aar -text
