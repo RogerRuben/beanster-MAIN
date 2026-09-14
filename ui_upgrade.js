@@ -7,9 +7,10 @@ const UI = (() => {
   const arg = x => esc(JSON.stringify(String(x)));
   const path = (id, animated=false) => {
     const reduce=matchMedia('(prefers-reduced-motion: reduce)').matches;
-    const category=categories[id] || (id.startsWith('character_')?'characters':id.startsWith('icon_')?'icons':id.startsWith('drink_')?'drinks':id.startsWith('cup_')?'cups':id.startsWith('stamp_')?'stamps':id.startsWith('achievement_')?'achievements':id.startsWith('locked_')?'locked':id.startsWith('portrait_')?'portraits':'decorations');
+    const category=categories[id] || (id.startsWith('character_')?'characters':id.startsWith('icon_')?'icons':id.startsWith('drink_')?'drinks':id.startsWith('cup_')?'cups':id.startsWith('stamp_')?'stamps':id.startsWith('achievement_')?'achievements':id.startsWith('locked_')?'locked':id.startsWith('portrait_')?'portraits':id.startsWith('sticker_')?'stickers':id.startsWith('empty_')?'empty-states':id.startsWith('label_')?'labels':id.startsWith('deco_')||id.startsWith('detail_')?'decorations':'decorations');
     return ROOT+`png/${category}/${id}@2x.png`;
   };
+
   const art=(id,cls='',animated=false,label='')=>`<img class="u-art ${cls}" src="${path(id)}" ${animated?`data-motion="${id}" role="button" tabindex="0" aria-label="${esc(label||'仓鼠表情')}，点击播放一次"`:''} alt="${esc(label)}" decoding="async">`;
   const icon=(id)=>art('icon_'+id,'u-icon');
   const arrow=(left=false)=>`<svg viewBox="0 0 24 24" class="icon" aria-hidden="true"><path d="${left?'m14 5-7 7 7 7':'m10 5 7 7-7 7'}"/></svg>`;
@@ -101,6 +102,12 @@ const UI = (() => {
 
 Object.assign(UI, (()=>{
   const {art,icon,arg,section,metric,arrow,dateLabel}=UI;
+  const lockedBadge={week:'locked_week',month:'locked_month',expert:'locked_expert'};
+  const badgeArt=a=>{
+    if(a.at)return art('achievement_'+a.badge);
+    const locked=lockedBadge[a.badge];
+    return locked?art(locked,'u-locked-art'):art('achievement_'+a.badge);
+  };
   const palette=['#754831','#a67555','#d3a17c','#ddc9b5','#98a186','#b18c73'];
   const countBy=(rs,key)=>{const counts={};rs.forEach(r=>{const value=String(r[key]||'未填写');counts[value]=(counts[value]||0)+1});return Object.entries(counts).sort((a,b)=>b[1]-a[1])};
   function monthNav(){const ref=monthRef();return `<div class="u-month-nav"><button onclick="UI.month(-1)" aria-label="上个月">${arrow(true)}</button><h1>${ref.getFullYear()} 年 ${ref.getMonth()+1} 月</h1><button onclick="UI.month(1)" aria-label="下个月" ${analysisMonthOffset>=0?'disabled':''}>${arrow()}</button></div>`}
@@ -112,7 +119,7 @@ Object.assign(UI, (()=>{
     const lines=[0,max/2,max].map(v=>`<line x1="${left}" x2="${W}" y1="${y(v)}" y2="${y(v)}" stroke="#ece2d6"/><text x="1" y="${y(v)+3}">${Math.round(v)}</text>`).join('');
     return `<div class="u-card u-daily-chart"><div class="u-chart-title"><h3>每日摄入 <small>（mg）</small></h3><span><i></i>咖啡因 <em></em>日上限</span></div><svg viewBox="0 0 ${W} ${H}" role="img" aria-label="${ref.getMonth()+1}月每日咖啡因摄入，日上限${limit}毫克">${lines}<line x1="${left}" x2="${W}" y1="${y(limit)}" y2="${y(limit)}" stroke="#cda17b" stroke-dasharray="3 3"/>${values.map((v,i)=>`<rect x="${left+i*step+step*.15}" y="${y(v)}" width="${step*.56}" height="${v?Math.max(1,bottom-y(v)):0}" rx="1.7" fill="${v>limit?'#b16143':i%3===1?'#c99b79':'#926248'}"><title>${i+1}日：${Math.round(v)} mg</title></rect>${[0,7,14,21,days-1].includes(i)?`<text x="${left+i*step}" y="154" text-anchor="${i===days-1?'end':'start'}">${ref.getMonth()+1}/${i+1}</text>`:''}`).join('')}</svg>${rs.length?'':'<p class="u-chart-empty">记录第一杯后，这里会显示摄入趋势。</p>'}</div>`;
   }
-  function calendar(ref){const year=ref.getFullYear(),mon=ref.getMonth(),offset=(new Date(year,mon,1).getDay()+6)%7,days=new Date(year,mon+1,0).getDate(),todayKey=localKey(new Date());let cells='<span></span>'.repeat(offset);for(let n=1;n<=days;n++){const key=localKey(new Date(year,mon,n)),rs=dayRecords(key),over=sum(rs,'caffeine')>settings.dailyLimit;cells+=`<button class="u-calendar-day ${key===todayKey?'is-today':''}" aria-label="${mon+1}月${n}日，${rs.length}杯${over?'，超过日上限':''}" onclick="UI.openDay('${key}')"><span>${n}</span>${rs.length?art(over||rs.length>3?'stamp_over':'stamp_'+rs.length):''}</button>`}return section('咖啡月历','<span>点击日期查看记录</span>')+`<div class="u-card u-calendar"><div class="u-weekdays">${'一二三四五六日'.split('').map(x=>`<span>${x}</span>`).join('')}</div><div class="u-calendar-grid">${cells}</div></div>`}
+  function calendar(ref){const year=ref.getFullYear(),mon=ref.getMonth(),offset=(new Date(year,mon,1).getDay()+6)%7,days=new Date(year,mon+1,0).getDate(),todayKey=localKey(new Date());let cells='<span></span>'.repeat(offset);for(let n=1;n<=days;n++){const key=localKey(new Date(year,mon,n)),rs=dayRecords(key),over=sum(rs,'caffeine')>settings.dailyLimit;cells+=`<button class="u-calendar-day ${key===todayKey?'is-today':''}" aria-label="${mon+1}月${n}日，${rs.length}杯${over?'，超过日上限':''}" onclick="UI.openDay('${key}')"><span>${n}</span>${rs.length?art(over?'stamp_over':rs.length>=4?'stamp_4plus':('stamp_'+Math.min(rs.length,3))):''}</button>`}return section('咖啡月历','<span>点击日期查看记录</span>')+`<div class="u-card u-calendar"><div class="u-weekdays">${'一二三四五六日'.split('').map(x=>`<span>${x}</span>`).join('')}</div><div class="u-calendar-grid">${cells}</div></div>`}
   function distribution(rs,key,title){
     const groups=countBy(rs,key),total=rs.length;let position=0;
     const shown=groups.length>5?[...groups.slice(0,4),['其他',groups.slice(4).reduce((s,x)=>s+x[1],0)]]:groups;
@@ -170,8 +177,8 @@ Object.assign(UI, (()=>{
     rs.forEach((r,i)=>{const d=new Date(r.ts),key=localKey(d),mon=key.slice(0,7);if(key!==lastDay){const prev=new Date(d);prev.setDate(prev.getDate()-1);streak=localKey(prev)===lastDay?streak+1:1;bestStreak=Math.max(bestStreak,streak);lastDay=key}days.set(key,true);if(!months.has(mon))months.set(mon,new Set());months.get(mon).add(key);types.add(r.type);if(r.brand)brands.add(r.brand);if(r.photoId||r.photoPreview||r.nativePhotoPath)photos++;const s={n:i+1,streak:bestStreak,monthDays:months.get(mon).size,types:types.size,brands:brands.size,photos,type:r.type,hour:d.getHours(),months:months.size};defs.forEach(a=>{if(!a.at&&a.test(s))a.at=r.ts})});return defs;
   }
   function achievements(){UI.overlay('uAchievements','我的成就','<div id="uAchievementContent"></div>');renderAchievements()}
-  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art(defs.some(a=>a.at)?'character_goal':'character_first_cup','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}" onclick="UI.achievementDetail('${a.id}')">${art('achievement_'+a.badge)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
-  function achievementDetail(id){const a=achievementList().find(x=>x.id===id);if(!a)return;UI.overlay('uBadgeDetail',a.title,`<div class="u-badge-detail ${a.at?'':'locked'}">${art('achievement_'+a.badge)}<h3>${a.title}</h3><p>${a.desc}</p><span>${a.at?'解锁于 '+dateLabel(localKey(new Date(a.at))):'慢慢记录，等待点亮。'}</span></div>`,'u-small-overlay')}
+  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art(defs.some(a=>a.at)?'character_goal':'empty_goal','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}${!a.at&&lockedBadge[a.badge]?' has-locked-art':''}" onclick="UI.achievementDetail('${a.id}')">${badgeArt(a)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
+  function achievementDetail(id){const a=achievementList().find(x=>x.id===id);if(!a)return;const lockedCls=!a.at&&lockedBadge[a.badge]?' locked has-locked-art':(a.at?'':' locked');UI.overlay('uBadgeDetail',a.title,`<div class="u-badge-detail${lockedCls}">${badgeArt(a)}<h3>${a.title}</h3><p>${a.desc}</p><span>${a.at?'解锁于 '+dateLabel(localKey(new Date(a.at))):'慢慢记录，等待点亮。'}</span></div>`,'u-small-overlay')}
   return {analysis,month,tab,dailyChart,distribution,timeChart,openDay,renderDay,selectDay,shiftDay,saveDayNote,addOnDay,achievementList,achievements,renderAchievements,achievementDetail};
 })());
 

@@ -13,12 +13,28 @@ const companionToday=renderToday;renderToday=function(){companionToday();const i
 const companionAnalysis=renderAnalysis;renderAnalysis=function(){companionAnalysis();$('analysisContent').insertAdjacentHTML('afterbegin',`<div class="u-report-companion">${UI.art('character_monthly','',true,'月报统计鼠鼠')}<span>看看这个月留下的咖啡记忆</span></div>`)};
 const companionOpen=openAdd;openAdd=function(...args){companionOpen(...args);Companion.decorateForm()};
 const companionEdit=editRecord;editRecord=async function(...args){await companionEdit(...args);Companion.decorateForm()};
+function showIdleSaveSticker(cups, unlocked){
+  document.querySelectorAll('.u-save-sticker').forEach(n=>n.remove());
+  if(matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+  const sticker=unlocked?'sticker_goal':((cups||0)>=3?'sticker_cheer':'sticker_done');
+  const el=document.createElement('div');
+  el.className='u-save-sticker';el.setAttribute('aria-hidden','true');
+  el.innerHTML=`${UI.art(sticker)}<img class="u-art u-save-label" src="${UI.path('label_success')}" alt="">`;
+  document.body.append(el);
+  clearTimeout(showIdleSaveSticker.t);
+  showIdleSaveSticker.t=setTimeout(()=>el.remove(),1700);
+}
 const companionSave=saveRecord;saveRecord=async function(...args){
   if(UI.saving)return;const before=new Set(UI.achievementList().filter(x=>x.at).map(x=>x.id)),old=JSON.stringify(records);
   await companionSave(...args);
-  if(!$('addModal').classList.contains('show')&&JSON.stringify(records)!==old){const unlocked=UI.achievementList().some(x=>x.at&&!before.has(x.id));Companion.react(unlocked?'portrait_excited':'portrait_happy')}
+  if(!$('addModal').classList.contains('show')&&JSON.stringify(records)!==old){
+    const unlocked=UI.achievementList().some(x=>x.at&&!before.has(x.id));
+    const cups=dayRecords().length;
+    Companion.react(unlocked?'portrait_excited':'portrait_happy');
+    showIdleSaveSticker(cups, unlocked);
+  }
 };
-// Saving feedback uses the header portrait; no delayed gauge/hero rerender.
+// Upgraded home no longer uses legacy save-fx markup; stickers are shown above.
 triggerSaveFx=function(){saveFxUntil=0;saveFxCups=0};
 const companionGallery=Motion.gallery;Motion.gallery=function(){companionGallery.call(this);const grid=document.querySelector('.u-expression-grid');for(const article of grid.children){const id=article.querySelector('[data-motion]')?.dataset.motion;if(id?.startsWith('portrait_'))article.insertAdjacentHTML('beforeend',`<button class="u-text-btn" onclick="Companion.choosePortrait('${id}')">${settings.homePortrait===id?'已设为头像':'设为陪伴头像'}</button>`)}grid.insertAdjacentHTML('afterend',`<p class="u-motion-hint">首页角色默认随时段更换；保存时开心，解锁成就时兴奋。每次只播放一个表情。</p><button class="u-text-btn" onclick="Companion.choosePortrait('')">头像跟随时段</button>`)};
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>{if(b.dataset.page==='today')Companion.enter()},true));
