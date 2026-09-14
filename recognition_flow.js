@@ -32,7 +32,7 @@ const Recognition={generation:-1,state:'idle',candidates:[],editVersion:0,startV
   current(g){return g===Reader.generation&&g===this.generation},
   untouched(){return this.editVersion===this.startVersion&&this.fields()===this.snapshot},
   actions(){return '<div class="order-actions"><button onclick="startTapLabel()">框选杯贴</button><button onclick="showOrderTextPaste()">手动输入</button></div>'},
-  candidateHtml(){return `<div class="order-card"><b>读到以下饮品名称</b><span>已保留完整名称；个别字不对，可以直接修改。</span><div class="ocr-name-candidates">${this.candidates.map((c,i)=>`<div class="ocr-name-candidate"><label for="ocrCandidate${i}">${c.partial?'名称可能不完整':c.corrected?'已纠正疑似错字，请核对':'请核对商品名称'}</label><input id="ocrCandidate${i}" maxlength="60" value="${esc(c.name)}" aria-label="饮品名称 ${i+1}"><button onclick="Recognition.choose(${i})">确认并填写</button></div>`).join('')}</div>${this.actions()}</div>`},
+  candidateHtml(){return `<div class="order-card"><b>读到以下饮品名称</b><span>已保留完整名称；个别字不对，可以直接修改。</span><div class="ocr-name-candidates">${this.candidates.map((c,i)=>`<div class="ocr-name-candidate"><label for="ocrCandidate${i}">${c.partial?'名称可能不完整':c.corrected?'已纠正疑似错字，请核对':'请核对商品名称'}</label><input id="ocrCandidate${i}" maxlength="60" value="${esc(c.name)}" aria-label="饮品名称 ${i+1}"><button class="primary" type="button" onclick="Recognition.choose(${i})">确认并填写</button></div>`).join('')}</div>${this.actions()}</div>`},
   editName(){if(!this.current(this.generation))return;this.snapshot=this.fields();this.startVersion=this.editVersion;this.candidates=[{name:$('fProductName').value,raw:$('fProductName').value,type:$('fType').value,confidence:0}];this.state='candidate';this.show(this.generation,this.candidateHtml())},
   detailRegion(lines){
     const crop=[...Reader.trace].reverse().find(x=>x.event==='crop');if(!crop)return null;
@@ -57,7 +57,7 @@ const Recognition={generation:-1,state:'idle',candidates:[],editVersion:0,startV
     if(!this.current(g)||!this.untouched())return;
     const r={...(this.metadata||{}),text:'',productName:item.name,type:item.type||DrinkEvidence.category(item.name)};
     readerApply(r,this.kind);draftProductSource=confirmed?'label-confirmed':'label';draftReadKey=item.raw;draftReadText='';
-    this.state='exact';this.snapshot=this.fields();this.show(g,`<div class="order-card"><b>杯贴${confirmed?'已确认':'识别'}：${esc(item.name)}</b><span>${confirmed?'已按你的选择填写。':'已读取饮品名称。'}咖啡因按配方估算，可继续修改。</span><div class="order-actions"><button onclick="Recognition.editName()">修改名称</button></div>${this.actions()}</div>`);
+    this.state='exact';this.snapshot=this.fields();this.show(g,`<div class="order-card"><b>杯贴${confirmed?'已确认':'识别'}：${esc(item.name)}</b><span>${confirmed?'已按你的选择填写。':'已读取饮品名称。'}咖啡因按配方估算，可继续修改。</span><div class="order-actions"><button class="u-text-btn" type="button" onclick="Recognition.editName()">修改名称</button></div>${this.actions()}</div>`);
   },
   async visual(im,g){
     if(!this.current(g)||['exact','candidate'].includes(this.state)||!this.untouched())return;
