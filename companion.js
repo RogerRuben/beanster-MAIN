@@ -5,7 +5,7 @@ const Companion={entryHour:new Date().getHours(),feedback:'',timer:0,
   hero(){return /^character_/.test(settings.homeCharacter||'')&&Motion.asset(settings.homeCharacter)?settings.homeCharacter:this.schedule(this.entryHour).hero},
   portrait(){return this.feedback||(/^portrait_/.test(settings.homePortrait||'')&&Motion.asset(settings.homePortrait)?settings.homePortrait:this.schedule(this.entryHour).portrait)},
   header(){const logo=document.querySelector('header .logo');logo.innerHTML=UI.art(this.portrait(),'u-companion-avatar',true,'陪伴表情');logo.setAttribute('aria-label',this.schedule(this.entryHour).label);logo.title=this.schedule(this.entryHour).label},
-  react(id){clearTimeout(this.timer);this.feedback=id;Motion.stop();this.header();if(document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)Motion.play(document.querySelector('.u-companion-avatar'));this.timer=setTimeout(()=>{this.feedback='';this.header()},4200)},
+  react(id, autoplay=true){clearTimeout(this.timer);this.feedback=id;Motion.stop();this.header();if(autoplay&&document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)Motion.play(document.querySelector('.u-companion-avatar'));this.timer=setTimeout(()=>{this.feedback='';this.header()},4200)},
   choosePortrait(id){settings.homePortrait=id;persist();this.feedback='';this.header();UI.closeOverlay('uExpressions');notify(id?'已设置陪伴头像':'头像已跟随时段')},
   decorateForm(){if(!$('addModal').querySelector('.u-form-companion'))$('addModal').querySelector('.u-form-body').insertAdjacentHTML('afterbegin',`<div class="u-form-companion">${UI.art('character_recording','',true,'记录中的鼠鼠')}<span>把这一杯，记下来。</span></div>`)},
 };
@@ -21,6 +21,7 @@ function showIdleSaveSticker(cups, unlocked){
   el.className='u-save-sticker';el.setAttribute('aria-hidden','true');
   el.innerHTML=`${UI.art(sticker)}<img class="u-art u-save-label" src="${UI.path('label_success')}" alt="">`;
   document.body.append(el);
+  Motion.effect(el, 'u-save-enter', 250);
   clearTimeout(showIdleSaveSticker.t);
   showIdleSaveSticker.t=setTimeout(()=>el.remove(),1700);
 }
@@ -30,10 +31,11 @@ const companionSave=saveRecord;saveRecord=async function(...args){
   if(!$('addModal').classList.contains('show')&&JSON.stringify(records)!==old){
     const unlocked=UI.achievementList().some(x=>x.at&&!before.has(x.id));
     const cups=dayRecords().length;
-    Companion.react(unlocked?'portrait_excited':'portrait_happy');
+    Companion.react(unlocked?'portrait_excited':'portrait_happy', false);
     showIdleSaveSticker(cups, unlocked);
   }
 };
+// Saving changes the portrait statically; only the sticker enters. Clicking the portrait still plays it.
 // Upgraded home no longer uses legacy save-fx markup; stickers are shown above.
 triggerSaveFx=function(){saveFxUntil=0;saveFxCups=0};
 const companionGallery=Motion.gallery;Motion.gallery=function(){companionGallery.call(this);const grid=document.querySelector('.u-expression-grid');for(const article of grid.children){const id=article.querySelector('[data-motion]')?.dataset.motion;if(id?.startsWith('portrait_'))article.insertAdjacentHTML('beforeend',`<button class="u-text-btn" onclick="Companion.choosePortrait('${id}')">${settings.homePortrait===id?'已设为头像':'设为陪伴头像'}</button>`)}grid.insertAdjacentHTML('afterend',`<p class="u-motion-hint">首页角色默认随时段更换；保存时开心，解锁成就时兴奋。每次只播放一个表情。</p><button class="u-text-btn" onclick="Companion.choosePortrait('')">头像跟随时段</button>`)};

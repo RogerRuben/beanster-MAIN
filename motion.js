@@ -1,7 +1,13 @@
 /* One global one-shot player. Resting art is always a transparent static PNG. */
-const Motion={active:null,token:0,scope:null,raf:0,
+const Motion={active:null,token:0,scope:null,raf:0,effectClass:null,
   asset:id=>window.BEANSTER_ART.assets.find(a=>a.id===id),
-  stop(){this.token++;cancelAnimationFrame(this.raf);if(this.active?.isConnected&&this.active.dataset.motion)this.active.src=UI.path(this.active.dataset.motion);this.active?.removeAttribute('data-playing');this.active=null},
+  stop(){if(this.effectClass)this.active?.classList.remove(this.effectClass);this.effectClass=null;this.token++;cancelAnimationFrame(this.raf);if(this.active?.isConnected&&this.active.dataset.motion)this.active.src=UI.path(this.active.dataset.motion);this.active?.removeAttribute('data-playing');this.active=null},
+  effect(el, className, duration){
+    this.stop();if(!el?.isConnected||document.hidden||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
+    const token=this.token,start=performance.now();this.active=el;this.effectClass=className;el.dataset.playing='true';el.classList.add(className);
+    const tick=now=>{if(token!==this.token)return;if(!el.isConnected||document.hidden||now-start>=duration){this.stop();return}this.raf=requestAnimationFrame(tick)};
+    this.raf=requestAnimationFrame(tick);
+  },
   async play(img){
     this.stop();if(!img?.isConnected||matchMedia('(prefers-reduced-motion: reduce)').matches)return;
     const asset=this.asset(img.dataset.motion);if(!asset?.animation?.type.startsWith('generated-'))return;
