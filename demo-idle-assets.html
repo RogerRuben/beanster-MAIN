@@ -1,0 +1,85 @@
+<!doctype html>
+<html lang="zh-CN">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover">
+<title>Beanster · 闲置资源第一波演示</title>
+<link rel="stylesheet" href="ui_upgrade.css">
+<style>
+  body{padding:24px 18px 40px;font-family:system-ui,-apple-system,sans-serif;color:var(--ink)}
+  h1{font-size:20px;margin:0 0 6px}
+  .sub{color:var(--muted);font-size:13px;margin:0 0 22px;line-height:1.5}
+  .grid{display:grid;gap:16px}
+  .card{background:var(--card);border:1px solid #eee3d630;border-radius:20px;padding:16px}
+  .card h2{font-size:15px;margin:0 0 12px}
+  .row{display:flex;flex-wrap:wrap;gap:14px;align-items:flex-end}
+  .item{width:110px;text-align:center}
+  .item img{width:96px;height:96px;object-fit:contain;display:block;margin:0 auto 6px}
+  .item b{display:block;font-size:12px}
+  .item span{display:block;font-size:10px;color:var(--muted);margin-top:3px}
+  .actions{display:flex;flex-wrap:wrap;gap:10px;margin-top:8px}
+  .actions button{border:0;border-radius:14px;padding:12px 16px;min-height:44px;font-weight:700;cursor:pointer}
+  .actions .primary{background:var(--primary-grad);color:#fff;box-shadow:var(--shadow-btn)}
+  .actions .ghost{background:#f3e4d2;color:#68432e}
+  .stamp-row img{width:64px;height:72px}
+  .locked img{/* locked art already designed */}
+  .gray img{filter:grayscale(1);opacity:.48}
+  .note{font-size:12px;color:var(--muted);margin-top:10px;line-height:1.6}
+  a.link{color:var(--coffee);font-size:13px}
+</style>
+</head>
+<body>
+  <h1>闲置资源第一波演示</h1>
+  <p class="sub">对应 PR #2：保存贴纸、empty_goal、stamp_4plus（成就锁态素材未齐，暂不接入）。<br>
+    完整素材库：<a class="link" href="art/upgrade-v1/preview.html">art/upgrade-v1/preview.html</a> ·
+    完整 App：<a class="link" href="index_v5.html">index_v5.html</a>
+  </p>
+
+  <div class="grid">
+    <section class="card">
+      <h2>1. 保存成功贴纸</h2>
+      <div class="actions">
+        <button class="primary" onclick="pop('sticker_done')">普通保存 · done</button>
+        <button class="primary" onclick="pop('sticker_cheer')">3杯+ · cheer</button>
+        <button class="primary" onclick="pop('sticker_goal')">解锁成就 · goal</button>
+      </div>
+      <p class="note">点按钮会弹出和 App 里一样的 `.u-save-sticker`（含 label_success）。</p>
+    </section>
+
+    <section class="card">
+      <h2>2. empty_goal</h2>
+      <div class="row">
+        <div class="item" style="width:160px"><img style="width:140px;height:140px" src="art/upgrade-v1/png/empty-states/empty_goal@2x.png" alt=""><b>empty_goal</b><span>成就页尚未解锁时</span></div>
+        <div class="item" style="width:160px"><img style="width:140px;height:140px" src="art/upgrade-v1/png/characters/character_goal@2x.png" alt=""><b>character_goal</b><span>已有解锁时</span></div>
+      </div>
+    </section>
+
+    <section class="card">
+      <h2>3. 月历印章</h2>
+      <div class="row stamp-row">
+        <div class="item"><img src="art/upgrade-v1/png/stamps/stamp_1@2x.png" alt=""><b>stamp_1</b></div>
+        <div class="item"><img src="art/upgrade-v1/png/stamps/stamp_2@2x.png" alt=""><b>stamp_2</b></div>
+        <div class="item"><img src="art/upgrade-v1/png/stamps/stamp_3@2x.png" alt=""><b>stamp_3</b></div>
+        <div class="item"><img src="art/upgrade-v1/png/stamps/stamp_4plus@2x.png" alt=""><b>stamp_4plus</b><span>新增接入</span></div>
+        <div class="item"><img src="art/upgrade-v1/png/stamps/stamp_over@2x.png" alt=""><b>stamp_over</b><span>超量</span></div>
+      </div>
+    </section>
+  </div>
+
+<script>
+const ROOT='art/upgrade-v1/';
+function art(id){
+  const cat=id.startsWith('sticker_')?'stickers':id.startsWith('label_')?'labels':'decorations';
+  return ROOT+`png/${cat}/${id}@2x.png`;
+}
+function pop(sticker){
+  document.querySelectorAll('.u-save-sticker').forEach(n=>n.remove());
+  const el=document.createElement('div');
+  el.className='u-save-sticker';
+  el.innerHTML=`<img class="u-art" src="${art(sticker)}" alt=""><img class="u-art u-save-label" src="${art('label_success')}" alt="">`;
+  document.body.append(el);
+  setTimeout(()=>el.remove(),1700);
+}
+</script>
+</body>
+</html>
