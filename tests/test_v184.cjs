@@ -37,7 +37,7 @@ const root=path.resolve(__dirname,'..'),out=path.join(root,'qa/v184');fs.mkdirSy
   await page.evaluate(()=>{nativeRecognizeBlob=async(...args)=>{Reader.deadline=performance.now()+60000;return savedOCR(...args)};LocalVision.infer=savedVision;$('fProductName').value=''});
   const img=fs.readFileSync(process.argv[2]).toString('base64');
   await page.evaluate(async data=>{const im=new Image();im.src='data:image/png;base64,'+data;await im.decode();await ocrSmartSource(null,'document',im)},img);
-  assert.equal(result.status,'done');assert.ok(result.engine.includes('PP-OCRv5'));assert.ok(result.lines.some(l=>l.text.includes('拿铁')));assert.ok((await page.locator('#recognition').innerText()).includes('拿铁'));checks.push('real transferred pixels -> NativeReader async -> PP-OCRv5 -> filtered UI (desktop native harness, not Android runtime)');
+  assert.equal(result.status,'done');assert.ok(result.engine.includes('PP-OCRv5'));assert.ok(result.lines.some(l=>l.text.includes('拿铁')));assert.ok((await page.locator('#recognition').evaluate(el=>el.innerText+' '+[...el.querySelectorAll('input')].map(x=>x.value).join(' '))).includes('拿铁'));checks.push('real transferred pixels -> NativeReader async -> PP-OCRv5 -> filtered UI (desktop native harness, not Android runtime)');
  }
  assert.deepEqual(errors,[]);fs.writeFileSync(path.join(out,'results.json'),JSON.stringify({passed:true,checks},null,2));console.log('PASS '+checks.length+' V18.4 groups');
 }finally{await browser.close()}})().catch(e=>{console.error(e);process.exitCode=1});

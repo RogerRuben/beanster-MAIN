@@ -49,6 +49,11 @@ public final class PaddleReader implements AutoCloseable {
         List<Line> lines=new ArrayList<>();
         for(double[] box:boxes){
             cancel.check();Line line=recognize(gray,w,h,box,false,false);
+            if(length(box,0,3)>length(box,0,1)*1.8){
+                cancel.check();Line stacked=recognizeStacked(gray,w,h,box);if(stacked!=null&&stacked.score>line.score)line=stacked;
+                double[] sideways={box[6],box[7],box[0],box[1],box[2],box[3],box[4],box[5]};
+                Line rotated=recognize(gray,w,h,sideways,false,false);if(rotated.score>line.score){rotated.box=box;line=rotated;}
+            }
             if(line.score<.78){
                 cancel.check();Line enhanced=recognize(gray,w,h,box,true,false);
                 if(enhanced.score>line.score+.03)line=enhanced;
@@ -58,6 +63,18 @@ public final class PaddleReader implements AutoCloseable {
             if(!line.text.trim().isEmpty()&&line.score>=.35)lines.add(line);
         }
         return lines;
+    }
+    private Line recognizeStacked(byte[] gray,int w,int h,double[] b) throws Exception {
+        double ratio=length(b,0,3)/Math.max(1,length(b,0,1));int first=Math.max(2,(int)Math.round(ratio));if(first>10)return null;
+        Line best=null;
+        // DB expansion widens a vertical column, so its aspect ratio underestimates glyph count.
+        for(int n=first;n<=Math.min(12,first+2);n++){
+            int width=48*n;byte[] strip=new byte[width*48];
+            for(int y=0;y<48;y++)for(int x=0;x<width;x++)strip[y*width+x]=(byte)Math.round(crop(gray,w,h,b,(x%48+.5)/48,(x/48+(y+.5)/48)/n));
+            Line r=recognize(strip,width,48,new double[]{0,0,width-1,0,width-1,47,0,47},false,false);r.box=b;
+            if(r.text.codePointCount(0,r.text.length())==n&&(best==null||r.score>best.score))best=r;
+        }
+        return best;
     }
     private Line recognize(byte[] gray,int w,int h,double[] b,boolean contrast,boolean flip) throws Exception {
         double bw=length(b,0,1),bh=length(b,0,3);

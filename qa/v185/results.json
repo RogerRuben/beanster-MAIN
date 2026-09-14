@@ -1,0 +1,87 @@
+{
+  "passed": true,
+  "nativeEngine": "Production PaddleReader Java CPU, desktop runtime; UI consumes real model output. No filenames fed to model or rules.",
+  "cases": [
+    {
+      "image": "埃塞瑰夏美式.jpg",
+      "expected": "埃塞瑰夏美式",
+      "before": "美式",
+      "after": "埃塞瑰夏美式",
+      "state": "candidate",
+      "attempts": 2
+    },
+    {
+      "image": "干姜美式.jpg",
+      "expected": "干姜美式",
+      "before": "美式",
+      "after": "干姜美式",
+      "state": "candidate",
+      "attempts": 1
+    },
+    {
+      "image": "美式咖啡.jpg",
+      "expected": "美式咖啡",
+      "before": "美式",
+      "after": "美式咖啡",
+      "state": "exact",
+      "attempts": 2
+    },
+    {
+      "image": "美式黑咖.jpg",
+      "expected": "美式黑咖",
+      "before": "",
+      "after": "美式黑咖",
+      "state": "exact",
+      "attempts": 1
+    },
+    {
+      "image": "苹果c美式.jpg",
+      "expected": "苹果C美式",
+      "before": "美式",
+      "after": "苹果C美式",
+      "state": "exact",
+      "attempts": 2
+    },
+    {
+      "image": "轻椰茉莉拿铁.jpg",
+      "expected": "轻椰茉莉拿铁",
+      "before": "拿铁",
+      "after": "轻椰茉莉拿铁",
+      "state": "candidate",
+      "attempts": 2
+    },
+    {
+      "image": "鲜萃黑咖深烘.jpg",
+      "expected": "鲜萃黑咖深烘",
+      "before": "",
+      "after": "鲜萃黑咖深烘",
+      "state": "exact",
+      "attempts": 2
+    },
+    {
+      "image": "黑巧风味美式.jpg",
+      "expected": "黑巧风味美式",
+      "before": "美式",
+      "after": "黑巧风味美式",
+      "state": "candidate",
+      "attempts": 2
+    },
+    {
+      "image": "黑巧风味美式1.jpg",
+      "expected": "黑巧风味美式",
+      "before": "美式",
+      "after": "黑巧风味美式",
+      "state": "exact",
+      "attempts": 2
+    },
+    {
+      "image": "黑巧风味美式2.jpg",
+      "expected": "黑巧风味美式",
+      "before": "",
+      "after": "黑巧风味美式",
+      "state": "exact",
+      "attempts": 3
+    }
+  ],
+  "editableName": true
+}

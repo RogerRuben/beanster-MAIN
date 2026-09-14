@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='18.4'
-VERSION_CODE=46
+APP_VERSION='18.5'
+VERSION_CODE=47
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
