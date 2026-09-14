@@ -102,12 +102,6 @@ const UI = (() => {
 
 Object.assign(UI, (()=>{
   const {art,icon,arg,section,metric,arrow,dateLabel}=UI;
-  const lockedBadge={week:'locked_week',month:'locked_month',expert:'locked_expert'};
-  const badgeArt=a=>{
-    if(a.at)return art('achievement_'+a.badge);
-    const locked=lockedBadge[a.badge];
-    return locked?art(locked,'u-locked-art'):art('achievement_'+a.badge);
-  };
   const palette=['#754831','#a67555','#d3a17c','#ddc9b5','#98a186','#b18c73'];
   const countBy=(rs,key)=>{const counts={};rs.forEach(r=>{const value=String(r[key]||'未填写');counts[value]=(counts[value]||0)+1});return Object.entries(counts).sort((a,b)=>b[1]-a[1])};
   function monthNav(){const ref=monthRef();return `<div class="u-month-nav"><button onclick="UI.month(-1)" aria-label="上个月">${arrow(true)}</button><h1>${ref.getFullYear()} 年 ${ref.getMonth()+1} 月</h1><button onclick="UI.month(1)" aria-label="下个月" ${analysisMonthOffset>=0?'disabled':''}>${arrow()}</button></div>`}
@@ -177,8 +171,8 @@ Object.assign(UI, (()=>{
     rs.forEach((r,i)=>{const d=new Date(r.ts),key=localKey(d),mon=key.slice(0,7);if(key!==lastDay){const prev=new Date(d);prev.setDate(prev.getDate()-1);streak=localKey(prev)===lastDay?streak+1:1;bestStreak=Math.max(bestStreak,streak);lastDay=key}days.set(key,true);if(!months.has(mon))months.set(mon,new Set());months.get(mon).add(key);types.add(r.type);if(r.brand)brands.add(r.brand);if(r.photoId||r.photoPreview||r.nativePhotoPath)photos++;const s={n:i+1,streak:bestStreak,monthDays:months.get(mon).size,types:types.size,brands:brands.size,photos,type:r.type,hour:d.getHours(),months:months.size};defs.forEach(a=>{if(!a.at&&a.test(s))a.at=r.ts})});return defs;
   }
   function achievements(){UI.overlay('uAchievements','我的成就','<div id="uAchievementContent"></div>');renderAchievements()}
-  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art(defs.some(a=>a.at)?'character_goal':'empty_goal','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}${!a.at&&lockedBadge[a.badge]?' has-locked-art':''}" onclick="UI.achievementDetail('${a.id}')">${badgeArt(a)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
-  function achievementDetail(id){const a=achievementList().find(x=>x.id===id);if(!a)return;const lockedCls=!a.at&&lockedBadge[a.badge]?' locked has-locked-art':(a.at?'':' locked');UI.overlay('uBadgeDetail',a.title,`<div class="u-badge-detail${lockedCls}">${badgeArt(a)}<h3>${a.title}</h3><p>${a.desc}</p><span>${a.at?'解锁于 '+dateLabel(localKey(new Date(a.at))):'慢慢记录，等待点亮。'}</span></div>`,'u-small-overlay')}
+  function renderAchievements(){const defs=achievementList();$('uAchievementContent').innerHTML=`<div class="u-achievement-intro">${art(defs.some(a=>a.at)?'character_goal':'empty_goal','',true)}<div><b>把日常，收集成光。</b><span>已解锁 ${defs.filter(a=>a.at).length} / ${defs.length}</span></div></div><div class="u-achievement-grid">${defs.map(a=>`<button class="u-badge ${a.at?'unlocked':'locked'}" onclick="UI.achievementDetail('${a.id}')">${art('achievement_'+a.badge)}<b>${a.title}</b><span>${a.at?localKey(new Date(a.at)).replaceAll('-','.'):'尚未解锁'}</span></button>`).join('')}</div>`}
+  function achievementDetail(id){const a=achievementList().find(x=>x.id===id);if(!a)return;UI.overlay('uBadgeDetail',a.title,`<div class="u-badge-detail ${a.at?'':'locked'}">${art('achievement_'+a.badge)}<h3>${a.title}</h3><p>${a.desc}</p><span>${a.at?'解锁于 '+dateLabel(localKey(new Date(a.at))):'慢慢记录，等待点亮。'}</span></div>`,'u-small-overlay')}
   return {analysis,month,tab,dailyChart,distribution,timeChart,openDay,renderDay,selectDay,shiftDay,saveDayNote,addOnDay,achievementList,achievements,renderAchievements,achievementDetail};
 })());
 
