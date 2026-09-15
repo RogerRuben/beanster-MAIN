@@ -6,8 +6,8 @@ try{const page=await browser.newPage({viewport:{width:390,height:844}}),errors=[
 await page.goto('file:///'+path.join(root,'index_v5.html').replaceAll('\\','/'));await page.waitForTimeout(200);assert.equal(await page.evaluate(()=>window.AppNav===AppNav),true);
 assert.deepEqual(await page.evaluate(()=>[2,7,10,12,16,20,23].map(h=>Companion.schedule(h).hero)),['character_idle','character_wave','character_coffee','character_burger','character_takeaway','character_idle','character_idle']);
 assert.equal(await page.evaluate(()=>Companion.schedule(23).portrait),'portrait_sleepy');
-await page.evaluate(()=>{Companion.entryHour=12;settings.homeCharacter='';renderToday()});assert.equal(await page.locator('.u-home-mascot').getAttribute('data-motion'),'character_burger');
-await page.evaluate(()=>renderAll());assert.equal(await page.locator('.u-home-mascot').getAttribute('data-motion'),'character_burger');checks.push('time slots and stable entry selection');
+await page.evaluate(()=>{Companion.entryHour=12;settings.homeCharacter='';renderToday()});assert.equal(await page.locator('.cc-hamster').getAttribute('data-motion'),await page.evaluate(()=>CoffeeRoom.hero()));
+await page.evaluate(()=>renderAll());assert.equal(await page.locator('.cc-hamster').getAttribute('data-motion'),await page.evaluate(()=>CoffeeRoom.hero()));checks.push('time slots and stable entry selection');
 await page.evaluate(()=>Motion.gallery());await page.getByRole('button',{name:'设为陪伴头像',exact:true}).first().click();assert.match(await page.locator('.u-companion-avatar').getAttribute('data-motion'),/^portrait_/);checks.push('portraits can be used as companion avatars');
 await page.evaluate(()=>{UI.go('analysis');UI.openDay(localKey(new Date()))});await page.waitForTimeout(50);
 assert.equal(await page.evaluate(()=>AppNav.back()),true);assert.equal(await page.locator('#uDay').count(),0);assert.equal(await page.locator('.page.active').getAttribute('id'),'analysis');

@@ -1,0 +1,23 @@
+# V19 coffee room art
+
+Generated with the built-in `image_gen` tool. Existing hamster images and frame sequences are reused unchanged from `art/upgrade-v1`; no hamster was generated or redesigned.
+
+Runtime layers: `corner.png` background (night tint is applied in CSS), `table.png` transparent foreground, `drinks.png` transparent 3×3 atlas, `shelf.png` repeatable shelf background. Cups use CSS background positioning at full cell boundaries; there is no destructive extraction or background-removal step. The nine cells, left to right and top to bottom, are latte, americano, cold brew, flat white, mocha, coconut latte, matcha latte, pour-over and generic takeaway. At small sizes the same sprites are used for tabletop and shelf items; the detail page uses a larger cell. The collection is about the individual drinking record, not an exact photograph of its branded packaging.
+
+## Final prompt set
+
+### corner.png
+
+Use case: stylized-concept. Asset: production background for a mobile pixel-art coffee tracking game, landscape 3:2. A cozy tiny coffee corner rendered entirely as crisp 16-bit pixel art with visible square pixel clusters and dark brown stepped outlines; warm cream plaster wall, honey oak floor, large blue-sky window on left, leafy green potted plants at lower edges, two small framed botanical prints on back wall, pendant lamp at upper center-right, trailing vine and small wall shelf on right. Composition: wall occupies upper 80%, floor bottom20%; center lower 60% is CLEAR EMPTY SPACE for separate existing hamster and table sprites that will be composited by the application. NO table, NO chair, NO hamster, NO animals, NO cups, NO text, NO UI, NO logos. Flat front-facing side-view game environment, orthographic, restrained cream/caramel/coffee-brown palette, no photographic surfaces, no painterly blur, no smooth 3D realism. Final production art, no layout sheet.
+
+### drinks.png
+
+Use case: stylized-concept. Production transparent PNG sprite atlas for Beanster Sips pixel-art cafe app. Exactly a 3x3 uniform grid of NINE distinct coffee vessels. Transparent alpha background (not checkerboard), no labels, no shadows outside objects, no text. Each item centered in its own equal cell with generous transparent margin, same apparent scale and bottom baseline, no overlap. Row1: latte with simple foam leaf in ivory ceramic mug; black americano in dark brown ceramic mug; iced cold brew in tall clear glass with amber ice. Row2: flat white in short cream cup; mocha dark chocolate drink in ivory mug topped small cream swirl; coconut latte in tall ivory mug with light milk coffee bands. Row3: matcha latte in ivory mug with green drink; pour-over dripper on small glass coffee server; takeaway kraft brown cup with dark brown lid and tiny plain cream square emblem. Crisp 16-bit pixel sprites with visible square clusters, dark coffee-brown stepped 2px outlines, warm ivory caramel brown palette plus matcha green. Orthographic front/three-quarter view, friendly handmade small videogame inventory icons. Avoid photorealism, vector smoothness, animals, brands, lettering. All nine separated and complete including handles.
+
+### table.png
+
+Use case stylized-concept. One production game sprite: a wide oval honey oak cafe table seen from slightly above, with a thick stepped pixel outline, simple wood plank top and two short visible legs. Transparent alpha background. No other objects, no cups, no characters, no text, no floor or shadow outside object. Width to height ratio of object about 3:1, large clear tabletop for four separate cup sprites to be composited on it. Crisp restrained 16-bit pixel art, visible square pixels, dark brown outline, warm caramel wood palette. Designed for tiny cozy pixel hamster game, NOT realism or smooth vector.
+
+### shelf.png
+
+Use case stylized-concept. One production background asset: a single EMPTY wooden display shelf compartment for repeatable mobile game coffee collection room. Landscape 3:1 composition. Flat front-facing view, dark warm honey oak back panel with very simple vertical wood planks, strong thick brown vertical frame at left and right edges, sturdy horizontal shelf board across entire bottom at 85 percent of image height. OPEN completely empty interior. No cups, no objects, no animals, no lettering, no numbers, no UI, no plants. Crisp visible 16-bit square pixel clusters and dark stepped pixel outlines; warm caramel brown/cream palette, soft pixel-shaded darker back panel, NO photo texture, no realistic grain, no smooth painting. Entire rectangular image filled with the shelf, no outer white border. Designed to hold three coffee cup sprites overlaid at runtime and repeat vertically.

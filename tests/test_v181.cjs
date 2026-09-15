@@ -7,12 +7,12 @@ const capture=page.screenshot.bind(page);page.screenshot=options=>capture({...op
 await page.goto('file:///'+path.join(ROOT,'index_v5.html').replaceAll('\\','/'));
 await page.waitForFunction(()=>document.querySelectorAll('[data-playing]').length===1);
 await page.waitForTimeout(2200);assert.equal(await page.locator('[data-playing]').count(),0);await page.waitForTimeout(1800);assert.equal(await page.locator('[data-playing]').count(),0);checks.push('entry animation plays once');
-await page.locator('.u-home-mascot').click();await page.waitForFunction(()=>document.querySelectorAll('[data-playing]').length===1);await page.waitForTimeout(2200);assert.equal(await page.locator('[data-playing]').count(),0);
-assert.ok((await page.locator('.u-home-mascot').boundingBox()).width<=118);checks.push('smaller mascot and click replay');
+await page.locator('.cc-hamster').click();await page.waitForFunction(()=>document.querySelectorAll('[data-playing]').length===1);await page.waitForTimeout(2200);assert.equal(await page.locator('[data-playing]').count(),0);
+assert.ok((await page.locator('.cc-hamster').boundingBox()).width<=130);checks.push('smaller mascot and click replay');
 await page.evaluate(()=>Motion.gallery());assert.equal(await page.locator('.u-expression-grid article').count(),14);
 await page.locator('.u-expression-grid [data-motion]').nth(1).click();await page.locator('.u-expression-grid [data-motion]').nth(2).click();assert.ok(await page.locator('[data-playing]').count()<=1);checks.push('all 14 expressions exposed; global single player');
-await page.screenshot({path:path.join(OUT,'expressions.png')});await page.evaluate(()=>Motion.choose('character_wave'));assert.equal(await page.locator('.u-home-mascot').getAttribute('data-motion'),'character_wave');checks.push('home character preference');
-await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.u-home-mascot').click();assert.equal(await page.locator('[data-playing]').count(),0);checks.push('reduced motion honored');
+await page.screenshot({path:path.join(OUT,'expressions.png')});await page.evaluate(()=>Motion.choose('character_wave'));assert.equal(await page.locator('.cc-hamster').getAttribute('data-motion'),'character_wave');checks.push('home character preference');
+await page.emulateMedia({reducedMotion:'reduce'});await page.locator('.cc-hamster').click();assert.equal(await page.locator('[data-playing]').count(),0);checks.push('reduced motion honored');
 const parsing=await page.evaluate(()=>{
  const positive=['埃塞瑰夏拿铁(杯)','瑞幸咖啡\n生椰拿铁\n少冰','订单详情\n实付 19.9\n澳白','冰美式','Dirty','燕麦拿铁','香草拿铁','摩卡','卡布奇诺','冷萃','手冲','加浓美式','低因咖啡','桂花米酿拿铁','拿铁\n大杯 450ml','Manner\n拿铁'];
  const negative=['机械键盘','人像照片','山川风景','手机壳','卡布奇诺蛋糕','拿铁饼干','咖啡杯','咖啡机','咖啡豆','细吸管','不额外加糖','TEL: 15203880541','付款成功\n订单号169','配件 Z','普通电脑屏幕','牛肉汉堡'];

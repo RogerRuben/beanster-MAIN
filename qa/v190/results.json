@@ -1,0 +1,17 @@
+{
+  "passed": true,
+  "checks": [
+    "empty desk, empty collection and first-record action",
+    "immediate collection membership, duplicate drinks, yesterday excluded from desk",
+    "search name, brand, date and no-results state",
+    "detail fields, edit date synchronization, delete and undo",
+    "4-cup cap, more entry and detail-to-room-to-home back navigation",
+    "missed days collapse to one ritual; only previous visible cups move",
+    "actual once-only 1.8s ritual, skip and restart preserve today and records",
+    "natural ritual completion does not mutate records",
+    "reduced motion consumes ritual without animation",
+    "transparent drink atlas and 320/390/480px layout",
+    "photo hydration and escaped user content in detail",
+    "all records reachable through shelf pagination without drink deduplication"
+  ]
+}
