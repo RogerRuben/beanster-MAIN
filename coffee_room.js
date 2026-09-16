@@ -11,20 +11,24 @@ const CoffeeRoom={
   cupButton(r){return `<button class="cc-desk-cup" data-record-id="${esc(r.id)}" onclick="CoffeeRoom.detail(${this.arg(r.id)})" aria-label="查看 ${esc(recordDisplayName(r))}，${pad(new Date(r.ts).getHours())}:${pad(new Date(r.ts).getMinutes())}">${this.cup(r)}</button>`},
   hero(){if(/^character_/.test(settings.homeCharacter||'')&&settings.homeCharacter!=='character_burger'&&Motion.asset(settings.homeCharacter))return settings.homeCharacter;const h=new Date().getHours();return h<6||h>=22?'character_idle':this.desk().length?'character_coffee':'character_wave'},
   scene(){const rs=this.desk(),night=new Date().getHours()<6||new Date().getHours()>=20;
-    return `<section class="cc-corner ${night?'cc-night':''}" aria-label="仓鼠咖啡角"><div class="cc-scene-heading"><span>仓鼠咖啡角</span><button class="cc-room-sign" onclick="CoffeeRoom.open()">收藏室 ↗</button></div><div class="cc-speech">${rs.length?'每一杯，都有自己的故事。':'桌子留好了，今天想喝什么？'}</div>${UI.art(this.hero(),'cc-hamster',true,'咖啡角仓鼠')}<img class="cc-table" src="art/coffee-room/table.png" alt=""><div class="cc-desk" aria-label="今天的咖啡">${rs.slice(0,4).map(r=>this.cupButton(r)).join('')}</div>${rs.length>4?`<button class="cc-more" onclick="CoffeeRoom.openToday()">更多 · 还有 ${rs.length-4} 杯 →</button>`:!rs.length?'<span class="cc-empty-desk">还没有放上今天的咖啡</span>':''}<div class="cc-ritual-slot"></div></section>`;
+    return `<section class="cc-corner ${night?'cc-night':''}" aria-label="仓鼠咖啡角"><div class="cc-scene-heading"><span>仓鼠咖啡角</span><button class="cc-room-sign" onclick="CoffeeRoom.open()">收藏室 ↗</button></div><div class="cc-speech">${rs.length?'每一杯，都有自己的故事。':'桌子留好了，今天想喝什么？'}</div><img class="cc-hamster cc-seated" src="art/coffee-room/hamster-seated-v192.png" alt="坐在咖啡桌前的仓鼠"><img class="cc-table" src="art/coffee-room/table.png" alt=""><div class="cc-desk" aria-label="今天的咖啡">${rs.slice(0,4).map(r=>this.cupButton(r)).join('')}</div>${rs.length>4?`<button class="cc-more" onclick="CoffeeRoom.openToday()">更多 · 还有 ${rs.length-4} 杯 →</button>`:!rs.length?'<span class="cc-empty-desk">还没有放上今天的咖啡</span>':''}<div class="cc-ritual-slot"></div></section>`;
   },
   decorateHome(){const content=$('todayContent');if(!content)return;const hero=content.querySelector('.u-hero');if(!hero)return;
-    // The landing page is a dashboard; the scene supplements it, never hides the gauge.
+    // Two independent home screens: scene first; live data and gauge on the second.
     hero.querySelector('.u-home-mascot')?.remove();hero.classList.add('u-no-mascot');
-    const custom=$('uDashboardCustomize'),panel=document.createElement('section');panel.className='cc-dashboard-panel';panel.setAttribute('aria-label','今日咖啡因仪表盘');
-    hero.before(panel);panel.innerHTML='<div class="cc-dashboard-title"><div><small>今天的咖啡时光</small><h1>今日仪表盘</h1></div><button class="cc-camera" onclick="openSmartAdd(\'camera\')" aria-label="拍照识别">'+UI.icon('camera')+'</button></div>';panel.append(hero);if(custom)panel.append(custom);
-    panel.insertAdjacentHTML('afterend',this.scene());
-    content.querySelector('.u-achievement-teaser')?.remove();
-    const metrics=content.querySelector('.u-metrics'),cta=content.querySelector('.u-record-cta');if(metrics)panel.append(metrics);if(cta)panel.append(cta);
-    panel.insertAdjacentHTML('beforebegin','<div class="cc-page-switch"><span aria-current="page">仪表盘</span><button onclick="CoffeeRoom.open()">收藏室</button><small>左右滑动，循环切换</small></div>');
+    const custom=$('uDashboardCustomize'),metrics=content.querySelector('.u-metrics'),cta=content.querySelector('.u-record-cta'),date=content.querySelector('.u-date');
+    const host=$('dashboardContent');host.innerHTML=this.screenTabs('dashboard')+'<div class="cc-data-heading"><span>看见今天的咖啡节奏</span><h1>今日仪表盘</h1></div><section class="cc-data-gauge"></section>';
+    host.querySelector('.cc-data-gauge').append(hero);if(custom)host.querySelector('.cc-data-gauge').append(custom);
+    const caf=Math.round(sum(this.desk(),'caffeine')),limit=Math.max(1,Number(settings.dailyLimit)||400);
+    host.insertAdjacentHTML('beforeend',`<div class="cc-data-numbers"><div><span>已摄入</span><b>${caf}<small> mg</small></b></div><div><span>剩余</span><b>${Math.max(0,limit-caf)}<small> mg</small></b></div><div><span>日上限</span><b>${limit}<small> mg</small></b></div></div>`);
+    if(metrics)host.append(metrics);
+    host.insertAdjacentHTML('beforeend','<button class="primary cc-data-add" onclick="openAdd()">＋ 记录一杯</button><button class="u-text-btn cc-data-collection" onclick="CoffeeRoom.open()">查看咖啡收藏室 →</button>');
+    content.innerHTML=this.screenTabs('today');if(date)content.append(date);content.insertAdjacentHTML('beforeend',this.scene());if(cta)content.append(cta);
+    content.insertAdjacentHTML('beforeend','<div class="cc-home-links"><button onclick="openSmartAdd(\'camera\')">'+UI.icon('camera')+'拍照记录</button><button onclick="Motion.gallery()">'+UI.icon('achievement')+'鼠鼠表情</button></div>');
     // Only a visible desk is remembered. Backdated additions never enter this snapshot.
     if(document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)this.checkDay();
   },
+  screenTabs(active){return `<div class="cc-page-switch"><button ${active==='today'?'aria-current="page"':''} onclick="UI.go('today')">仓鼠咖啡角</button><button ${active==='dashboard'?'aria-current="page"':''} onclick="UI.go('dashboard')">今日仪表盘</button><small>${active==='today'?'1 / 2':'2 / 2'} · 左右滑动</small></div>`},
   open(){this.query='';this.limit=60;UI.go('collection')},
   openToday(){this.query=this.today();this.limit=60;UI.go('collection')},
   search(value){this.query=value;this.limit=60;this.renderShelves()},
@@ -52,11 +56,11 @@ const roomToday=renderToday;renderToday=function(){roomToday();CoffeeRoom.decora
 const roomRenderAll=renderAll;renderAll=function(){roomRenderAll();CoffeeRoom.refresh()};
 // Save already persists the record. All room views read that same record immediately.
 const roomPersist=persist;persist=function(){roomPersist();CoffeeRoom.renderShelves();CoffeeRoom.renderDetail()};
-const roomGo=UI.go;UI.go=function(id){if(id==='photos')CoffeeRoom.photos();else roomGo(id)};
-const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.1'};
+const roomGo=UI.go;UI.go=function(id){if(id==='dashboard'){CoffeeRoom.finishRitual();document.querySelectorAll('.page,.nav button').forEach(n=>n.classList.remove('active'));$('dashboard').classList.add('active');document.querySelector('.nav [data-page=today]').classList.add('active');document.body.dataset.page='dashboard';renderAll();scrollTo(0,0)}else if(id==='photos')CoffeeRoom.photos();else roomGo(id)};
+const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.2'};
 // Route existing record menus into the complete detail page.
 UI.recordMenu=id=>CoffeeRoom.detail(id);
-const roomGallery=Motion.gallery;Motion.gallery=function(){roomGallery.call(this);const burger=document.querySelector('.u-expression-grid [data-motion=character_burger]')?.closest('article');const button=burger?.querySelector('button');if(button){button.disabled=true;button.textContent='仅在表情册欣赏'}};
+const roomGallery=Motion.gallery;Motion.gallery=function(){roomGallery.call(this);document.querySelectorAll('.u-expression-grid article').forEach(article=>{const img=article.querySelector('[data-motion]');if(!img?.dataset.motion.startsWith('character_'))return;const button=article.querySelector('button');if(button){button.disabled=false;button.textContent='播放表情';button.removeAttribute('onclick');button.onclick=()=>Motion.play(img)}});document.querySelectorAll('#uExpressions button[onclick^=\"Motion.choose\"]').forEach(b=>b.remove());document.querySelectorAll('#uExpressions .u-motion-hint').forEach((p,i)=>p.textContent=i?'开心、平静等头像仍可选择；咖啡角使用专属坐姿。':'点击表情，播放一次。汉堡搭配保留为扩展情绪。')};
 document.addEventListener('toggle',e=>{if(e.target.matches?.('.cc-dashboard-details')&&!e.target.open&&e.target.contains(Motion.active))Motion.stop()},true);
 document.querySelectorAll('.nav button').forEach(b=>b.addEventListener('click',()=>CoffeeRoom.finishRitual(),true));
 document.addEventListener('visibilitychange',()=>{if(document.hidden)CoffeeRoom.finishRitual();else if(document.querySelector('.page.active')?.id==='today'){renderToday();Motion.sync()}});

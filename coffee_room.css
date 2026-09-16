@@ -79,3 +79,26 @@ body[data-page=today]>.top{display:none}
 @media(max-width:350px){.cc-corner{height:380px}.cc-dashboard-title h1{font-size:17px}.cc-dashboard-panel .u-gauge{width:132px;height:132px}.cc-dashboard-panel>.u-hero{height:142px}}
 
 @media(max-width:350px){.cc-corner{margin-left:-15px;margin-right:-15px}}
+
+/* V19.2 approach B: scene and dashboard are separate home pages. */
+body[data-page=dashboard]>.top{display:none}
+#dashboard{padding-top:max(12px,env(safe-area-inset-top))}
+.cc-page-switch button[aria-current=page]{color:#613e29;font-weight:750;border-bottom:2px solid #966a46}
+#todayContent>.cc-page-switch{padding-bottom:4px}#todayContent>.u-date{margin:5px 0 12px}
+#todayContent>.cc-corner{height:clamp(380px,calc(100svh - 310px),560px);margin-bottom:14px}
+.cc-seated{width:182px;height:205px;bottom:129px;z-index:4;pointer-events:none;object-fit:contain}
+#todayContent .cc-table{bottom:39px;height:128px}
+#todayContent .cc-desk{bottom:94px;z-index:5}
+#todayContent .cc-speech{bottom:338px}
+#todayContent .cc-more{bottom:17px}#todayContent .cc-empty-desk{bottom:20px}
+#todayContent>.u-record-cta{margin:8px 0 7px;min-height:50px}
+.cc-home-links{display:flex;justify-content:space-around;gap:10px}.cc-home-links button{display:flex;align-items:center;justify-content:center;gap:6px;min-height:40px;border:0;background:transparent;color:#92704e;font-size:12px}.cc-home-links .u-icon{width:20px;height:20px}
+.cc-data-heading{text-align:center;margin:14px 0 6px}.cc-data-heading>span{font-size:11px;color:#a08264}.cc-data-heading h1{font-size:23px;color:#65412a;margin:5px 0}
+.cc-data-gauge{background:#fff9ef;border:1px solid #eedfca;border-radius:22px;padding:8px 10px 6px;margin:16px 0}
+.cc-data-gauge>.u-hero{display:flex;justify-content:center;align-items:center;height:218px;margin:0}
+.cc-data-gauge .u-gauge{width:196px;height:196px;left:0}.cc-data-gauge .u-gauge-copy strong{font-size:43px}.cc-data-gauge .u-gauge-copy em{font-size:21px}
+.cc-data-gauge .u-dashboard-cup{transform:scale(.9)}.cc-data-gauge .u-dashboard-customize{display:block;text-align:center;width:100%;min-height:36px;margin:0}
+.cc-data-numbers{display:grid;grid-template-columns:repeat(3,minmax(0,1fr));border-radius:17px;padding:16px 5px;background:#f0e1cc;gap:3px;margin:14px 0}
+.cc-data-numbers>div{text-align:center;border-right:1px solid #dac2a5}.cc-data-numbers>div:last-child{border:0}.cc-data-numbers span{font-size:11px;color:#947554}.cc-data-numbers b{display:block;font-size:24px;color:#67462c;margin-top:5px}.cc-data-numbers small{font-size:10px;font-weight:400}
+#dashboardContent>.u-metrics{margin:15px 0;padding:18px 2px}.cc-data-add{width:100%;margin-top:4px;min-height:50px}.cc-data-collection{display:block;width:100%;min-height:44px;margin-top:8px}
+@media(max-width:350px){.cc-seated{width:165px;height:187px;bottom:130px}.cc-page-switch{gap:10px}.cc-page-switch button{font-size:12px}.cc-page-switch small{font-size:9px}.cc-data-numbers b{font-size:21px}}
