@@ -102,3 +102,17 @@ body[data-page=dashboard]>.top{display:none}
 .cc-data-numbers>div{text-align:center;border-right:1px solid #dac2a5}.cc-data-numbers>div:last-child{border:0}.cc-data-numbers span{font-size:11px;color:#947554}.cc-data-numbers b{display:block;font-size:24px;color:#67462c;margin-top:5px}.cc-data-numbers small{font-size:10px;font-weight:400}
 #dashboardContent>.u-metrics{margin:15px 0;padding:18px 2px}.cc-data-add{width:100%;margin-top:4px;min-height:50px}.cc-data-collection{display:block;width:100%;min-height:44px;margin-top:8px}
 @media(max-width:350px){.cc-seated{width:165px;height:187px;bottom:130px}.cc-page-switch{gap:10px}.cc-page-switch button{font-size:12px}.cc-page-switch small{font-size:9px}.cc-data-numbers b{font-size:21px}}
+
+/* User frame atlases: all paws land at the same tabletop plane. */
+canvas.cc-seated{width:210px;height:230px;bottom:145px;pointer-events:auto;cursor:pointer;z-index:4;image-rendering:pixelated}
+#todayContent .cc-speech{bottom:auto;top:85px}
+@media(max-width:350px){canvas.cc-seated{width:190px;height:208px;bottom:147px}}
+@media(max-height:760px){#todayContent .cc-speech{display:none}}
+
+/* Smaller companion, unchanged paw contact plane. */
+canvas.cc-seated{width:160px;height:175px;bottom:149px}
+@media(max-width:350px){canvas.cc-seated{width:148px;height:162px;bottom:150px}}
+
+/* Extra transparent side room keeps pointing paws fully inside the canvas. */
+canvas.cc-seated{width:200px;height:175px}
+@media(max-width:350px){canvas.cc-seated{width:185px;height:162px}}
