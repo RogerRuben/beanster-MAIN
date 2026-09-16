@@ -14,13 +14,14 @@ const CoffeeRoom={
     return `<section class="cc-corner ${night?'cc-night':''}" aria-label="仓鼠咖啡角"><div class="cc-scene-heading"><span>仓鼠咖啡角</span><button class="cc-room-sign" onclick="CoffeeRoom.open()">收藏室 ↗</button></div><div class="cc-speech">${rs.length?'每一杯，都有自己的故事。':'桌子留好了，今天想喝什么？'}</div>${UI.art(this.hero(),'cc-hamster',true,'咖啡角仓鼠')}<img class="cc-table" src="art/coffee-room/table.png" alt=""><div class="cc-desk" aria-label="今天的咖啡">${rs.slice(0,4).map(r=>this.cupButton(r)).join('')}</div>${rs.length>4?`<button class="cc-more" onclick="CoffeeRoom.openToday()">更多 · 还有 ${rs.length-4} 杯 →</button>`:!rs.length?'<span class="cc-empty-desk">还没有放上今天的咖啡</span>':''}<div class="cc-ritual-slot"></div></section>`;
   },
   decorateHome(){const content=$('todayContent');if(!content)return;const hero=content.querySelector('.u-hero');if(!hero)return;
-    // Keep every dashboard style available, but let the scene be the home focal point.
+    // The landing page is a dashboard; the scene supplements it, never hides the gauge.
     hero.querySelector('.u-home-mascot')?.remove();hero.classList.add('u-no-mascot');
-    const custom=$('uDashboardCustomize'),details=document.createElement('details');details.className='u-details cc-dashboard-details';details.innerHTML='<summary>咖啡因仪表盘 · 切换组件 '+UI.arrow()+'</summary>';hero.before(details);details.append(hero);if(custom)details.append(custom);
-    const rs=this.desk(),caf=Math.round(sum(rs,'caffeine')),limit=Math.max(1,Number(settings.dailyLimit)||400);
-    details.insertAdjacentHTML('beforebegin',this.scene()+`<div class="cc-caffeine"><span>今日咖啡因 <b>${caf}<small> mg</small></b></span><span>${caf>limit?'超过上限':'日上限剩余'} <b>${Math.abs(limit-caf)}<small> mg</small></b></span></div>`);
+    const custom=$('uDashboardCustomize'),panel=document.createElement('section');panel.className='cc-dashboard-panel';panel.setAttribute('aria-label','今日咖啡因仪表盘');
+    hero.before(panel);panel.innerHTML='<div class="cc-dashboard-title"><div><small>今天的咖啡时光</small><h1>今日仪表盘</h1></div><button class="cc-camera" onclick="openSmartAdd(\'camera\')" aria-label="拍照识别">'+UI.icon('camera')+'</button></div>';panel.append(hero);if(custom)panel.append(custom);
+    panel.insertAdjacentHTML('afterend',this.scene());
     content.querySelector('.u-achievement-teaser')?.remove();
-    const metrics=content.querySelector('.u-metrics'),cta=content.querySelector('.u-record-cta');if(metrics)details.before(metrics);if(cta)details.before(cta);
+    const metrics=content.querySelector('.u-metrics'),cta=content.querySelector('.u-record-cta');if(metrics)panel.append(metrics);if(cta)panel.append(cta);
+    panel.insertAdjacentHTML('beforebegin','<div class="cc-page-switch"><span aria-current="page">仪表盘</span><button onclick="CoffeeRoom.open()">收藏室</button><small>左右滑动，循环切换</small></div>');
     // Only a visible desk is remembered. Backdated additions never enter this snapshot.
     if(document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)this.checkDay();
   },
@@ -29,7 +30,7 @@ const CoffeeRoom={
   search(value){this.query=value;this.limit=60;this.renderShelves()},
   matches(r){const q=this.query.trim().normalize('NFKC').toLowerCase();if(!q)return true;const d=new Date(r.ts),date=this.day(r.ts);const text=[recordDisplayName(r),r.brand,date,date.replaceAll('-','/'),`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`,`${d.getMonth()+1}月${d.getDate()}日`].join(' ').normalize('NFKC').toLowerCase();return q.split(/\s+/).every(t=>text.includes(t))},
   render(){const host=$('collectionContent');if(!host)return;
-    host.innerHTML=`<div class="cc-room-header"><div><span>BEANSTER MEMORIES</span><h1>咖啡收藏室</h1><p>一杯一格，收藏喝过的日常。</p></div><button class="cc-photo-link" onclick="CoffeeRoom.photos()">${UI.icon('camera')}照片</button></div><label class="cc-search"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><input id="ccSearch" type="search" value="${esc(this.query)}" placeholder="搜索饮品、品牌或日期" aria-label="搜索饮品名、品牌或日期" oninput="CoffeeRoom.search(this.value)"></label><div id="ccShelves" aria-live="polite"></div>`;this.renderShelves();
+    host.innerHTML=`<div class="cc-room-header"><div><span>收好每一杯的故事</span><h1>咖啡收藏室</h1><p>一杯一格，收藏喝过的日常。</p></div><button class="cc-photo-link" onclick="CoffeeRoom.photos()">${UI.icon('camera')}照片</button></div><label class="cc-search"><svg class="icon" viewBox="0 0 24 24" aria-hidden="true"><circle cx="10" cy="10" r="6"/><path d="m15 15 6 6"/></svg><input id="ccSearch" type="search" value="${esc(this.query)}" placeholder="搜索饮品、品牌或日期" aria-label="搜索饮品名、品牌或日期" oninput="CoffeeRoom.search(this.value)"></label><div id="ccShelves" aria-live="polite"></div>`;this.renderShelves();
   },
   renderShelves(){const host=$('ccShelves');if(!host)return;const all=this.valid(),filtered=all.filter(r=>this.matches(r)),shown=filtered.slice(0,this.limit),groups=new Map();shown.forEach(r=>{const key=this.day(r.ts);if(!groups.has(key))groups.set(key,[]);groups.get(key).push(r)});
     if(!all.length){host.innerHTML=`<div class="cc-room-empty"><div class="cc-empty-scene">${UI.art('character_coffee')}</div><h2>这里，还等着你的第一杯</h2><p>记录一杯咖啡，就为它留下一格。<br>同款的每一次饮用，也值得单独收藏。</p><button class="primary" onclick="openAdd()">＋ 去记录一杯</button></div>`;return}
@@ -52,7 +53,7 @@ const roomRenderAll=renderAll;renderAll=function(){roomRenderAll();CoffeeRoom.re
 // Save already persists the record. All room views read that same record immediately.
 const roomPersist=persist;persist=function(){roomPersist();CoffeeRoom.renderShelves();CoffeeRoom.renderDetail()};
 const roomGo=UI.go;UI.go=function(id){if(id==='photos')CoffeeRoom.photos();else roomGo(id)};
-const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.0'};
+const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.1'};
 // Route existing record menus into the complete detail page.
 UI.recordMenu=id=>CoffeeRoom.detail(id);
 const roomGallery=Motion.gallery;Motion.gallery=function(){roomGallery.call(this);const burger=document.querySelector('.u-expression-grid [data-motion=character_burger]')?.closest('article');const button=burger?.querySelector('button');if(button){button.disabled=true;button.textContent='仅在表情册欣赏'}};

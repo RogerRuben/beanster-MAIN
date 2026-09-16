@@ -34,3 +34,48 @@ body[data-page=collection]>.top{display:none}#collection{padding-top:max(25px,en
 .cc-ritual{position:absolute;inset:65px 10px 10px;z-index:10;background:#fff8edec;border:1px solid #b99772;border-radius:14px;padding:12px;box-shadow:0 4px 12px #69402420}.cc-ritual-copy{display:flex;align-items:center;justify-content:space-between;gap:8px;font-size:12px;color:#795236}.cc-ritual-copy button{min-width:44px;min-height:44px;border:0;background:transparent;color:#89694a}.cc-packing-cups{display:flex;justify-content:center;margin:20px auto 0;transform-origin:right center}.cc-packing-cups .cc-cup{width:50px;height:50px}.cc-packing-destination{display:block;text-align:right;margin-top:22px;color:#825936;font-size:12px}.cc-packing .cc-packing-cups{animation:cc-pack 1.8s ease-in-out both}@keyframes cc-pack{0%,15%{transform:translate(0,0) scale(1);opacity:1}65%{transform:translate(25%,25px) scale(.6);opacity:1}100%{transform:translate(35%,45px) scale(.1);opacity:0}}
 @media(prefers-reduced-motion:reduce){.cc-packing .cc-packing-cups{animation:none}}
 @media(max-width:350px){.cc-corner{height:280px}.cc-hamster{width:116px;height:136px}.cc-desk-cup .cc-cup{width:49px;height:49px}.cc-collection-cup .cc-cup{width:59px;height:59px}.cc-shelf{padding-left:7px;padding-right:7px}.cc-room-header h1{font-size:23px}}
+
+/* V19.1: dashboard first, no home brand header, larger furnished scene. */
+body[data-page=today]>.top{display:none}
+#today{padding-top:max(12px,env(safe-area-inset-top))}
+.cc-page-switch{display:flex;align-items:center;gap:17px;padding:6px 1px 14px;font-size:14px;color:#a78b6e}
+.cc-page-switch>span{color:#613e29;font-weight:750;border-bottom:2px solid #966a46;padding:6px 0}
+.cc-page-switch button{border:0;background:transparent;color:#93765b;font:inherit;min-height:44px;padding:6px 0}
+.cc-page-switch small{margin-left:auto;font-size:10px;color:#a88a6c}
+.cc-dashboard-panel{background:#fffaf2;border:1px solid #eddcc8;border-radius:22px;padding:16px 14px 12px;margin-bottom:18px;position:relative}
+.cc-dashboard-title{display:flex;justify-content:space-between;align-items:center}.cc-dashboard-title small{font-size:10px;color:#ad8d6e}.cc-dashboard-title h1{font-size:22px;color:#61412c;margin:4px 0}
+.cc-camera{border:1px solid #e8d6bd;background:#f8ecdc;width:44px;height:44px;border-radius:14px;display:grid;place-items:center}
+.cc-dashboard-panel>.u-hero{height:195px;margin:0;display:flex;align-items:center;justify-content:center}
+.cc-dashboard-panel .u-gauge{width:194px;height:194px;left:auto}.cc-dashboard-panel .u-gauge-copy strong{font-size:43px}.cc-dashboard-panel .u-gauge-copy em{font-size:20px}
+.cc-dashboard-panel .u-dashboard-customize{display:block;width:100%;margin:0;padding:7px;min-height:36px;text-align:center}
+.cc-dashboard-panel>.u-metrics{margin:9px 0 0;border:0;background:#f5eadb;padding:12px 0;border-radius:15px}.cc-dashboard-panel>.u-metrics b{font-size:17px}
+.cc-dashboard-panel>.u-record-cta{min-height:48px;margin:12px 0 0;font-size:16px}
+.cc-dashboard-panel .u-dashboard-cup{transform:scale(.87);transform-origin:center center;padding:0}
+.cc-corner{height:440px;margin:0 -20px 20px;border:0;border-radius:0;background-image:url('art/coffee-room/corner-v191.png');background-position:center;background-size:cover;box-shadow:inset 0 8px 12px #643d1310}
+.cc-scene-heading{top:16px;left:18px;right:18px}.cc-scene-heading>span{font-size:12px;padding:8px 10px}
+.cc-hamster{width:155px;height:180px;bottom:91px}
+.cc-table{width:91%;left:4.5%;height:126px;bottom:28px}
+.cc-desk{bottom:89px;left:9%;right:9%}.cc-desk-cup{max-width:75px}.cc-desk-cup .cc-cup{width:64px;height:64px}
+.cc-speech{top:auto;bottom:273px;font-size:12px;padding:10px 13px}.cc-empty-desk{bottom:23px}.cc-more{bottom:14px}
+.cc-room-header{min-height:165px;margin:-25px -16px 18px;padding:25px 20px 18px;background:linear-gradient(#fff8e8b0,#fff8e8e8),url('art/coffee-room/corner-v191.png') center 25%/cover;align-items:flex-end}
+.cc-room-header h1{font-size:28px}.cc-room-header>div>span{letter-spacing:1px;font-size:11px;color:#946641}
+.cc-empty-scene{height:320px;background-image:url('art/coffee-room/corner-v191.png')}.cc-empty-scene img{bottom:25px}
+.cc-enter-right{animation:cc-page-right .22s ease-out}.cc-enter-left{animation:cc-page-left .22s ease-out}
+@keyframes cc-page-right{from{transform:translateX(-28px);opacity:.7}to{transform:translateX(0);opacity:1}}
+@keyframes cc-page-left{from{transform:translateX(28px);opacity:.7}to{transform:translateX(0);opacity:1}}
+@media(max-width:350px){.cc-corner{height:400px}.cc-hamster{width:140px;height:160px}.cc-desk-cup .cc-cup{width:55px;height:55px}.cc-page-switch{gap:12px}.cc-page-switch small{font-size:9px}}
+@media(prefers-reduced-motion:reduce){.cc-enter-right,.cc-enter-left{animation:none}}
+
+/* Keep the gauge, primary numbers and a generous scene within reach on a phone. */
+.cc-dashboard-panel{display:grid;grid-template-columns:1fr 1fr;padding:12px;column-gap:4px;margin-bottom:12px}
+.cc-dashboard-title{grid-column:2;grid-row:1;align-self:center;display:block;padding-bottom:20px}.cc-dashboard-title h1{font-size:20px}.cc-dashboard-title small{font-size:10px}
+.cc-camera{position:absolute;right:12px;top:12px;width:36px;height:36px}
+.cc-dashboard-panel>.u-hero{grid-column:1;grid-row:1;height:145px;width:100%}
+.cc-dashboard-panel .u-gauge{width:150px;height:150px;max-width:100%}.cc-dashboard-panel .u-gauge-copy strong{font-size:34px}.cc-dashboard-panel .u-gauge-copy>b{font-size:12px;margin-bottom:7px}.cc-dashboard-panel .u-gauge-copy>span{font-size:10px}.cc-dashboard-panel .u-gauge-copy em{font-size:17px}
+.cc-dashboard-panel .u-dashboard-customize{grid-column:2;grid-row:1;align-self:end;margin-bottom:8px;min-height:32px;text-align:left}
+.cc-dashboard-panel>.u-metrics{grid-column:1/-1;margin-top:10px;padding:10px 0}.cc-dashboard-panel>.u-record-cta{grid-column:1/-1;min-height:46px;margin-top:10px}
+.cc-dashboard-panel .u-dashboard-cup{transform:scale(.68);width:165px;margin-left:-5px}.cc-dashboard-panel .u-dashboard-number,.cc-dashboard-panel .u-dashboard-bar{width:100%;padding:8px;box-sizing:border-box}.cc-dashboard-panel .u-dashboard-number strong,.cc-dashboard-panel .u-dashboard-bar strong{font-size:30px}
+.cc-corner{height:400px}.cc-hamster{bottom:86px}.cc-speech{bottom:270px}
+@media(max-width:350px){.cc-corner{height:380px}.cc-dashboard-title h1{font-size:17px}.cc-dashboard-panel .u-gauge{width:132px;height:132px}.cc-dashboard-panel>.u-hero{height:142px}}
+
+@media(max-width:350px){.cc-corner{margin-left:-15px;margin-right:-15px}}

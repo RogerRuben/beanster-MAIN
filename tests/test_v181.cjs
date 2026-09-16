@@ -8,7 +8,7 @@ await page.goto('file:///'+path.join(ROOT,'index_v5.html').replaceAll('\\','/'))
 await page.waitForFunction(()=>document.querySelectorAll('[data-playing]').length===1);
 await page.waitForTimeout(2200);assert.equal(await page.locator('[data-playing]').count(),0);await page.waitForTimeout(1800);assert.equal(await page.locator('[data-playing]').count(),0);checks.push('entry animation plays once');
 await page.locator('.cc-hamster').click();await page.waitForFunction(()=>document.querySelectorAll('[data-playing]').length===1);await page.waitForTimeout(2200);assert.equal(await page.locator('[data-playing]').count(),0);
-assert.ok((await page.locator('.cc-hamster').boundingBox()).width<=130);checks.push('smaller mascot and click replay');
+assert.ok((await page.locator('.cc-hamster').boundingBox()).width<=155);checks.push('smaller mascot and click replay');
 await page.evaluate(()=>Motion.gallery());assert.equal(await page.locator('.u-expression-grid article').count(),14);
 await page.locator('.u-expression-grid [data-motion]').nth(1).click();await page.locator('.u-expression-grid [data-motion]').nth(2).click();assert.ok(await page.locator('[data-playing]').count()<=1);checks.push('all 14 expressions exposed; global single player');
 await page.screenshot({path:path.join(OUT,'expressions.png')});await page.evaluate(()=>Motion.choose('character_wave'));assert.equal(await page.locator('.cc-hamster').getAttribute('data-motion'),'character_wave');checks.push('home character preference');

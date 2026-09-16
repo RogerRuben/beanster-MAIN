@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.0'
-VERSION_CODE=49
+APP_VERSION='19.1'
+VERSION_CODE=50
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -105,7 +105,7 @@ def main():
         z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','coffee_room.js','coffee_room.css']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','coffee_room.js','coffee_room.css','coffee_pages.js']:
             z.write(OUT/name,'assets/'+name)
         for asset in sorted((OUT/'art/coffee-room').glob('*.png')):
             z.write(asset,'assets/art/coffee-room/'+asset.name,compress_type=zipfile.ZIP_STORED)

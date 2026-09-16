@@ -1,0 +1,14 @@
+{
+  "passed": true,
+  "checks": [
+    "home header removed and gauge visible",
+    "full-width larger scene",
+    "both directions wrap repeatedly",
+    "vertical and short gestures ignored",
+    "search and edit gestures ignored",
+    "details close before page switching",
+    "Android Back cycles root pages",
+    "reduced motion",
+    "320/390/480 layout"
+  ]
+}
