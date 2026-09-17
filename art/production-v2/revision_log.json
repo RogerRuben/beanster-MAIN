@@ -1,0 +1,7 @@
+[
+  {
+    "id": "hamster_cleanup_05",
+    "prompt": "Edit ONLY the empty arms and hands of this exact sprite to create the immediately preceding animation frame. Hands reach down toward screen-left with palms open, about 8 percent further apart and 3 percent lower than current hands, anticipating grasping a cup which MUST NOT BE DRAWN. Keep head, face, ears, eyes, sunglasses, legs, feet, body width, shirt pattern, pixel art style, image size and ALL positions unchanged. No objects, no cups, no scenery. ONE independent transparent-alpha PNG frame, no sheet. Do not resize or recenter hamster. The two empty hands are below the belly, never up at chest.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-99e8e6b3-2222-479c-a79e-d25172d41194.png"
+  }
+]

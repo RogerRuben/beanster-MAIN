@@ -1,0 +1,47 @@
+[
+  {
+    "id": "scene_background",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE empty cafe room architectural background ONLY: cream plaster wall, warm wooden floor lower20%, subtly shaded wall corners. Front facing orthographic slight topdown pixel game. No window no lamp no plants no furniture no hamster no cups. Portrait 3:4 opaque filled background. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-793e3c40-65ce-44ce-a5f7-befcb33942eb.png"
+  },
+  {
+    "id": "window_day",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated rectangular wooden framed cafe WINDOW, blue daytime sky trees and distant buildings INSIDE glass, no pots no sill objects. Front facing. Transparent OUTSIDE frame. Centered square canvas. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-83417520-e7c6-4266-b1e3-2c97d47848f8.png"
+  },
+  {
+    "id": "lamp",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated brown pendant cafe lamp, short hanging cable and golden lit shade, front facing. Transparent background. No glow baked outside shade. Centered square. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-d3a53554-3a43-477b-9e57-67bb2b7e0986.png"
+  },
+  {
+    "id": "plant",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated leafy green cafe potted plant in cream ceramic planter, front-facing slight topdown, transparent background. Whole plant no floor no shadow no scene. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-fb77a839-b31e-497a-8e9f-26f88071bde2.png"
+  },
+  {
+    "id": "chair",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated honey-brown wooden cafe chair, front-facing very slightly angled to right, viewed slightly above, transparent background. No table no cups no hamster. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-b91fc852-04f5-4a86-bc18-70835dd7b2c2.png"
+  },
+  {
+    "id": "storage_box",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated EMPTY OPEN honey-brown wooden storage box with hinged upright lid. Front-facing slight topdown perspective. Wide open empty dark cavity, front board low enough to see interior. Lid fully open extends upward. Transparent background, no cups no hamster no floor no shadow, no text. Square composition. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-2c5acab6-39d7-431f-bcc9-21e9cfce0242.png"
+  },
+  {
+    "id": "cup_cappuccino",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated cappuccino in a short ivory ceramic mug with simple creamy foam top, front-facing slightly topdown, handle right. Transparent background no steam no shadow no text no saucer no otherobjects. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-bdc3019c-b2b1-43f7-9f37-0d51f6b99b91.png"
+  },
+  {
+    "id": "cup_dirty",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated dirty coffee in a small clear cylindrical glass, milk lower half espresso upper half. Front-facing slightly topdown, transparent background no steam no shadow no text no straw. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-a2af6e52-77a7-4c5d-84e6-7a5fd6133d0d.png"
+  },
+  {
+    "id": "cup_espresso",
+    "prompt": "Use case stylized-concept. Produce ONE standalone production PNG asset, NOT collage/reference sheet. Match the attached approved coffee-room concept's warm cream/caramel palette and crisp light-pixel videogame art with stepped dark brown outlines. ONE isolated espresso in a small dark brown demitasse with crema, handle right. Front-facing slightly topdown, transparent background no steam no shadow no text no saucer. No labels, no watermark, no checkerboard pattern. Maintain same furniture perspective throughout the asset family.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-5f019ab5-3378-451e-ad03-7a9300c4d47e.png"
+  }
+]

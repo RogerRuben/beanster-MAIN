@@ -1,0 +1,1933 @@
+{
+  "schemaVersion": 2,
+  "status": "asset-validation-passed-app-integration-pending",
+  "units": "pixels",
+  "coordinateSystem": {
+    "origin": "top-left",
+    "x": "right",
+    "y": "down",
+    "anchorFormula": "world = spritePosition + (anchor - pivot) * scale"
+  },
+  "assets": {
+    "hamster_idle_base": {
+      "file": "characters/hamster_idle_base.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "9ed2ce42c03afb1406d4f7b3563cd14ea7abceeaee69f473af45259c16e09b5f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 0",
+      "containsCup": false
+    },
+    "hamster_idle_01": {
+      "file": "characters/hamster_idle_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "46f13a965e3040bf92c887fbb1d932de903c699f5c4773b176465256c7a2a562",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 1",
+      "containsCup": false
+    },
+    "hamster_idle_02": {
+      "file": "characters/hamster_idle_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "fb93e7d0777a53c64641a99ef01032ebeb9e9adf9b5ed1df8cc8401db1ffd434",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 2",
+      "containsCup": false
+    },
+    "hamster_idle_03": {
+      "file": "characters/hamster_idle_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "ed60ce1456762a03a221b33fb7c11e110000147ca6bd049259a41bce06c7a64f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 3",
+      "containsCup": false
+    },
+    "hamster_idle_04": {
+      "file": "characters/hamster_idle_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "0c2d28a05be3864f8406a79fc2e0b7a36c6c086f1a555b1e42ea3b88de5862cc",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 4",
+      "containsCup": false
+    },
+    "hamster_idle_05": {
+      "file": "characters/hamster_idle_05.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "eea6f838fb9b1ab1228dcf0c3dccb23cd371b4d18bb8629ae8231e86e6cf1b96",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 5",
+      "containsCup": false
+    },
+    "hamster_idle_06": {
+      "file": "characters/hamster_idle_06.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "4c9d82cc21fbaa9be5dd793325f949ba651eae5adace292463583ae7fcffbc30",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 6",
+      "containsCup": false
+    },
+    "hamster_idle_07": {
+      "file": "characters/hamster_idle_07.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "8566362c679b4c11cd6bef1dfd4af3cfd7822e19164e0db83840e428ef77f833",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 7",
+      "containsCup": false
+    },
+    "hamster_idle_08": {
+      "file": "characters/hamster_idle_08.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "fd01ef10527bb4076b9154ecbb0380cc220a8d8a47a68a40c59b994a4cf74bbb",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 0",
+      "containsCup": false
+    },
+    "hamster_idle_09": {
+      "file": "characters/hamster_idle_09.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "03e45a511b1b13c8a4e65ccf8686d36403ad7d93d5f86397f4d746ec29ba4ceb",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 1",
+      "containsCup": false
+    },
+    "hamster_idle_10": {
+      "file": "characters/hamster_idle_10.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "c6c175fa69d5ea9e33bfaa69d080e92fcadc85e9b7255c14ff141b99eb5734bf",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 2",
+      "containsCup": false
+    },
+    "hamster_idle_11": {
+      "file": "characters/hamster_idle_11.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "393c9353df15b36eabafd82f6721a6c4ee8c5316eea1ec610afda79392dee46f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 3",
+      "containsCup": false
+    },
+    "hamster_idle_12": {
+      "file": "characters/hamster_idle_12.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "ad7f6a2008c93a7ce35862ea1963408aea6bedbac3ca08c28b14d0934f7b0804",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 4",
+      "containsCup": false
+    },
+    "hamster_idle_13": {
+      "file": "characters/hamster_idle_13.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "435c7daaed47daa5ef22777d3ffda25f15d70fcfbf29ab84ee2b8cfca8bbc07f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 1, frame 5",
+      "containsCup": false
+    },
+    "hamster_idle_14": {
+      "file": "characters/hamster_idle_14.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "fb93e7d0777a53c64641a99ef01032ebeb9e9adf9b5ed1df8cc8401db1ffd434",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 2",
+      "containsCup": false
+    },
+    "hamster_idle_15": {
+      "file": "characters/hamster_idle_15.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "9ed2ce42c03afb1406d4f7b3563cd14ea7abceeaee69f473af45259c16e09b5f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "user atlas 0, frame 0",
+      "containsCup": false
+    },
+    "hamster_cleanup_01": {
+      "file": "characters/hamster_cleanup_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "2d8bdce6f4c2969bb5e335941c64877ccc9644ddeb3d7ca756a407d2a7e2b733",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 256,
+      "cupAnchorY": 348,
+      "cupAnchorKind": "table",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 2
+    },
+    "hamster_cleanup_02": {
+      "file": "characters/hamster_cleanup_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "76e07bb71080315d8b8446695d9049fea49697f8cccb70ce773e7a05fb687f32",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 241,
+      "cupAnchorY": 371,
+      "cupAnchorKind": "table",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": -11
+    },
+    "hamster_cleanup_03": {
+      "file": "characters/hamster_cleanup_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "9f7c747558abf5266857814880da06c880a022422c96736f000f5512e4278b28",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 167,
+      "cupAnchorY": 388,
+      "cupAnchorKind": "table",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": -33
+    },
+    "hamster_cleanup_04": {
+      "file": "characters/hamster_cleanup_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "d626df4efa9d0ce24334b0369db847b4b26783a7d9266126d602e9c1f37e6663",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 163,
+      "cupAnchorY": 371,
+      "cupAnchorKind": "grasp",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": -10
+    },
+    "hamster_cleanup_05": {
+      "file": "characters/hamster_cleanup_05.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "87d4af9e3fa3d075c61de7819842b7a063a519f71cbcf4f4d88d90ea66e1573d",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 165,
+      "cupAnchorY": 396,
+      "cupAnchorKind": "grasp",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": -20
+    },
+    "hamster_cleanup_06": {
+      "file": "characters/hamster_cleanup_06.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "42dc5c670f0ada9b44e0923592738df51e146924dd41384f80ea518680d932e9",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 251,
+      "cupAnchorY": 348,
+      "cupAnchorKind": "hand",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 6
+    },
+    "hamster_cleanup_07": {
+      "file": "characters/hamster_cleanup_07.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "c901413112734af2157951157ec5eb5efaba463edbbe6fb8ca312873af176b98",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 247,
+      "cupAnchorY": 337,
+      "cupAnchorKind": "hand",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 2
+    },
+    "hamster_cleanup_08": {
+      "file": "characters/hamster_cleanup_08.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "ba8f338659dd4d0cd5601b49e353327c9e9cab9597d0424e5fc64b21e062dfca",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 302,
+      "cupAnchorY": 331,
+      "cupAnchorKind": "carry",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 6
+    },
+    "hamster_cleanup_09": {
+      "file": "characters/hamster_cleanup_09.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "c8f647304dde755027166d1e168f3c84465615726cb4f48002055a8258b5da93",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 318,
+      "cupAnchorY": 365,
+      "cupAnchorKind": "carry",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 30
+    },
+    "hamster_cleanup_10": {
+      "file": "characters/hamster_cleanup_10.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "fc48866ade1fc9a69a8634d8dab379d38e5f57f81e030228c9ebd3f03370edd8",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 332,
+      "cupAnchorY": 395,
+      "cupAnchorKind": "lower",
+      "cupAttached": true,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 25
+    },
+    "hamster_cleanup_11": {
+      "file": "characters/hamster_cleanup_11.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "17fe3a415b2249049e64c1dfb9bf177a0f693b4a45cf6452d60440343cdebcd3",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 348,
+      "cupAnchorY": 395,
+      "cupAnchorKind": "release",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 37
+    },
+    "hamster_cleanup_12": {
+      "file": "characters/hamster_cleanup_12.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "dbb11011c0a78c68ab455f4a700db66ddc9cf5ba2d774392b5701c181667198c",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "cupAnchorX": 256,
+      "cupAnchorY": 354,
+      "cupAnchorKind": "complete",
+      "cupAttached": false,
+      "anchorSpace": "asset-pixels",
+      "registrationOffsetX": 2
+    },
+    "cup_latte": {
+      "file": "cups/cup_latte.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "0d8774907b223a204eae33b1a36d66ae76cb0fe18ae6f0daef213a3c6d668fc5",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_americano": {
+      "file": "cups/cup_americano.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "efa7f2a46699d48abe317a46144e6cfa57806fc36cc1fcbfc29f0fc22756a455",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_cold_brew": {
+      "file": "cups/cup_cold_brew.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "baf83ab36e79d753d72dc3539d860c235b394da9e3e6ba0f856e96f8745a152c",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": false
+    },
+    "cup_flat_white": {
+      "file": "cups/cup_flat_white.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "4442444fb9728223f121392750403666e023e986b5b29ddca8129a00fa8d8303",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_mocha": {
+      "file": "cups/cup_mocha.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "765a2eccba9f6d3312a5d9df4f69be96f7ec0b6f6b98bb96902fca104832bf15",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_coconut_latte": {
+      "file": "cups/cup_coconut_latte.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "ae68b00e580f535d19aba86f5ba782f5a8eed8721e63534a5f214a3814d20b3c",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": false
+    },
+    "cup_matcha": {
+      "file": "cups/cup_matcha.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "ff5f3cea4150f426465b436a4e74eb6644425972dd8eb1b148b72bd567f4f3df",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": false
+    },
+    "cup_pour_over": {
+      "file": "cups/cup_pour_over.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "611f4aabfc78213d0d510f2790bdf7cbbc63bf49ecfb718f69979b07da48fa95",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_takeaway": {
+      "file": "cups/cup_takeaway.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "4c2ee34eedd6d67c406b686d56c803f830f14d13a9048de8b84374c2be8d9a24",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_cappuccino": {
+      "file": "cups/cup_cappuccino.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "cd0abe3a0384eb4aa3d9d4a1f2bf2e0af270998784ad1852fb54c29db1812b2b",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "cup_dirty": {
+      "file": "cups/cup_dirty.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "fae75a8dd9f9514e35f6e89434d771b09c66c92d8fa8dd5577b8a4b9c4e90afa",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": false
+    },
+    "cup_espresso": {
+      "file": "cups/cup_espresso.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 50,
+      "sha256": "f1f3af2d4c69d102aa800adf325849db544fd65e636af9c19097b152c08872ff",
+      "bottomCenter": [
+        128,
+        224
+      ],
+      "hot": true
+    },
+    "table_back": {
+      "file": "scene/table_back.png",
+      "canvas": [
+        1024,
+        342
+      ],
+      "pivotX": 512,
+      "pivotY": 280,
+      "zIndex": 30,
+      "sha256": "54105d29f96ab661a446a9e7347dc4cf2f61fa9974a75bd6bbe57594d533df54"
+    },
+    "table_front": {
+      "file": "scene/table_front.png",
+      "canvas": [
+        1024,
+        342
+      ],
+      "pivotX": 512,
+      "pivotY": 280,
+      "zIndex": 60,
+      "sha256": "7c0349237bef32a438d0dabadebd9487ee327b3060dbf73c1e19179e186bfb02"
+    },
+    "storage_empty": {
+      "file": "storage/storage_empty.png",
+      "canvas": [
+        1024,
+        342
+      ],
+      "pivotX": 512,
+      "pivotY": 300,
+      "zIndex": 10,
+      "sha256": "219a34ebc65e00fb503b43ef13a8777ad5d6045425a8ac57ed672507d23ec351"
+    },
+    "storage_front_mask": {
+      "file": "storage/storage_front_mask.png",
+      "canvas": [
+        1024,
+        342
+      ],
+      "pivotX": 512,
+      "pivotY": 300,
+      "zIndex": 60,
+      "sha256": "267ba679d26fa9e6362df2fde95888f58fee94295e000a8fa54e7288d5e11acf"
+    },
+    "scene_background": {
+      "file": "scene/scene_background.png",
+      "canvas": [
+        768,
+        1024
+      ],
+      "pivotX": 384,
+      "pivotY": 1024,
+      "zIndex": 0,
+      "sha256": "9b7ed0799b601116d4fabbdf5a5ccfb67940947a4ff2624503946c566e11d1fe"
+    },
+    "window_day": {
+      "file": "scene/window_day.png",
+      "canvas": [
+        320,
+        400
+      ],
+      "pivotX": 160,
+      "pivotY": 400,
+      "zIndex": 5,
+      "sha256": "d0b785cfef297a219f3e2338c6fda3f244902d87984af804fd715bf17456a350"
+    },
+    "window_night": {
+      "file": "scene/window_night.png",
+      "canvas": [
+        320,
+        400
+      ],
+      "pivotX": 160,
+      "pivotY": 400,
+      "zIndex": 5,
+      "sha256": "363b5cf14b272f24420367ca6b4ac6ee6febe8c707a3b2cc67517e65f784de7e",
+      "geometry": "same day frame; pane-only replacement"
+    },
+    "lamp": {
+      "file": "scene/lamp.png",
+      "canvas": [
+        180,
+        280
+      ],
+      "pivotX": 90,
+      "pivotY": 0,
+      "zIndex": 15,
+      "sha256": "63359108143dcdc35e23c77d83a774e6fb68ff59e9e6ce9091330761cbd20828"
+    },
+    "plant": {
+      "file": "scene/plant.png",
+      "canvas": [
+        240,
+        320
+      ],
+      "pivotX": 120,
+      "pivotY": 296,
+      "zIndex": 20,
+      "sha256": "47057b5ba4df1e5dbd661111c0c6ec84b6b608f7467e9ff6e5493e18df4feb66"
+    },
+    "chair": {
+      "file": "scene/chair.png",
+      "canvas": [
+        280,
+        360
+      ],
+      "pivotX": 140,
+      "pivotY": 336,
+      "zIndex": 25,
+      "sha256": "4d67176f466c6408e7047c93482e8766973b2af513ee59ee91736f10618177f4"
+    },
+    "box_open": {
+      "file": "storage/box_open.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "6eedc780f39d7c1b3cc5d074bc9960f514aec0ceb45ae38c3280e2226d36e98a"
+    },
+    "box_lid": {
+      "file": "storage/box_lid.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 263,
+      "zIndex": 42,
+      "sha256": "9991d1da323835d766b8a998ae71fc4ab6cf635e34af059ab2aa5284d038d463",
+      "hinge": [
+        256,
+        263
+      ]
+    },
+    "box_body": {
+      "file": "storage/box_body.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 44,
+      "sha256": "b56e35f1fdb1d4e7460a085219932f30cd56d85191f561c05da5dcaa1df74124",
+      "receiveAnchor": [
+        256,
+        358
+      ]
+    },
+    "box_front": {
+      "file": "storage/box_front.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 60,
+      "sha256": "c2b2c54cec75437541e4c2a19d2b72b933bcc42012d3a0001e7f657b3e9535bd"
+    },
+    "box_lid_closed": {
+      "file": "storage/box_lid_closed.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 263,
+      "zIndex": 59,
+      "sha256": "2cb084df94b9770116b8dfa1040fe9180358716dca442ceb949ed6f6a7a9fa87"
+    },
+    "box_closed": {
+      "file": "storage/box_closed.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "794fb5e65cf34a3dbf01f01da7a7051d0dab40f139114198063ffa04ef74a36c"
+    },
+    "box_lid_opening": {
+      "file": "storage/box_lid_opening.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 263,
+      "zIndex": 42,
+      "sha256": "d04c1197662065621b8e7dacabeb2789d8b48300724eec5cb0c135e70fb8a657"
+    },
+    "box_opening": {
+      "file": "storage/box_opening.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "bde74a1102fd40ac6c2de91bc896d02a256c49a833ba2c381e144a39f6d20d31"
+    },
+    "box_receiving": {
+      "file": "storage/box_receiving.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "6eedc780f39d7c1b3cc5d074bc9960f514aec0ceb45ae38c3280e2226d36e98a",
+      "receiveAnchor": [
+        256,
+        358
+      ],
+      "note": "Cup is a separate live record sprite between body and front"
+    },
+    "box_close": {
+      "file": "storage/box_close.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "bde74a1102fd40ac6c2de91bc896d02a256c49a833ba2c381e144a39f6d20d31",
+      "note": "Reverse transition to box_closed"
+    },
+    "cup_shadow_small": {
+      "file": "scene/cup_shadow_small.png",
+      "canvas": [
+        256,
+        96
+      ],
+      "pivotX": 128,
+      "pivotY": 48,
+      "zIndex": 48,
+      "sha256": "d67eaf135619986d483a16c510bb612242c2c8994d1987ee2835d9c6646a4fdf"
+    },
+    "cup_shadow_medium": {
+      "file": "scene/cup_shadow_medium.png",
+      "canvas": [
+        256,
+        96
+      ],
+      "pivotX": 128,
+      "pivotY": 48,
+      "zIndex": 48,
+      "sha256": "2f32ab2ab302a11b7c2384f62c980e729229463e9c443e0887232f8feaa94612"
+    },
+    "fx_steam_01": {
+      "file": "effects/fx_steam_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "e98e85ac9320ada34c08b3498cd2f3e7b8ba9ed1064b84c578a2a27cd331ddb9"
+    },
+    "fx_steam_02": {
+      "file": "effects/fx_steam_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "7e7355bae033d2570ad163af9857edd54a4c92910a5e541a731feb4faa84c4cf"
+    },
+    "fx_steam_03": {
+      "file": "effects/fx_steam_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "60162fc953ff0c3e308b7c084cdc46463b57e59278db9333e37769f31412d06b"
+    },
+    "fx_steam_04": {
+      "file": "effects/fx_steam_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "7f36cdaf5c77fcdc00d0f325e35ed849ce7458620a74598d2c0e95042e65b916"
+    },
+    "fx_steam_05": {
+      "file": "effects/fx_steam_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "3c2b826b8c02c548789c56203198551802d722b070bf88edb30c98c94d23d038"
+    },
+    "fx_sparkle_01": {
+      "file": "effects/fx_sparkle_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "fa5827d6f067a7c82648c3d50883513a493fcec3d21fbe7bb8f1f286ff00a1e5"
+    },
+    "fx_sparkle_02": {
+      "file": "effects/fx_sparkle_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "654c2367a1aaacce78cd026ff2004583d6b1fcf2fc88c68395f26eb7c7b3cbac"
+    },
+    "fx_sparkle_03": {
+      "file": "effects/fx_sparkle_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "d3530f9e9e1dad954ee65ef30b9bf5669cfc1396b28bc858de42483d673a4ec8"
+    },
+    "fx_sparkle_04": {
+      "file": "effects/fx_sparkle_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "3a3e865955f2c777e5972c0fb2ec864ab26c8ac13a1990eda59819f25bcc7195"
+    },
+    "fx_sparkle_05": {
+      "file": "effects/fx_sparkle_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "ae97e3b05913283de5a625ef51d81ecb2a3c1a7abb8557e49a13f9ad962a9782"
+    },
+    "fx_heart_01": {
+      "file": "effects/fx_heart_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "de07bfb8a7643e5f02c18cbd121a31a6d3279cfc8bb771134eedab26996c7261"
+    },
+    "fx_heart_02": {
+      "file": "effects/fx_heart_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "ca097623864303f68f87719637b70996f7823db026c748ba089dc71567ba0890"
+    },
+    "fx_heart_03": {
+      "file": "effects/fx_heart_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "58713f99e3e5dbdd575d62dde8293dd2101ae51862da6e69fc7b10bf5c415009"
+    },
+    "fx_heart_04": {
+      "file": "effects/fx_heart_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "135fd9a06fd9d23270b8bdc00c5a87aaa4d6659507157bf80ecdb8f6c18da771"
+    },
+    "fx_heart_05": {
+      "file": "effects/fx_heart_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "2f67f68ec34136352144a39eeb0357e7a2cc29d1d436ac675626022b4228705d"
+    },
+    "nav_home_default": {
+      "file": "ui/nav_home_default.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "d1fe7dc4b3b10df1d8802249a1f20bac4e978c832bb9e38d4f4046b6aab0ae26"
+    },
+    "nav_home_selected": {
+      "file": "ui/nav_home_selected.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "7408ac5a0420ed093b9e008d935ce081f07dfd4ff0fabba15cc853199582d5fe"
+    },
+    "nav_home_pressed": {
+      "file": "ui/nav_home_pressed.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "c1e1cf73291c80565e02680d3f1cf73db566610c36959dcaea2542b3888fa21c"
+    },
+    "nav_home_disabled": {
+      "file": "ui/nav_home_disabled.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "980d7c5715fe733c567302cb77dabc250d0baa17ca56b18d72e4096023b243f2"
+    },
+    "nav_record_default": {
+      "file": "ui/nav_record_default.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "eba02629864915ad4234eb75cf265090e3c138e4b6784cea975929189a27fe1e"
+    },
+    "nav_record_selected": {
+      "file": "ui/nav_record_selected.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "13b9b9e4263cb62b46d99c6a60617b8480898b2652a127fee5ed1932271fc61a"
+    },
+    "nav_record_pressed": {
+      "file": "ui/nav_record_pressed.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "f89d3281ace662ea132ec6a73786e2b29157a490f04dda465b98a6b4b72e40bb"
+    },
+    "nav_record_disabled": {
+      "file": "ui/nav_record_disabled.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "070ec7bd257dbe5ffe59fc1fec86a3da31101b3f7d687bcb1ec419d46c05be49"
+    },
+    "nav_collection_default": {
+      "file": "ui/nav_collection_default.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "37857eae27301f7ca5133ae847ead409d56c7e4aa64023700625cd98e0f5b623"
+    },
+    "nav_collection_selected": {
+      "file": "ui/nav_collection_selected.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "8868f0755c69e74d30ee6908effe75c06f415cc2782ef3e3a07fc21e12048bde"
+    },
+    "nav_collection_pressed": {
+      "file": "ui/nav_collection_pressed.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "3432ac5a05eac70164fb74bf728689d3c84a2476fc8585b717dace25baadf4e5"
+    },
+    "nav_collection_disabled": {
+      "file": "ui/nav_collection_disabled.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "f778ff4986aa0fc4a379a46d73f1c6eb6b39a3ab39f42f74002a50c2a0726714"
+    },
+    "nav_monthly_default": {
+      "file": "ui/nav_monthly_default.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "dffe8c23fad0c1abcaf99b3c4eb16aee50c640b704bc2602121732bba2009d0f"
+    },
+    "nav_monthly_selected": {
+      "file": "ui/nav_monthly_selected.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "dbcbe03dda873eeeb0dad149b20ab420f58ff3e57dbb9e42c33f53fc8fd703c6"
+    },
+    "nav_monthly_pressed": {
+      "file": "ui/nav_monthly_pressed.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "71fa0b4b1a3959c4800ec7d2ab9917b60c931351259d477d4d983036851d7acf"
+    },
+    "nav_monthly_disabled": {
+      "file": "ui/nav_monthly_disabled.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "aed74a5db73b0cca9582d1629c3f29ea647fbcc872763f7cfe99fcc7d484f3a9"
+    },
+    "nav_settings_default": {
+      "file": "ui/nav_settings_default.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "ea86e106627a25c1e05da31e42f81dc51d3dc190805a6cae087675f85f62ddca"
+    },
+    "nav_settings_selected": {
+      "file": "ui/nav_settings_selected.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "4811a4565192c533b43fe220204b338c9501c5de557e9d32fb6a3b881ef860f9"
+    },
+    "nav_settings_pressed": {
+      "file": "ui/nav_settings_pressed.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "a83f9acfc4610838e907e509338762f329cce643c01cb6d1dfd5afdd92f61679"
+    },
+    "nav_settings_disabled": {
+      "file": "ui/nav_settings_disabled.png",
+      "canvas": [
+        120,
+        120
+      ],
+      "pivotX": 60,
+      "pivotY": 60,
+      "zIndex": 100,
+      "sha256": "296018d29e3c7bc1911e6a77ac4609216c74efeb228694d40a791193487d467f"
+    },
+    "button_record_normal": {
+      "file": "ui/button_record_normal.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "02bbb4a52431715f456c3b752eadfec3db1c7cb4f6586942b543f67819bfe6ea",
+      "textBaked": false
+    },
+    "button_record_pressed": {
+      "file": "ui/button_record_pressed.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "02425a00b677139d235e0aba7643ad985fe98322a3ff843444c47e8f101ab210",
+      "textBaked": false
+    },
+    "button_record_disabled": {
+      "file": "ui/button_record_disabled.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "48ad4d8fbc798832c839560a64d110959b882a04875fd96299faee0f971da321",
+      "textBaked": false
+    },
+    "button_collection_normal": {
+      "file": "ui/button_collection_normal.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "3580d283baa068b09c830c50b6ad6ba335eeb9d9253423af0ea81d8c12fc8d4c",
+      "textBaked": false
+    },
+    "button_collection_pressed": {
+      "file": "ui/button_collection_pressed.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "02425a00b677139d235e0aba7643ad985fe98322a3ff843444c47e8f101ab210",
+      "textBaked": false
+    },
+    "button_collection_disabled": {
+      "file": "ui/button_collection_disabled.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "48ad4d8fbc798832c839560a64d110959b882a04875fd96299faee0f971da321",
+      "textBaked": false
+    },
+    "button_more_normal": {
+      "file": "ui/button_more_normal.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "3580d283baa068b09c830c50b6ad6ba335eeb9d9253423af0ea81d8c12fc8d4c",
+      "textBaked": false
+    },
+    "button_more_pressed": {
+      "file": "ui/button_more_pressed.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "02425a00b677139d235e0aba7643ad985fe98322a3ff843444c47e8f101ab210",
+      "textBaked": false
+    },
+    "button_more_disabled": {
+      "file": "ui/button_more_disabled.png",
+      "canvas": [
+        640,
+        160
+      ],
+      "pivotX": 320,
+      "pivotY": 80,
+      "zIndex": 100,
+      "sha256": "48ad4d8fbc798832c839560a64d110959b882a04875fd96299faee0f971da321",
+      "textBaked": false
+    },
+    "gauge_normal": {
+      "file": "ui/gauge_normal.png",
+      "canvas": [
+        256,
+        320
+      ],
+      "pivotX": 128,
+      "pivotY": 290,
+      "zIndex": 20,
+      "sha256": "3912186a7c3e383fcc19cd578d7d80e86b92ce702955da2b143f33362a7fa444",
+      "textBaked": false
+    },
+    "gauge_near_limit": {
+      "file": "ui/gauge_near_limit.png",
+      "canvas": [
+        256,
+        320
+      ],
+      "pivotX": 128,
+      "pivotY": 290,
+      "zIndex": 20,
+      "sha256": "512d60eaa6ad5de666de727fc52722b01585e30794fdec5127d5030568eef35f",
+      "textBaked": false
+    },
+    "gauge_over_limit": {
+      "file": "ui/gauge_over_limit.png",
+      "canvas": [
+        256,
+        320
+      ],
+      "pivotX": 128,
+      "pivotY": 290,
+      "zIndex": 20,
+      "sha256": "1390c865ad550a2b8143640b3a8646379858c7235d5586fcfc7d330551b216e2",
+      "textBaked": false
+    },
+    "gauge_fill_mask": {
+      "file": "ui/gauge_fill_mask.png",
+      "canvas": [
+        256,
+        320
+      ],
+      "pivotX": 128,
+      "pivotY": 290,
+      "zIndex": 15,
+      "sha256": "5d801c4e120f031fc448645e7159a309c96754e0195b7282acf1f43545d9e2eb"
+    },
+    "gauge_ticks": {
+      "file": "ui/gauge_ticks.png",
+      "canvas": [
+        256,
+        320
+      ],
+      "pivotX": 128,
+      "pivotY": 290,
+      "zIndex": 21,
+      "sha256": "3d03dff14eec2c39c885d26912f982788e1dc7d2a50bafc80ac42a53d6039474"
+    },
+    "entrance_normal": {
+      "file": "storage/entrance_normal.png",
+      "canvas": [
+        352,
+        112
+      ],
+      "pivotX": 176,
+      "pivotY": 56,
+      "zIndex": 65,
+      "sha256": "646b941e7cdda7b8610b2e3e19437f81e5566d0ca78bdbd0a28de8f77f51d8ea",
+      "textBaked": false
+    },
+    "entrance_new_item": {
+      "file": "storage/entrance_new_item.png",
+      "canvas": [
+        352,
+        112
+      ],
+      "pivotX": 176,
+      "pivotY": 56,
+      "zIndex": 65,
+      "sha256": "fe203ccc10be9d2b68235053966a99238e14b47285900da2c0773c523e40a332",
+      "textBaked": false
+    },
+    "entrance_highlight": {
+      "file": "storage/entrance_highlight.png",
+      "canvas": [
+        352,
+        112
+      ],
+      "pivotX": 176,
+      "pivotY": 56,
+      "zIndex": 65,
+      "sha256": "646b941e7cdda7b8610b2e3e19437f81e5566d0ca78bdbd0a28de8f77f51d8ea",
+      "textBaked": false
+    },
+    "entrance_glow": {
+      "file": "storage/entrance_glow.png",
+      "canvas": [
+        352,
+        112
+      ],
+      "pivotX": 176,
+      "pivotY": 56,
+      "zIndex": 66,
+      "sha256": "54f9ca7cc8f70a1edd34839d80c4d2cbc742b1236dd1e0859b45fa2e4430e9b4"
+    }
+  },
+  "animations": {
+    "idle": {
+      "frames": [
+        "hamster_idle_base",
+        "hamster_idle_01",
+        "hamster_idle_02",
+        "hamster_idle_03",
+        "hamster_idle_04",
+        "hamster_idle_05",
+        "hamster_idle_06",
+        "hamster_idle_07",
+        "hamster_idle_08",
+        "hamster_idle_09",
+        "hamster_idle_10",
+        "hamster_idle_11",
+        "hamster_idle_12",
+        "hamster_idle_13",
+        "hamster_idle_14",
+        "hamster_idle_15"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "entry-or-click",
+      "rest": "hamster_idle_base"
+    },
+    "cleanup": {
+      "frames": [
+        "hamster_cleanup_01",
+        "hamster_cleanup_02",
+        "hamster_cleanup_03",
+        "hamster_cleanup_05",
+        "hamster_cleanup_04",
+        "hamster_cleanup_06",
+        "hamster_cleanup_07",
+        "hamster_cleanup_08",
+        "hamster_cleanup_09",
+        "hamster_cleanup_10",
+        "hamster_cleanup_11",
+        "hamster_cleanup_12"
+      ],
+      "fps": 8,
+      "loop": false,
+      "cupBinding": "cup bottomCenter -> cupAnchor; draw cup over character; release into box before front mask"
+    },
+    "quickTransfer": {
+      "frames": [
+        "hamster_cleanup_04",
+        "hamster_cleanup_06",
+        "hamster_cleanup_09",
+        "hamster_cleanup_11",
+        "hamster_cleanup_12"
+      ],
+      "fps": 10,
+      "loop": false
+    },
+    "box": {
+      "frames": [
+        "box_closed",
+        "box_opening",
+        "box_open",
+        "box_receiving",
+        "box_close",
+        "box_closed"
+      ],
+      "fps": 6,
+      "loop": false
+    },
+    "steam": {
+      "frames": [
+        "fx_steam_01",
+        "fx_steam_02",
+        "fx_steam_03",
+        "fx_steam_04",
+        "fx_steam_05"
+      ],
+      "fps": 10,
+      "loop": true,
+      "play": "only while global animation player owns scene"
+    },
+    "sparkle": {
+      "frames": [
+        "fx_sparkle_01",
+        "fx_sparkle_02",
+        "fx_sparkle_03",
+        "fx_sparkle_04",
+        "fx_sparkle_05"
+      ],
+      "fps": 10,
+      "loop": false,
+      "play": "only while global animation player owns scene"
+    },
+    "heart": {
+      "frames": [
+        "fx_heart_01",
+        "fx_heart_02",
+        "fx_heart_03",
+        "fx_heart_04",
+        "fx_heart_05"
+      ],
+      "fps": 10,
+      "loop": false,
+      "play": "only while global animation player owns scene"
+    }
+  },
+  "table": {
+    "canvas": [
+      1024,
+      342
+    ],
+    "maxVisibleCups": 4,
+    "overflow": "more-button",
+    "slots": {
+      "1": [
+        [
+          512,
+          184
+        ]
+      ],
+      "2": [
+        [
+          360,
+          186
+        ],
+        [
+          664,
+          186
+        ]
+      ],
+      "3": [
+        [
+          280,
+          178
+        ],
+        [
+          512,
+          206
+        ],
+        [
+          744,
+          178
+        ]
+      ],
+      "4": [
+        [
+          232,
+          176
+        ],
+        [
+          418,
+          208
+        ],
+        [
+          606,
+          208
+        ],
+        [
+          792,
+          176
+        ]
+      ]
+    },
+    "cupDisplayScale": 0.62
+  },
+  "storage": {
+    "canvas": [
+      1024,
+      342
+    ],
+    "slots": [
+      [
+        180,
+        275
+      ],
+      [
+        402,
+        275
+      ],
+      [
+        624,
+        275
+      ],
+      [
+        846,
+        275
+      ]
+    ],
+    "cupDisplayScale": 0.72,
+    "repeatRows": true,
+    "records": "one-slot-per-record-id; never merge drinks"
+  },
+  "layers": [
+    "scene_background",
+    "window_day/window_night",
+    "lamp",
+    "plant",
+    "chair",
+    "table_back",
+    "hamster",
+    "cup_shadow",
+    "cup",
+    "table_front"
+  ],
+  "integration": {
+    "save": "record persists immediately; visual collection is never a separate inventory",
+    "cleanup": "snapshot previous visible desk IDs only; exclude today and backdated additions; consume once; skip cancels animation only",
+    "maxSimultaneousAnimations": 1,
+    "reducedMotion": "show rest and completed state immediately"
+  },
+  "scene": {
+    "canvas": [
+      768,
+      1024
+    ],
+    "table": {
+      "position": [
+        384,
+        830
+      ],
+      "scale": 0.66
+    },
+    "idle": {
+      "position": [
+        390,
+        714
+      ],
+      "scale": 0.72
+    },
+    "storageBox": {
+      "position": [
+        620,
+        925
+      ],
+      "scale": 0.4
+    },
+    "recordAppears": {
+      "effect": "sparkle",
+      "durationMs": 350
+    },
+    "recordDeletes": {
+      "scale": [
+        1,
+        0
+      ],
+      "opacity": [
+        1,
+        0
+      ],
+      "durationMs": 180
+    }
+  },
+  "box": {
+    "layerOrder": [
+      "box_lid",
+      "box_body",
+      "liveCup",
+      "box_front"
+    ],
+    "receiveAnchor": [
+      256,
+      358
+    ],
+    "states": {
+      "closed": [
+        "box_lid_closed",
+        "box_front"
+      ],
+      "opening": [
+        "box_lid_opening",
+        "box_body",
+        "box_front"
+      ],
+      "open": [
+        "box_lid",
+        "box_body",
+        "box_front"
+      ],
+      "receiving": [
+        "box_lid",
+        "box_body",
+        "liveCup",
+        "box_front"
+      ],
+      "close": [
+        "box_lid_opening",
+        "box_body",
+        "box_front"
+      ]
+    }
+  },
+  "ui": {
+    "navigationStates": [
+      "default",
+      "selected",
+      "pressed",
+      "disabled"
+    ],
+    "buttonStates": [
+      "normal",
+      "pressed",
+      "disabled"
+    ],
+    "labels": "live text, not baked",
+    "gauge": {
+      "outline": "gauge_normal",
+      "fillMask": "gauge_fill_mask",
+      "ticks": "gauge_ticks",
+      "states": {
+        "normal": [
+          0,
+          0.8
+        ],
+        "near_limit": [
+          0.8,
+          1
+        ],
+        "over_limit": [
+          1,
+          null
+        ]
+      },
+      "fill": "clip dynamic coffee color to fill mask; 0..1 ratio, bottom up"
+    }
+  },
+  "entrance": {
+    "normal": [
+      "entrance_normal"
+    ],
+    "new_item": [
+      "entrance_new_item"
+    ],
+    "highlight": [
+      "entrance_highlight",
+      "entrance_glow"
+    ],
+    "text": "收藏室",
+    "textBaked": false
+  }
+}

@@ -1,0 +1,12 @@
+[
+  {
+    "id": "window_night",
+    "prompt": "Use case precise-object-edit. ONE individual transparent PNG production asset. Change ONLY the sky and scenery INSIDE the two glass panes to nighttime: dark navy sky, sparse stars and moon, dark tree silhouettes, warm distant building windows. Keep EXACT wooden frame pixel geometry, size, position, central rail and alpha silhouette unchanged. Do not add any objects outside panes. Genuine transparent alpha, no checkerboard. Match existing stepped pixel outlines exactly.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-83acc3e5-a7f8-4c8e-a8bf-61e9616eefdc.png"
+  },
+  {
+    "id": "box_closed_source",
+    "prompt": "Use case precise-object-edit. ONE individual transparent PNG production asset. Close the lid of this EXACT wooden storage box. KEEP lower front board, corners, dimensions, viewpoint and wood style unchanged. Lid now lies over the cavity; transparent space replaces former upright lid. Keep SAME canvas, exact same lower box position, no recentering or enlargement. No cups, no items, no labels, no floor or shadow. Genuine transparent alpha, no checkerboard. Match existing stepped pixel outlines exactly.",
+    "source": "C:\\Users\\HP\\.codex\\generated_images\\01a09d6a-9ae0-78a1-ac65-52da6b196d00\\exec-9241064b-d576-4f66-ae54-58cc41cc7cd6.png"
+  }
+]
