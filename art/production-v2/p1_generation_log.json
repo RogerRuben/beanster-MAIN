@@ -1,0 +1,16 @@
+[
+  {"id":"hamster_sleep_01","source":"characters/hamster_idle_base.png","prompt":"seated sleepy pose with cream knitted blanket, paws on tabletop, no cup"},
+  {"id":"hamster_sleep_02","source":"hamster_sleep_01","prompt":"head droops further, still asleep under blanket"},
+  {"id":"hamster_sleep_03","source":"hamster_sleep_01","prompt":"gentle inhale, puffed cheeks, table line cropped out"},
+  {"id":"hamster_clap_01","source":"characters/hamster_cleanup_12.png","prompt":"paws raised open, about to clap"},
+  {"id":"hamster_clap_02","source":"hamster_clap_01","prompt":"paws moving inward halfway"},
+  {"id":"hamster_clap_03","source":"hamster_clap_01","prompt":"palms together clap contact"},
+  {"id":"hamster_wipe_01","source":"characters/hamster_cleanup_12.png","prompt":"left paw up beside sunglasses"},
+  {"id":"hamster_wipe_02","source":"hamster_wipe_01","prompt":"paw wipes across glasses"},
+  {"id":"hamster_wipe_03","source":"hamster_wipe_01","prompt":"paw returning halfway to waist"},
+  {"id":"paw_front","source":"characters/hamster_cleanup_07.png","prompt":"front paws only as cup occlusion overlay; feet cropped"},
+  {"id":"fx_condensation","source":"image_gen","prompt":"three pixel condensation droplets"},
+  {"id":"fx_sweat","source":"image_gen","prompt":"single pixel sweat droplet"},
+  {"id":"fx_zzz","source":"code","prompt":"pixel Z letters rising"},
+  {"id":"fx_question","source":"code","prompt":"pixel question mark"}
+]

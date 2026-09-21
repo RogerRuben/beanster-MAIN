@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "layered production scene and P1 animations are loaded",
+    "desk and collection use independent production cup sprites",
+    "cleanup ritual binds yesterday cups only and skip preserves records",
+    "reduced motion consumes ritual without animation",
+    "night sleep pose plays with Zzz overlay"
+  ]
+}

@@ -1,6 +1,6 @@
 {
   "schemaVersion": 2,
-  "status": "asset-validation-passed-app-integration-pending",
+  "status": "p1-motion-stabilized-scene-depth",
   "units": "pixels",
   "coordinateSystem": {
     "origin": "top-left",
@@ -1591,6 +1591,999 @@
       "pivotY": 56,
       "zIndex": 66,
       "sha256": "54f9ca7cc8f70a1edd34839d80c4d2cbc742b1236dd1e0859b45fa2e4430e9b4"
+    },
+    "hamster_sleep_01": {
+      "file": "characters/hamster_sleep_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "156b280f16713276f583208938543c7606ea275157567ef18b7a92d14ec8d77d",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_02": {
+      "file": "characters/hamster_sleep_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "06b8e41d54482014a4974b669b6f13f42c1cb93c776f2cb04c7ea3de53129d16",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_03": {
+      "file": "characters/hamster_sleep_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "77beadfd69426c72e8b2d32cc7befb0e5348db0c6a0ec3a16155e63dcb62153a",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_base": {
+      "file": "characters/hamster_sleep_base.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "156b280f16713276f583208938543c7606ea275157567ef18b7a92d14ec8d77d",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep rest"
+    },
+    "hamster_clap_01": {
+      "file": "characters/hamster_clap_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "406328a42fec56b29916c8cec392ddf3131bdc15d85fcedbf04b8bc3e0dc890e",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_02": {
+      "file": "characters/hamster_clap_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "a889a264ca861a17f34810d9af8f5a71b01a4596af604eb4517ab42eefec4eda",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_03": {
+      "file": "characters/hamster_clap_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "3759b8f730062f11b0c896c9d3d35aba95f5dcbd3478da528536fd682e935dfe",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_wipe_01": {
+      "file": "characters/hamster_wipe_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "028de532e4720db579bc2e447acd8a986096d0ae2ad0a0fb1fd60ade56abf261",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_02": {
+      "file": "characters/hamster_wipe_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "fba31dcf4b8ee1834f79de466133814a2f2c4ff6b2c5de112970aff0ebf8a437",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_03": {
+      "file": "characters/hamster_wipe_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "532959b1572be22fdd057033f32a6ad295e3cfd0088f8d12742e298e2f957fbb",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "paw_front": {
+      "file": "characters/paw_front.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 110,
+      "zIndex": 55,
+      "sha256": "a3fc6e2f331a0e670495154abf11acba0d9730ecfc74f316f6373415f89e6aba",
+      "overlay": "draw after attached cup",
+      "source": "p1 finger occlusion"
+    },
+    "fx_condensation_01": {
+      "file": "effects/fx_condensation_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "818a0299d661a9fdc7393335db7fd395837d4a9787c2100b1662bf7f52d66ff8"
+    },
+    "fx_condensation_02": {
+      "file": "effects/fx_condensation_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "d8eefcb0fa3e7261f1a6767a0d8b5dec204e7c0f6eb9b218a75371a8efa23e5e"
+    },
+    "fx_condensation_03": {
+      "file": "effects/fx_condensation_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "30606668cf1865a24306ba87b8617d2c4c999379ed80784f5c92ec9f5dcf03ef"
+    },
+    "fx_condensation_04": {
+      "file": "effects/fx_condensation_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "c986a8c43a162ac763136b5dd57c5f1146d935ff9a49d4b2f2e623a03ef0a340"
+    },
+    "fx_condensation_05": {
+      "file": "effects/fx_condensation_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "ce5cdd2cb320e60e72c06fb2799509db7ccb5b54c0fd6044456c8937a2f9beed"
+    },
+    "fx_sweat_01": {
+      "file": "effects/fx_sweat_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "04803af4e56caa3d6538e287e3184274abe57863e8fa781bb45f249e4c65c1d9"
+    },
+    "fx_sweat_02": {
+      "file": "effects/fx_sweat_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "3f3f9d32a47130cf39efc86e2302bb47d79a9b34c92186c6b65646acb0e73d71"
+    },
+    "fx_sweat_03": {
+      "file": "effects/fx_sweat_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "1f052c99d037f40c8f51a67b08d60d53110bd06f8af7e9e52d0de85c2cec6cbb"
+    },
+    "fx_sweat_04": {
+      "file": "effects/fx_sweat_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "5919107f8595905531dfbbae79f54c5da4bfe4947c2f6da93a50ef4024c8738b"
+    },
+    "fx_sweat_05": {
+      "file": "effects/fx_sweat_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 70,
+      "sha256": "ce69de5e9eb2fc7bfe271b9688176a53cb185fede0eb7f6ae312c719627fa48a"
+    },
+    "fx_zzz_01": {
+      "file": "effects/fx_zzz_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "d1ac2c1ff2ec08524c5894716ef7b58596514fe77b4295eaf73749399c10837e"
+    },
+    "fx_zzz_02": {
+      "file": "effects/fx_zzz_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "4cf7e7c8aae7a7a037036171572fbfa743eb2cb659b3ab39093a4078110e3fb9"
+    },
+    "fx_zzz_03": {
+      "file": "effects/fx_zzz_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "e12b16e10637de843f11ff3f6e277485e740045807cb60eb5e2e4ee18a08a2f2"
+    },
+    "fx_zzz_04": {
+      "file": "effects/fx_zzz_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "a5bb7a44d39c9da64558e23944d59f5bf17c793e9e3a5a7ab3fb15e7eab348a9"
+    },
+    "fx_zzz_05": {
+      "file": "effects/fx_zzz_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "176b85eedaa5029699638797309adb34b2ef532b4513cda108359ab66e445629"
+    },
+    "fx_question_01": {
+      "file": "effects/fx_question_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "eddd34ae82b9faf22274ded55f8b531e97ee119559981b5e0c5a0a98c08af2f1"
+    },
+    "fx_question_02": {
+      "file": "effects/fx_question_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "86671e86dc7e9614c5dad68641a599c81ace79995694b7a109a609d895c316ff"
+    },
+    "fx_question_03": {
+      "file": "effects/fx_question_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "c298b8b5ff8f4e284f5f048ca2b3145061660dd2e4a8d1becc74357fd04c364f"
+    },
+    "fx_question_04": {
+      "file": "effects/fx_question_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "6ce864c28471408700b288c052d63876855952eed61ecc0734c2d10edbc12b72"
+    },
+    "fx_question_05": {
+      "file": "effects/fx_question_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 224,
+      "zIndex": 72,
+      "sha256": "440a4fb520fd7f866b0cc4011c8a92c195ee9a9dd061b9e1543657cc0554e224"
+    },
+    "hamster_sleep_04": {
+      "file": "characters/hamster_sleep_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "4ec0f3cea3f05973b7f4e860b7274d38a58cd151c9e89e98e07bb8ae1b0d902c",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_05": {
+      "file": "characters/hamster_sleep_05.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "4968b2870e9726ca03db2850c68f05c7f8afdd14f158f6ac45a6c94411aed221",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_06": {
+      "file": "characters/hamster_sleep_06.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "ec3f30114cc7e26778c86f5acd76c93400a75d3427d54f37886de29dc453a20b",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_07": {
+      "file": "characters/hamster_sleep_07.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "0d9b1937ecb9bc3dea4ab1bf1973518161be4bd3b5c5df7ebd04c6a7cc97ae68",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_sleep_08": {
+      "file": "characters/hamster_sleep_08.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "881cc57a2f02f8affc4c9a8cc967a3e9af343214803652e23f42ea05ed4ff99e",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "source": "video sleep"
+    },
+    "hamster_clap_04": {
+      "file": "characters/hamster_clap_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "db8ee8394a2eb65beddc7be32e49bb4013ba6a493d8feee5e6fe125bb96cc09d",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_05": {
+      "file": "characters/hamster_clap_05.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "1475d941f0252e9f37bf18e0a2a8846d133abc92ba8d49e9bd8466fe0cf9a7af",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_06": {
+      "file": "characters/hamster_clap_06.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "2fd6cb1f7cb3d124d17c7a96db033739e1fec4f1415dd30b09343d77dcb21905",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_07": {
+      "file": "characters/hamster_clap_07.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "97f7a24b386aaa1f6610470133abc9a4fc5ba36c3bd5356332ea5a0e05744adb",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_clap_08": {
+      "file": "characters/hamster_clap_08.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "42e9e21a4536651d00eb3a010796c204ecfdf9c0272d56b7e6c3130cdb52f8a5",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video clap"
+    },
+    "hamster_wipe_04": {
+      "file": "characters/hamster_wipe_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "7a691b119c003aed6add220cec7fe2b208a9789ea16a19575678e90cc45e1953",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_05": {
+      "file": "characters/hamster_wipe_05.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "3ea000dd6da1410756cf68f8e367b16e18b67668ae71d0527e87bc1a44371575",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_06": {
+      "file": "characters/hamster_wipe_06.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "601ae555a76f9c4945f388c868e9098aee77122042ad96fc97fb6a31a6f7e21f",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_07": {
+      "file": "characters/hamster_wipe_07.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "1f44c8f685183428e3c60b7bfa7bf271ed15462c639abf8f0ed00b284d69caad",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "hamster_wipe_08": {
+      "file": "characters/hamster_wipe_08.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 40,
+      "sha256": "028de532e4720db579bc2e447acd8a986096d0ae2ad0a0fb1fd60ade56abf261",
+      "containsCup": false,
+      "bodyCenter": [
+        256,
+        300
+      ],
+      "source": "video wipe"
+    },
+    "scene_room_day": {
+      "file": "scene/scene_room_day.png",
+      "canvas": [
+        768,
+        1024
+      ],
+      "pivotX": 384,
+      "pivotY": 1024,
+      "zIndex": 0,
+      "sha256": "57efa5e7fd8acf17c873a09a4bc0d6dbf6baf5395a77741be96202fe572b3124",
+      "source": "corner-v191 + ref cafe"
+    },
+    "scene_room_night": {
+      "file": "scene/scene_room_night.png",
+      "canvas": [
+        768,
+        1024
+      ],
+      "pivotX": 384,
+      "pivotY": 1024,
+      "zIndex": 0,
+      "sha256": "8b19388199027415b21abe78a807b3cb05a0e66ebd235fd572b7911c5eeec470",
+      "source": "night edit of furnished room"
+    },
+    "ivy_hanging": {
+      "file": "scene/ivy_hanging.png",
+      "canvas": [
+        320,
+        480
+      ],
+      "pivotX": 160,
+      "pivotY": 0,
+      "zIndex": 80,
+      "sha256": "0600b075060e921dc6edc7cd74910939477ca99e278fb11f5ca721027bb80746",
+      "overlay": "foreground cascade"
+    },
+    "floor_rug": {
+      "file": "scene/floor_rug.png",
+      "canvas": [
+        640,
+        280
+      ],
+      "pivotX": 320,
+      "pivotY": 140,
+      "zIndex": 15,
+      "sha256": "100f84e43540ac55e5b643a37563603639045e3d4e653f042acc69bb732f4635"
+    },
+    "chalkboard": {
+      "file": "scene/chalkboard.png",
+      "canvas": [
+        180,
+        240
+      ],
+      "pivotX": 90,
+      "pivotY": 240,
+      "zIndex": 18,
+      "sha256": "2ff2777be85bc273e66c4edcd108dafaf94e4020f062c6811c366c3d5c2fdd1b"
+    },
+    "btn_hamster_up": {
+      "file": "ui/btn_hamster_up.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 210,
+      "zIndex": 36,
+      "sha256": "355044ff38b88a1934e950ddb4103d9cf50635b51807f5e0a1e222055a48f4ac",
+      "role": "table gadget idle"
+    },
+    "btn_hamster_down": {
+      "file": "ui/btn_hamster_down.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 210,
+      "zIndex": 36,
+      "sha256": "abe86a5e3d180334e701e6296e07edf190df8ce85cc69aa25453b8a6ed2286eb",
+      "role": "table gadget pressed"
+    },
+    "fx_suck_01": {
+      "file": "effects/fx_suck_01.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "98a401df781fc9557df42ff2ac6790d334c315559d5e05c205709a913fb53565",
+      "role": "suction cover"
+    },
+    "fx_suck_02": {
+      "file": "effects/fx_suck_02.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "275eaed609f7615302a369f13b6b6d984c711a7c2c370f8cca3c1e1c182b1bf8",
+      "role": "suction cover"
+    },
+    "fx_suck_03": {
+      "file": "effects/fx_suck_03.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "d4cb16651912aa4a1d74d6be08b689b9c42304a9f7b8a9ad7a95f7ef4a300d00",
+      "role": "suction cover"
+    },
+    "fx_suck_04": {
+      "file": "effects/fx_suck_04.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "c31d48babbd0fdcdf442929b21920b02b9d8060aee9ba1e5e311f489804d854e",
+      "role": "suction cover"
+    },
+    "fx_suck_05": {
+      "file": "effects/fx_suck_05.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "558ff3c3ecefdfe5c1b7b5eb992a2d5d193abee14aa2443e72aa38c4011e473c",
+      "role": "suction cover"
+    },
+    "fx_suck_06": {
+      "file": "effects/fx_suck_06.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 128,
+      "zIndex": 80,
+      "sha256": "af1075e031aa9be1916e553a53499ddece70c68aafb81103171adc2c6538050a",
+      "role": "suction cover"
+    },
+    "hamster_press": {
+      "file": "characters/hamster_press.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "184e03681ec03a92c9914957f0150414367d63ffaacc5bc8dfbd870973fd7ce1",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "prop_napkin": {
+      "file": "scene/prop_napkin.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 200,
+      "zIndex": 28,
+      "sha256": "6aa906514cd57e45c83276dc76b6c3fe34c7898009cf066450166967cce6f1c8"
+    },
+    "prop_sugar": {
+      "file": "scene/prop_sugar.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 210,
+      "zIndex": 28,
+      "sha256": "a2667bf37834f94f9f78ff2e31fbabde19ecf99e35711153524043fa95c7e677"
+    },
+    "prop_succulent": {
+      "file": "scene/prop_succulent.png",
+      "canvas": [
+        256,
+        256
+      ],
+      "pivotX": 128,
+      "pivotY": 220,
+      "zIndex": 28,
+      "sha256": "1537885593003ecf4a94009ec649af0b6e5b0bbf61783ed8a17d387db08228be"
+    },
+    "hamster_seated_glad_01": {
+      "file": "characters/hamster_seated_glad_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "ac0729c7dc48043dfca632470bab513175446e9cecc47d1b2b6172351aaddda5",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_seated_glad_02": {
+      "file": "characters/hamster_seated_glad_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "6b5da924b2e56af3bbd993159906d46a4bb92b5d6d921a4f7410239629e937f3",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_seated_glad_03": {
+      "file": "characters/hamster_seated_glad_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "a6a507db3462aec8e9293f95b6bc7beea628f5c2e5c8e696248f42681a57da93",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_seated_wipe_01": {
+      "file": "characters/hamster_seated_wipe_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "d5903100036baa368520d04ca7ded636ce225ad8da9ad9b84f47f6f412a28c4a",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_seated_wipe_02": {
+      "file": "characters/hamster_seated_wipe_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "cc8ddd2ad9e822f492373dbe06790d0189d201223209b2bf3570bbf2ea5f5836",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_look_button": {
+      "file": "characters/hamster_look_button.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "190de58f6fce5c98028e5f19a84df7e0b063e98f3c0f89769c8b5e6a2afd9c83",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "hamster_watch": {
+      "file": "characters/hamster_watch.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "302da3220e51c5c57eed3a0bc616365bfd6d0bc3ba5cb7620fd81730778765c4",
+      "tableContact": [
+        256,
+        448
+      ],
+      "containsCup": false,
+      "seated": true
+    },
+    "box_almost": {
+      "file": "storage/box_almost.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 472,
+      "zIndex": 45,
+      "sha256": "e2b7eebd6a16eea24a45dbb2dc9fd18eb770f4e387bbdfa12386da5e99e3b12b",
+      "note": "Nearly-closed composite for closing in-between"
     }
   },
   "animations": {
@@ -1598,20 +2591,20 @@
       "frames": [
         "hamster_idle_base",
         "hamster_idle_01",
-        "hamster_idle_02",
-        "hamster_idle_03",
-        "hamster_idle_04",
+        "hamster_idle_base",
         "hamster_idle_05",
-        "hamster_idle_06",
-        "hamster_idle_07",
-        "hamster_idle_08",
-        "hamster_idle_09",
-        "hamster_idle_10",
-        "hamster_idle_11",
-        "hamster_idle_12",
-        "hamster_idle_13",
-        "hamster_idle_14",
-        "hamster_idle_15"
+        "hamster_idle_base",
+        "hamster_idle_01",
+        "hamster_idle_base",
+        "hamster_idle_05",
+        "hamster_idle_base",
+        "hamster_idle_01",
+        "hamster_idle_base",
+        "hamster_idle_05",
+        "hamster_idle_base",
+        "hamster_idle_01",
+        "hamster_idle_base",
+        "hamster_idle_base"
       ],
       "fps": 8,
       "loop": false,
@@ -1695,6 +2688,111 @@
       "fps": 10,
       "loop": false,
       "play": "only while global animation player owns scene"
+    },
+    "sleep": {
+      "frames": [
+        "hamster_sleep_01",
+        "hamster_sleep_02",
+        "hamster_sleep_03",
+        "hamster_sleep_04",
+        "hamster_sleep_05",
+        "hamster_sleep_06",
+        "hamster_sleep_07",
+        "hamster_sleep_08"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "night-entry-or-click",
+      "rest": "hamster_sleep_01"
+    },
+    "clap": {
+      "frames": [
+        "hamster_idle_base",
+        "hamster_seated_glad_01",
+        "hamster_seated_glad_03",
+        "hamster_seated_glad_02",
+        "hamster_seated_glad_01",
+        "hamster_idle_base"
+      ],
+      "fps": 10,
+      "loop": false,
+      "play": "after-cleanup-seated",
+      "pose": "seated"
+    },
+    "wipe": {
+      "frames": [
+        "hamster_idle_base",
+        "hamster_seated_wipe_01",
+        "hamster_seated_wipe_02",
+        "hamster_seated_wipe_01",
+        "hamster_seated_glad_01",
+        "hamster_idle_base"
+      ],
+      "fps": 10,
+      "loop": false,
+      "play": "after-cleanup-seated-when-busy",
+      "pose": "seated"
+    },
+    "zzz": {
+      "frames": [
+        "fx_zzz_01",
+        "fx_zzz_02",
+        "fx_zzz_03",
+        "fx_zzz_04",
+        "fx_zzz_05"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "with owning character animation"
+    },
+    "condensation": {
+      "frames": [
+        "fx_condensation_01",
+        "fx_condensation_02",
+        "fx_condensation_03",
+        "fx_condensation_04",
+        "fx_condensation_05"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "with owning character animation"
+    },
+    "sweat": {
+      "frames": [
+        "fx_sweat_01",
+        "fx_sweat_02",
+        "fx_sweat_03",
+        "fx_sweat_04",
+        "fx_sweat_05"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "with owning character animation"
+    },
+    "question": {
+      "frames": [
+        "fx_question_01",
+        "fx_question_02",
+        "fx_question_03",
+        "fx_question_04",
+        "fx_question_05"
+      ],
+      "fps": 8,
+      "loop": false,
+      "play": "with owning character animation"
+    },
+    "suck": {
+      "frames": [
+        "fx_suck_01",
+        "fx_suck_02",
+        "fx_suck_03",
+        "fx_suck_04",
+        "fx_suck_05",
+        "fx_suck_06"
+      ],
+      "fps": 12,
+      "loop": true,
+      "play": "while-cups-vacuum"
     }
   },
   "table": {
@@ -1707,50 +2805,50 @@
     "slots": {
       "1": [
         [
-          512,
-          184
+          400,
+          220
         ]
       ],
       "2": [
         [
-          360,
-          186
+          300,
+          216
         ],
         [
-          664,
-          186
+          430,
+          222
         ]
       ],
       "3": [
         [
-          280,
-          178
+          250,
+          210
         ],
         [
-          512,
-          206
+          370,
+          224
         ],
         [
-          744,
-          178
+          480,
+          214
         ]
       ],
       "4": [
         [
-          232,
-          176
+          220,
+          206
         ],
         [
-          418,
-          208
+          320,
+          220
         ],
         [
-          606,
-          208
+          410,
+          226
         ],
         [
-          792,
-          176
+          500,
+          210
         ]
       ]
     },
@@ -1797,7 +2895,7 @@
   ],
   "integration": {
     "save": "record persists immediately; visual collection is never a separate inventory",
-    "cleanup": "snapshot previous visible desk IDs only; exclude today and backdated additions; consume once; skip cancels animation only",
+    "cleanup": "snapshot previous visible desk IDs only; exclude today and backdated additions; consume once; skip jumps to completed closed state",
     "maxSimultaneousAnimations": 1,
     "reducedMotion": "show rest and completed state immediately"
   },
@@ -1822,10 +2920,10 @@
     },
     "storageBox": {
       "position": [
-        620,
-        925
+        560,
+        955
       ],
-      "scale": 0.4
+      "scale": 0.38
     },
     "recordAppears": {
       "effect": "sparkle",
@@ -1841,7 +2939,63 @@
         0
       ],
       "durationMs": 180
-    }
+    },
+    "room": {
+      "day": "scene_room_day",
+      "night": "scene_room_night"
+    },
+    "chair": {
+      "position": [
+        338,
+        702
+      ],
+      "scale": 0.58
+    },
+    "cleanup": {
+      "mode": "vacuum",
+      "seated": true,
+      "walk": false,
+      "press": "hamster_press",
+      "maxVisibleCups": 4,
+      "legacy": [
+        "pickup",
+        "drawCollect",
+        "quickTransfer",
+        "animations.cleanup"
+      ],
+      "timing": {
+        "lookMs": 120,
+        "pressMs": 140,
+        "releaseMs": 80,
+        "openingMs": 200,
+        "openHoldMs": 100,
+        "cupMs": 460,
+        "staggerMs": 200,
+        "waitCloseMs": 100,
+        "closingMs": 200,
+        "closedHoldMs": 100,
+        "archiveFlashMs": 700
+      },
+      "ending": {
+        "1": "clap",
+        "2": "clap",
+        "3": "clap",
+        "4": "wipe",
+        "0": "question"
+      },
+      "look": "hamster_look_button",
+      "watch": "hamster_watch"
+    },
+    "button": {
+      "up": "btn_hamster_up",
+      "down": "btn_hamster_down",
+      "position": [
+        548,
+        778
+      ],
+      "scale": 0.28
+    },
+    "dressing": []
   },
   "box": {
     "layerOrder": [
@@ -1879,6 +3033,9 @@
         "box_lid_opening",
         "box_body",
         "box_front"
+      ],
+      "close_almost": [
+        "box_almost"
       ]
     }
   },
@@ -1929,5 +3086,17 @@
     ],
     "text": "收藏室",
     "textBaked": false
+  },
+  "p1": {
+    "sleep": "independent seated sleep with knitted blanket",
+    "zzz": "overlay sequence",
+    "clap": "cleanup ending",
+    "wipe": "tired ending",
+    "fingerOcclusion": "paw_front drawn after attached cup",
+    "fx": [
+      "condensation",
+      "sweat",
+      "question"
+    ]
   }
 }

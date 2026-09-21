@@ -8,7 +8,7 @@ for id,a in m['assets'].items():
     assert im.mode=='RGBA',id
     assert hashlib.sha256(p.read_bytes()).hexdigest()==a['sha256'],id
     assert im.getchannel('A').getbbox(),id
-    if id not in ['scene_background','storage_empty']:assert im.getchannel('A').getextrema()[0]==0,id
+    if id not in ['scene_background','storage_empty','scene_room_day','scene_room_night']:assert im.getchannel('A').getextrema()[0]==0,id
     assert 0<=a['pivotX']<=im.width and 0<=a['pivotY']<=im.height,id
     if id.startswith('hamster_cleanup'):
         assert a['containsCup'] is False
@@ -21,8 +21,40 @@ for id,a in m['assets'].items():
         assert im.getchannel('A').getbbox()[3]==224,id
 for a in m['animations'].values():
     assert a['fps']>0 and all(f in m['assets'] for f in a['frames'])
+assert 'btn_hamster_up' in m['assets'] and 'fx_suck_01' in m['assets']
+assert m['scene']['cleanup'].get('mode')=='vacuum'
+assert m['scene']['storageBox']['position']==[560,955] and m['scene']['storageBox']['scale']==0.38
+assert m['animations']['box']['frames'][0]=='box_closed' and m['animations']['box']['frames'][-1]=='box_closed'
+assert 'box_close' in m['assets'] and 'liveCup' in m['box']['states']['receiving']
+src=(R/'production_scene.js').read_text(encoding='utf-8')
+assert '600,950' not in src and 'progress<.9' not in src.replace(' ','')
+assert 'function pickup' not in src and 'drawCollect' not in src
+assert 'CleanupMotion' in src and 'boxPhase' in src
+fsm=(P/'cleanup_fsm.js').read_text(encoding='utf-8')
+assert 'lastCupEnd' in fsm and 'wait_before_close' in fsm
+assert src.count('function boxPhase')==1 and fsm.count('function boxPhase')==1
+preview=(P/'preview.js').read_text(encoding='utf-8')
+assert '600,950' not in preview and 'function pickup' not in preview and 'drawCollect' not in preview
+assert 'QA-only' in preview
 assert len(m['animations']['cleanup']['frames'])==12
 assert len(m['animations']['idle']['frames'])==16
+assert not any(f in m['animations']['idle']['frames'] for f in [f'hamster_idle_{n:02d}' for n in range(9,16)])
+assert len(m['animations']['sleep']['frames'])>=6
+assert len(m['animations']['clap']['frames'])>=6
+assert len(m['animations']['wipe']['frames'])>=5
+assert m['animations']['clap'].get('pose')=='seated' and m['animations']['wipe'].get('pose')=='seated'
+assert 'hamster_cleanup_12' not in m['animations']['clap']['frames']
+assert 'hamster_seated_glad_01' in m['assets'] and 'hamster_seated_wipe_01' in m['assets']
+assert len(m['scene'].get('dressing') or [])<=1
+assert m['scene']['button']['position'][0]>=540
+assert 'hamster_look_button' in m['assets'] and 'hamster_watch' in m['assets'] and 'box_almost' in m['assets']
+assert m['scene']['cleanup']['ending']['0']=='question'
+assert m['scene']['cleanup']['look']=='hamster_look_button'
+assert 'Number.isFinite' in fsm and 'archiveFlashMs' in fsm
+assert 'skipToComplete' in preview and 'if(!yesterday.length)return' not in preview.replace(' ','')
+assert 'archiveText' in src
+assert m['assets']['paw_front']['overlay']
+assert all(f'fx_{n}_01' in m['assets'] for n in ['zzz','condensation','sweat','question'])
 assert len([i for i in m['assets'] if i.startswith('cup_') and 'shadow' not in i])==12
 assert [len(m['table']['slots'][str(n)]) for n in range(1,5)]==[1,2,3,4]
 table=Image.open(P/'scene/table_back.png');table.alpha_composite(Image.open(P/'scene/table_front.png'))

@@ -155,7 +155,7 @@ def build():
     animations={'idle':{'frames':idle,'fps':8,'loop':False,'play':'entry-or-click','rest':'hamster_idle_base'},'cleanup':{'frames':[f'hamster_cleanup_{n:02d}' for n in [1,2,3,5,4,6,7,8,9,10,11,12]],'fps':8,'loop':False,'cupBinding':'cup bottomCenter -> cupAnchor; draw cup over character; release into box before front mask'},'quickTransfer':{'frames':[f'hamster_cleanup_{n:02d}' for n in [4,6,9,11,12]],'fps':10,'loop':False},'box':{'frames':['box_closed','box_opening','box_open','box_receiving','box_close','box_closed'],'fps':6,'loop':False}}
     for name in ['steam','sparkle','heart']:animations[name]={'frames':[f'fx_{name}_{i:02d}' for i in range(1,6)],'fps':10,'loop':name=='steam','play':'only while global animation player owns scene'}
     manifest={'schemaVersion':2,'status':'asset-validation-passed-app-integration-pending','units':'pixels','coordinateSystem':{'origin':'top-left','x':'right','y':'down','anchorFormula':'world = spritePosition + (anchor - pivot) * scale'},'assets':assets,'animations':animations,'table':{'canvas':[1024,342],'maxVisibleCups':4,'overflow':'more-button','slots':{'1':[[512,184]],'2':[[360,186],[664,186]],'3':[[280,178],[512,206],[744,178]],'4':[[232,176],[418,208],[606,208],[792,176]]},'cupDisplayScale':0.62},'storage':{'canvas':[1024,342],'slots':[[180,275],[402,275],[624,275],[846,275]],'cupDisplayScale':.72,'repeatRows':True,'records':'one-slot-per-record-id; never merge drinks'},'layers':['scene_background','window_day/window_night','lamp','plant','chair','table_back','hamster','cup_shadow','cup','table_front'],'integration':{'save':'record persists immediately; visual collection is never a separate inventory','cleanup':'snapshot previous visible desk IDs only; exclude today and backdated additions; consume once; skip cancels animation only','maxSimultaneousAnimations':1,'reducedMotion':'show rest and completed state immediately'}}
-    manifest['scene']={'canvas':[768,1024],'table':{'position':[384,830],'scale':.66},'idle':{'position':[390,714],'scale':.72},'storageBox':{'position':[620,925],'scale':.4},'recordAppears':{'effect':'sparkle','durationMs':350},'recordDeletes':{'scale':[1,0],'opacity':[1,0],'durationMs':180}}
+    manifest['scene']={'canvas':[768,1024],'table':{'position':[384,830],'scale':.66},'idle':{'position':[390,714],'scale':.72},'storageBox':{'position':[560,955],'scale':.38},'recordAppears':{'effect':'sparkle','durationMs':350},'recordDeletes':{'scale':[1,0],'opacity':[1,0],'durationMs':180}}
     manifest['box']={'layerOrder':['box_lid','box_body','liveCup','box_front'],'receiveAnchor':[256,358],'states':{'closed':['box_lid_closed','box_front'],'opening':['box_lid_opening','box_body','box_front'],'open':['box_lid','box_body','box_front'],'receiving':['box_lid','box_body','liveCup','box_front'],'close':['box_lid_opening','box_body','box_front']}}
     manifest['ui']={'navigationStates':['default','selected','pressed','disabled'],'buttonStates':['normal','pressed','disabled'],'labels':'live text, not baked','gauge':{'outline':'gauge_normal','fillMask':'gauge_fill_mask','ticks':'gauge_ticks','states':{'normal':[0,.8],'near_limit':[.8,1],'over_limit':[1,None]},'fill':'clip dynamic coffee color to fill mask; 0..1 ratio, bottom up'}}
     manifest['entrance']={'normal':['entrance_normal'],'new_item':['entrance_new_item'],'highlight':['entrance_highlight','entrance_glow'],'text':'收藏室','textBaked':False}
@@ -167,4 +167,9 @@ def build():
             im=Image.open(OUT/assets[id]['file']);im.thumbnail((240,240),RES);x=i%4*256;y=i//4*280;qa.paste(im,(x+(256-im.width)//2,y),im);d.text((x+6,y+250),id,fill='#472e20')
         qa.save(OUT/'qa'/(group+'.png'))
     print(f'Built {len(assets)} assets')
-if __name__=='__main__':build()
+if __name__=='__main__':
+    build()
+    import runpy
+    p1=Path(__file__).with_name('pack_p1_assets.py')
+    if p1.exists():
+        runpy.run_path(str(p1), run_name='__main__')

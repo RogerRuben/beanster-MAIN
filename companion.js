@@ -4,12 +4,12 @@ const Companion={entryHour:new Date().getHours(),feedback:'',timer:0,
   enter(){this.entryHour=new Date().getHours()},
   hero(){return /^character_/.test(settings.homeCharacter||'')&&Motion.asset(settings.homeCharacter)?settings.homeCharacter:this.schedule(this.entryHour).hero},
   portrait(){return this.feedback||(/^portrait_/.test(settings.homePortrait||'')&&Motion.asset(settings.homePortrait)?settings.homePortrait:this.schedule(this.entryHour).portrait)},
-  header(){const logo=document.querySelector('header .logo');logo.innerHTML=UI.art(this.portrait(),'u-companion-avatar',true,'陪伴表情');logo.setAttribute('aria-label',this.schedule(this.entryHour).label);logo.title=this.schedule(this.entryHour).label},
+  header(){const logo=document.querySelector('header .logo');if(!logo)return;logo.innerHTML='<img src="icon.png" alt="鼠鼠今天喝了啥">';logo.setAttribute('aria-label','鼠鼠今天喝了啥');logo.removeAttribute('title')},
   react(id, autoplay=true){clearTimeout(this.timer);this.feedback=id;Motion.stop();this.header();if(autoplay&&document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)Motion.play(document.querySelector('.u-companion-avatar'));this.timer=setTimeout(()=>{this.feedback='';this.header()},4200)},
   choosePortrait(id){settings.homePortrait=id;persist();this.feedback='';this.header();UI.closeOverlay('uExpressions');notify(id?'已设置陪伴头像':'头像已跟随时段')},
   decorateForm(){if(!$('addModal').querySelector('.u-form-companion'))$('addModal').querySelector('.u-form-body').insertAdjacentHTML('afterbegin',`<div class="u-form-companion">${UI.art('character_recording','',true,'记录中的鼠鼠')}<span>把这一杯，记下来。</span></div>`)},
 };
-const companionToday=renderToday;renderToday=function(){companionToday();const im=document.querySelector('.u-home-mascot');if(im){im.dataset.motion=Companion.hero();im.src=UI.path(im.dataset.motion)}Companion.header()};
+const companionToday=renderToday;renderToday=function(){companionToday();Companion.header()};
 const companionAnalysis=renderAnalysis;renderAnalysis=function(){companionAnalysis();$('analysisContent').insertAdjacentHTML('afterbegin',`<div class="u-report-companion">${UI.art('character_monthly','',true,'月报统计鼠鼠')}<span>看看这个月留下的咖啡记忆</span></div>`)};
 const companionOpen=openAdd;openAdd=function(...args){companionOpen(...args);Companion.decorateForm()};
 const companionEdit=editRecord;editRecord=async function(...args){await companionEdit(...args);Companion.decorateForm()};

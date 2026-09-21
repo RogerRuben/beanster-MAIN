@@ -1,0 +1,108 @@
+<!doctype html><html lang="zh-CN"><meta charset="utf-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>收杯动作检查</title>
+<style>
+*{box-sizing:border-box}body{margin:0;background:#eee5d7;color:#513724;font:15px system-ui}
+main{max-width:980px;margin:auto;padding:20px}h1{font-size:26px;margin:0 0 8px}
+p{line-height:1.6}button{font:inherit;border:1px solid #c9ad8d;background:#fff8eb;color:#65462e;border-radius:9px;padding:8px 12px;cursor:pointer}
+.row{display:flex;gap:8px;flex-wrap:wrap;margin:10px 0}
+.card{background:#fff8ec;border-radius:16px;padding:14px}
+canvas{width:min(100%,420px);image-rendering:pixelated;display:block;border-radius:12px;background:#1f1916}
+input[type=range]{width:100%}pre{white-space:pre-wrap;font-size:12px;background:#f4eadc;padding:10px;border-radius:8px}
+</style>
+<main>
+<h1>收杯动作检查</h1>
+<p>仓鼠短按桌面按钮，收藏盒按 closed → opening → open → receiving → closing → closed 吸入真实杯子。超过 4 杯只动画可见的 4 杯。</p>
+<div class="card">
+<canvas id="scene" width="768" height="1024" aria-label="吸入收杯"></canvas>
+<div class="row">
+<button id="play">播放吸入</button>
+<button id="skip">跳过</button>
+<button id="reset">重置（QA）</button>
+<button data-count="0">0 杯</button>
+<button data-count="1">1 杯</button>
+<button data-count="2">2 杯</button>
+<button data-count="4">4 杯</button>
+<button data-count="7">7 杯</button>
+<button id="night">日 / 夜</button>
+</div>
+<label>时间 <input id="slider" type="range" min="0" max="100" value="0"></label>
+<pre id="details"></pre>
+<p id="stats"></p>
+<p><a href="preview.html">素材验收页</a></p>
+</div>
+</main>
+<script src="asset_manifest.js"></script>
+<script src="cleanup_fsm.js"></script>
+<script>
+const M=window.BEANSTER_ASSETS,images={};
+const scene=document.getElementById('scene'),slider=document.getElementById('slider');
+const cups=Object.keys(M.assets).filter(id=>id.startsWith('cup_')&&!id.includes('shadow'));
+let night=false,deskN=2,raf=0,token=0,kind='idle',elapsed=0;
+function sprite(ctx,id,x,y,scale=1){const a=M.assets[id],im=images[id];if(!a||!im)return;ctx.imageSmoothingEnabled=false;ctx.drawImage(im,x-a.pivotX*scale,y-a.pivotY*scale,a.canvas[0]*scale,a.canvas[1]*scale)}
+function spriteBox(ctx,id){const a=M.assets[id],im=images[id],o=CleanupMotion.boxOrigin(M);if(!a||!im)return;ctx.imageSmoothingEnabled=false;ctx.drawImage(im,o.x,o.y,a.canvas[0]*o.scale,a.canvas[1]*o.scale)}
+function drawTop(ctx,id,x,y,w){const a=M.assets[id];if(!a)return;sprite(ctx,id,x+a.pivotX*w/a.canvas[0],y+a.pivotY*w/a.canvas[0],w/a.canvas[0])}
+function demoRows(n){return Array.from({length:n},(_,i)=>({id:i+1,cup:cups[i%cups.length],day:'yesterday'}))}
+function drawElapsed(ms){
+  elapsed=Math.max(0,ms);
+  const rows=demoRows(deskN);
+  const vis=CleanupMotion.visibleRows(rows);
+  const origins=vis.map((_,i)=>CleanupMotion.tableCup(M,i,vis.length));
+  const snap=CleanupMotion.snapshot(M,elapsed,rows,origins);
+  const c=scene.getContext('2d'),idle=M.scene.idle,ch=M.scene.chair||{},btn=M.scene.button||{},tw=CleanupMotion.tablePose(M);
+  const room=night?(M.scene.room&&M.scene.room.night):(M.scene.room&&M.scene.room.day);
+  const hid=snap.hamster.id;
+  c.clearRect(0,0,768,1024);
+  if(M.assets[room])drawTop(c,room,0,0,768);
+  sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
+  sprite(c,'table_back',tw.x,tw.y,tw.scale);
+  if(!snap.hamster.pressed)sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
+  snap.cups.forEach(cup=>{if(cup.gone||cup.flying)return;sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,.4);sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
+  (M.scene.dressing||[]).forEach(p=>sprite(c,p.id,p.position[0],p.position[1],p.scale));
+  sprite(c,snap.buttonDown?'btn_hamster_down':'btn_hamster_up',btn.position?btn.position[0]:548,(btn.position?btn.position[1]:778)+(snap.buttonDown?6:0),btn.scale||.28);
+  if(snap.hamster.pressed)sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
+  sprite(c,'table_front',tw.x,tw.y,tw.scale);
+  if(M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);
+  sprite(c,'entrance_normal',597,255,.55);c.fillStyle='#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',597,262);c.textAlign='left';
+  snap.layers.forEach(id=>{
+    if(id==='liveCup'){
+      snap.cups.forEach(cup=>{if(!cup.flying||cup.gone)return;sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
+      if(snap.swirl){const swirl=M.animations.suck;if(swirl){const fi=Math.floor(snap.elapsed/1000*swirl.fps)%swirl.frames.length;sprite(c,swirl.frames[fi],snap.mouth[0],snap.mouth[1],.26)}}
+    }else spriteBox(c,id);
+  });
+  if(snap.archiveText){c.save();c.fillStyle='#fff1cf';c.font='700 18px system-ui';c.textAlign='center';c.fillText(snap.archiveText,snap.pose.x,snap.pose.y+18);c.restore()}
+  const max=Math.max(1,snap.sched.reactionAt);
+  slider.value=String(Math.round(Math.min(1,elapsed/max)*100));
+  const sample=snap.cups[0]||{gone:true,flying:false,t:0};
+  document.getElementById('details').textContent=JSON.stringify({elapsed:Math.round(elapsed),phase:snap.phase,stateKey:snap.stateKey,layers:snap.layers,buttonDown:snap.buttonDown,watching:snap.hamster.watching,n:snap.sched.n,hidden:snap.sched.hidden,lastCupEnd:snap.sched.lastCupEnd,closingAt:snap.sched.closingAt,closedAt:snap.sched.closedAt,cup:{where:sample.gone?'box':sample.flying?'air':'table',t:+(sample.t||0).toFixed(3)},pose:snap.pose,mode:M.scene.cleanup.mode,seated:true},null,2);
+  document.getElementById('stats').textContent='箱子 FSM · '+deskN+' 条记录 · 动画 '+snap.sched.n+' 杯 · '+snap.phase;
+  return snap;
+}
+function stop(){++token;cancelAnimationFrame(raf);kind='idle'}
+function play(){stop();kind='cleanup';const rows=demoRows(deskN),sched=CleanupMotion.schedule(M,rows),t=token,t0=performance.now();function step(now){if(t!==token)return;const ms=now-t0;drawElapsed(ms);if(ms>=sched.reactionAt){kind='done';drawElapsed(sched.closedAt);return}raf=requestAnimationFrame(step)}raf=requestAnimationFrame(step)}
+function skipToComplete(){stop();kind='done';const s=CleanupMotion.schedule(M,demoRows(deskN));drawElapsed(s.closedAt)}
+function resetQA(){stop();kind='idle';drawElapsed(0)}
+document.getElementById('play').onclick=play;
+document.getElementById('skip').onclick=skipToComplete;
+document.getElementById('reset').onclick=resetQA;
+document.getElementById('night').onclick=()=>{night=!night;drawElapsed(elapsed)};
+document.getElementById('slider').oninput=e=>{stop();kind='cleanup';drawElapsed(+e.target.value/100*CleanupMotion.schedule(M,demoRows(deskN)).reactionAt)};
+document.querySelectorAll('[data-count]').forEach(b=>b.onclick=()=>{deskN=+b.dataset.count;stop();drawElapsed(elapsed)});
+Promise.all(Object.entries(M.assets).map(([id,a])=>new Promise((res,rej)=>{const im=new Image();im.onload=()=>{images[id]=im;res()};im.onerror=()=>rej(Error(a.file));im.src=a.file}))).then(()=>{
+  drawElapsed(0);
+  window.cleanupQA={
+    ready:true,
+    kind:()=>kind,
+    playKind:n=>{if(n==='cleanup'||n==='suck')play();else{stop();kind=n;drawElapsed(CleanupMotion.schedule(M,demoRows(deskN)).closedAt)}},
+    stop,draw:drawElapsed,elapsed:()=>elapsed,deskN:()=>deskN,setCount:n=>{deskN=n;drawElapsed(elapsed)},
+    snapshot:ms=>CleanupMotion.snapshot(M,ms,demoRows(deskN),CleanupMotion.visibleRows(demoRows(deskN)).map((_,i)=>CleanupMotion.tableCup(M,i,Math.min(4,deskN)))),
+    schedule:()=>CleanupMotion.schedule(M,demoRows(deskN)),
+    motion:CleanupMotion,
+    frame:()=>Math.round(elapsed/80),
+    packed:()=>deskN,
+    pose:()=>M.scene.idle,
+    boxPose:()=>CleanupMotion.boxPose(M),
+    skipToComplete,resetQA
+  };
+}).catch(e=>document.getElementById('stats').textContent='加载失败 '+e.message);
+</script>
+</html>
