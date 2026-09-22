@@ -140,6 +140,7 @@ window.CleanupMotion=(function(){
     const s=schedule(M,rows);
     return s.reactionAt+reactionMs(M,rows);
   }
+  function boxVisible(elapsed,sched){return elapsed>=sched.openingAt&&elapsed<sched.reactionAt}
   function snapshot(M,elapsed,rows,origins){
     const sched=schedule(M,rows);
     const phase=boxPhase(elapsed,sched);
@@ -164,5 +165,5 @@ window.CleanupMotion=(function(){
       react:elapsed>=sched.reactionAt
     };
   }
-  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
+  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
 })();

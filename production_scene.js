@@ -141,6 +141,8 @@ window.CleanupMotion=(function(){
     const s=schedule(M,rows);
     return s.reactionAt+reactionMs(M,rows);
   }
+  // Closed box appears with the lid opening and leaves after the closed hold.
+  function boxVisible(elapsed,sched){return elapsed>=sched.openingAt&&elapsed<sched.reactionAt}
   function snapshot(M,elapsed,rows,origins){
     const sched=schedule(M,rows);
     const phase=boxPhase(elapsed,sched);
@@ -165,7 +167,7 @@ window.CleanupMotion=(function(){
       react:elapsed>=sched.reactionAt
     };
   }
-  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
+  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
 })();
 }
 const ProductionScene={
@@ -182,9 +184,10 @@ const ProductionScene={
   tableCup(i,n){return CleanupMotion.tableCup(this.M(),i,n)},
   hot(id){return this.M().assets[id]?.hot!==false&&!/cold_brew|coconut_latte|matcha|dirty/.test(id)},
   roomId(){const s=this.M().scene.room;return this.night()?(s&&s.night)||'scene_room_night':(s&&s.day)||'scene_room_day'},
+  bakedRoom(){return !!this.M().assets[this.roomId()]},
   drawRoom(c){
-    if(this.M().assets[this.roomId()])this.drawTop(c,this.roomId(),0,0,768);
-    else{this.drawTop(c,'scene_background',0,0,768);this.drawTop(c,this.night()?'window_night':'window_day',35,140,285);this.drawTop(c,'lamp',350,40,125);this.drawTop(c,'plant',18,540,160);this.drawTop(c,'plant',610,530,130)}
+    if(this.bakedRoom()){this.drawTop(c,this.roomId(),0,0,768);return}
+    this.drawTop(c,'scene_background',0,0,768);this.drawTop(c,this.night()?'window_night':'window_day',35,140,285);this.drawTop(c,'lamp',350,40,125);this.drawTop(c,'plant',18,540,160);this.drawTop(c,'plant',610,530,130);
     if(this.M().assets.chalkboard)this.sprite(c,'chalkboard',118,790,.78);
   },
   drawSeat(c){const ch=this.M().scene.chair||{},x=ch.position?ch.position[0]:338,y=ch.position?ch.position[1]:702,s=ch.scale||.58;this.sprite(c,'chair',x,y,s)},
@@ -192,7 +195,10 @@ const ProductionScene={
   btn(){const b=this.M().scene.button||{};return {x:b.position?b.position[0]:548,y:b.position?b.position[1]:778,scale:b.scale||.28,up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'}},
   drawButton(c,pressed){const b=this.btn();this.sprite(c,pressed?b.down:b.up,b.x,b.y+(pressed?6:0),b.scale)},
   drawDressing(c){(this.M().scene.dressing||[]).forEach(p=>{if(this.M().assets[p.id])this.sprite(c,p.id,p.position[0],p.position[1],p.scale)})},
-  drawSign(c,glow){this.sprite(c,'entrance_normal',597,255,.55);c.save();c.fillStyle=glow?'#fff8dc':'#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',597,262);c.restore()},
+  signPose(){return {id:'entrance_normal',x:597,y:255,scale:.55}},
+  signRect(){const p=this.signPose(),a=this.M().assets[p.id]||{pivotX:176,pivotY:56,canvas:[352,112]};const w=a.canvas[0]*p.scale,h=a.canvas[1]*p.scale;return {x:p.x-a.pivotX*p.scale,y:p.y-a.pivotY*p.scale,w,h}},
+  drawSign(c,glow){const p=this.signPose();this.sprite(c,p.id,p.x,p.y,p.scale);c.save();c.fillStyle=glow?'#fff8dc':'#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',p.x,p.y+7);c.restore()},
+  drawIvy(c){if(!this.bakedRoom()&&this.M().assets.ivy_hanging)this.sprite(c,'ivy_hanging',640,8,.85)},
   drawStorage(c,snap,cupSprite){
     snap.layers.forEach(id=>{
       if(id==='liveCup'){
@@ -221,15 +227,14 @@ const ProductionScene={
     if(this.paintRitual){this.paintRitual(c);this.place();return}
     this.drawRoom(c);this.drawSeat(c);
     const tw=this.tableWorld();this.sprite(c,'table_back',tw.x,tw.y,tw.scale);
-    const hid=id||this.hamster||this.restId(), idle=this.M().scene.idle, bob=this._bob||0;
-    this.sprite(c,hid,idle.position[0],idle.position[1]+bob,idle.scale);
+    const hid=id||this.hamster||this.restId(), idle=this.M().scene.idle;
+    this.sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
     const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],cs=.4;
     cups.forEach((r,i)=>{const [x,y]=this.tableCup(i,cups.length),cid=this.cupId(r);this.sprite(c,'cup_shadow_medium',x,y+2,cs);this.sprite(c,cid,x,y,cs);if(this.fx)this.sprite(c,this.fx,x,y-36,.32)});
     this.drawDressing(c);this.drawButton(c,false);
     this.sprite(c,'table_front',tw.x,tw.y,tw.scale);
-    if(this.M().assets.ivy_hanging)this.sprite(c,'ivy_hanging',640,8,.85);
+    this.drawIvy(c);
     this.drawSign(c,false);
-    this.drawStorage(c,CleanupMotion.snapshot(this.M(),0,[],[]),r=>this.cupId(r));
     if(this.sleepy()&&this.fx&&String(this.fx).startsWith('fx_zzz'))this.sprite(c,this.fx,idle.position[0]+70,idle.position[1]-120,.5);
     if(!cups.length&&this.fx&&String(this.fx).startsWith('fx_question'))this.sprite(c,this.fx,idle.position[0]+90,idle.position[1]-80,.55);
     this.place();
@@ -238,10 +243,14 @@ const ProductionScene={
     const canvas=this.canvas;if(!canvas?.parentElement)return;
     const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],n=cups.length,cs=.4;
     canvas.parentElement.querySelectorAll('.cc-desk-cup').forEach((btn,i)=>{if(i>=n)return;const [x,y]=this.tableCup(i,n),w=256*cs,h=256*cs;btn.style.left=((x-128*cs)/768*100).toFixed(2)+'%';btn.style.top=((y-224*cs)/1024*100).toFixed(2)+'%';btn.style.width=(w/768*100).toFixed(2)+'%';btn.style.height=(h/1024*100).toFixed(2)+'%'});
+    const sign=canvas.parentElement.querySelector('.cc-room-sign');
+    if(sign){const r=this.signRect();sign.style.left=((r.x+r.w/2)/768*100).toFixed(2)+'%';sign.style.top=((r.y+r.h/2)/1024*100).toFixed(2)+'%';sign.style.width=(r.w/768*100).toFixed(2)+'%';sign.style.height=(r.h/1024*100).toFixed(2)+'%'}
   },
-  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();this.bob()},
+  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this._bob=0;this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();this.bob()},
   bob(){const canvas=this.canvas;if(!canvas)return;const tok=++this.bobTok,t0=performance.now(),rest=this.restId(),blink=this.sleepy()?'hamster_sleep_02':'hamster_idle_01';
-    const tick=now=>{if(tok!==this.bobTok||this.paintRitual||canvas.dataset.playing)return;const t=(now-t0)/1000;this._bob=Math.sin(t*Math.PI*1.15)*1.4;this.hamster=(t%3.6)>3.38?blink:rest;this.paint(this.hamster);requestAnimationFrame(tick)};requestAnimationFrame(tick)},
+    this._bob=0;
+    let shown=this.hamster;
+    const tick=now=>{if(tok!==this.bobTok||this.paintRitual||canvas.dataset.playing)return;const t=(now-t0)/1000;this._bob=0;const next=(t%3.6)>3.38?blink:rest;if(next!==shown){shown=next;this.hamster=next;this.paint(next)}requestAnimationFrame(tick)};requestAnimationFrame(tick)},
   play(name,onframe,done){
     this.bobTok++;Motion.stop();
     const canvas=this.canvas||document.querySelector('[data-scene]');if(!canvas){done?.();return}
@@ -285,9 +294,9 @@ const ProductionScene={
     this.drawDressing(c);this.drawButton(c,snap.buttonDown);
     if(snap.hamster.pressed)this.sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
     this.sprite(c,'table_front',tw.x,tw.y,tw.scale);
-    if(this.M().assets.ivy_hanging)this.sprite(c,'ivy_hanging',640,8,.85);
+    this.drawIvy(c);
     this.drawSign(c,snap.phase!=='closed');
-    this.drawStorage(c,snap,r=>this.cupId(r));
+    if(CleanupMotion.boxVisible(snap.elapsed,snap.sched))this.drawStorage(c,snap,r=>this.cupId(r));
     if(this.fx&&String(this.fx).startsWith('fx_question'))this.sprite(c,this.fx,idle.position[0]+90,idle.position[1]-80,.55);
   },
   startReaction(rows,done){
@@ -335,7 +344,7 @@ const ProductionScene={
   mount(){
     document.querySelectorAll('canvas[data-scene]').forEach(canvas=>{
       if(this.mounted.has(canvas)){this.canvas=canvas;this.paint();return}
-      this.mounted.add(canvas);this.canvas=canvas;
+      this.mounted.add(canvas);this.canvas=canvas;this.place();
       this.load().then(()=>{if(!canvas.isConnected)return;if(typeof CoffeeRoom!=='undefined'&&CoffeeRoom.ritual)return;if(!canvas.dataset.playing){this.rest();this.nudge()}}).catch(()=>{canvas.setAttribute('aria-label','咖啡角素材暂时无法加载')});
     });
   }

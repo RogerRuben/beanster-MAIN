@@ -1,0 +1,10 @@
+{
+  "passed": true,
+  "checks": [
+    "idle bob offset is gone from the renderer",
+    "single collection entrance: canvas sign plus transparent hotspot",
+    "idle anchor stays fixed, box only during the open ritual, baked room is not drawn twice",
+    "wooden-sign hotspot opens the collection room",
+    "dashboard 80% is a quiet reminder and 100% is the late-night caution"
+  ]
+}

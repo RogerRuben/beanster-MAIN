@@ -16,6 +16,8 @@ function play(name,paint,finish){halt();const t=token,a=M.animations[name],start
 function desk(){return records.filter(r=>r.day==='today')}
 function tableCupPosition(index,n){return CleanupMotion.tableCup(M,index,n)}
 function roomId(){const s=M.scene.room;return night?(s&&s.night)||'scene_room_night':(s&&s.day)||'scene_room_day'}
+function bakedRoom(){return !!M.assets[roomId()]}
+function drawIvy(c){if(!bakedRoom()&&M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85)}
 function cupOf(r){return r.cup&&M.assets[r.cup]?r.cup:'cup_latte'}
 function drawStorage(c,snap){
   snap.layers.forEach(id=>{
@@ -30,8 +32,7 @@ function drawIdle(id='hamster_idle_base'){
   hamsterId=id;
   const c=scene.getContext('2d'),idle=M.scene.idle,ch=M.scene.chair||{},tw=CleanupMotion.tablePose(M),btn=M.scene.button||{};
   c.clearRect(0,0,768,1024);
-  if(M.assets[roomId()])drawTop(c,roomId(),0,0,768);else{drawTop(c,'scene_background',0,0,768);drawTop(c,night?'window_night':'window_day',35,140,285);drawTop(c,'lamp',350,40,125);drawTop(c,'plant',18,540,160);drawTop(c,'plant',610,530,130)}
-  if(M.assets.chalkboard)sprite(c,'chalkboard',118,790,.78);
+  if(bakedRoom())drawTop(c,roomId(),0,0,768);else{drawTop(c,'scene_background',0,0,768);drawTop(c,night?'window_night':'window_day',35,140,285);drawTop(c,'lamp',350,40,125);drawTop(c,'plant',18,540,160);drawTop(c,'plant',610,530,130);if(M.assets.chalkboard)sprite(c,'chalkboard',118,790,.78)}
   sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
   sprite(c,'table_back',tw.x,tw.y,tw.scale);sprite(c,id,idle.position[0],idle.position[1],idle.scale);
   const cups=desk().slice(0,CleanupMotion.MAX_VISIBLE);
@@ -39,11 +40,9 @@ function drawIdle(id='hamster_idle_base'){
   (M.scene.dressing||[]).forEach(p=>sprite(c,p.id,p.position[0],p.position[1],p.scale));
   sprite(c,btn.up||'btn_hamster_up',btn.position?btn.position[0]:548,btn.position?btn.position[1]:778,btn.scale||.28);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
-  if(M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);
+  drawIvy(c);
   sprite(c,'entrance_normal',597,255,.55);
-  c.fillStyle='#634027';c.font='24px system-ui';c.fillText('仓鼠咖啡角',36,66);
   c.font='700 20px system-ui';c.fillStyle='#fff1cf';c.textAlign='center';c.fillText('收藏室 →',597,262);c.textAlign='left';
-  drawStorage(c,CleanupMotion.snapshot(M,0,[],[]));
   c.fillStyle='#634027';if(desk().length>4)c.fillText('更多 · +'+(desk().length-4),550,881);
   document.getElementById('stats').textContent=`桌面 ${desk().length} 杯 · 展示 ${cups.length} 杯 · 收藏 ${records.length} 条独立记录`;
   drawShelf();
@@ -59,8 +58,8 @@ function drawCleanup(elapsed,rows,hid){
   const c=scene.getContext('2d'),idle=M.scene.idle,ch=M.scene.chair||{},tw=CleanupMotion.tablePose(M),btn=M.scene.button||{};
   const hamster=hid||snap.hamster.id;
   c.clearRect(0,0,768,1024);
-  if(M.assets[roomId()])drawTop(c,roomId(),0,0,768);
-  if(M.assets.chalkboard)sprite(c,'chalkboard',118,790,.78);
+  if(bakedRoom())drawTop(c,roomId(),0,0,768);
+  else if(M.assets.chalkboard)sprite(c,'chalkboard',118,790,.78);
   sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
   sprite(c,'table_back',tw.x,tw.y,tw.scale);
   if(!snap.hamster.pressed)sprite(c,hamster,idle.position[0],idle.position[1],idle.scale);
@@ -69,10 +68,10 @@ function drawCleanup(elapsed,rows,hid){
   sprite(c,snap.buttonDown?btn.down||'btn_hamster_down':btn.up||'btn_hamster_up',btn.position?btn.position[0]:548,(btn.position?btn.position[1]:778)+(snap.buttonDown?6:0),btn.scale||.28);
   if(snap.hamster.pressed)sprite(c,hamster,idle.position[0],idle.position[1],idle.scale);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
-  if(M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);
+  drawIvy(c);
   sprite(c,'entrance_normal',597,255,.55);
   c.fillStyle='#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',597,262);c.textAlign='left';
-  drawStorage(c,snap);
+  if(CleanupMotion.boxVisible(snap.elapsed,snap.sched))drawStorage(c,snap);
   if(fxId)sprite(c,fxId,idle.position[0]+90,idle.position[1]-80,.55);
   inspectFrame(hamster);
   return snap;

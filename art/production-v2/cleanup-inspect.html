@@ -61,15 +61,17 @@ function drawElapsed(ms){
   sprite(c,snap.buttonDown?'btn_hamster_down':'btn_hamster_up',btn.position?btn.position[0]:548,(btn.position?btn.position[1]:778)+(snap.buttonDown?6:0),btn.scale||.28);
   if(snap.hamster.pressed)sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
-  if(M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);
+  if(!(M.assets[room])&&M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);
   sprite(c,'entrance_normal',597,255,.55);c.fillStyle='#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',597,262);c.textAlign='left';
-  snap.layers.forEach(id=>{
-    if(id==='liveCup'){
-      snap.cups.forEach(cup=>{if(!cup.flying||cup.gone)return;sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
-      if(snap.swirl){const swirl=M.animations.suck;if(swirl){const fi=Math.floor(snap.elapsed/1000*swirl.fps)%swirl.frames.length;sprite(c,swirl.frames[fi],snap.mouth[0],snap.mouth[1],.26)}}
-    }else spriteBox(c,id);
-  });
-  if(snap.archiveText){c.save();c.fillStyle='#fff1cf';c.font='700 18px system-ui';c.textAlign='center';c.fillText(snap.archiveText,snap.pose.x,snap.pose.y+18);c.restore()}
+  if(CleanupMotion.boxVisible(elapsed,snap.sched)){
+    snap.layers.forEach(id=>{
+      if(id==='liveCup'){
+        snap.cups.forEach(cup=>{if(!cup.flying||cup.gone)return;sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
+        if(snap.swirl){const swirl=M.animations.suck;if(swirl){const fi=Math.floor(snap.elapsed/1000*swirl.fps)%swirl.frames.length;sprite(c,swirl.frames[fi],snap.mouth[0],snap.mouth[1],.26)}}
+      }else spriteBox(c,id);
+    });
+    if(snap.archiveText){c.save();c.fillStyle='#fff1cf';c.font='700 18px system-ui';c.textAlign='center';c.fillText(snap.archiveText,snap.pose.x,snap.pose.y+18);c.restore()}
+  }
   const max=Math.max(1,snap.sched.reactionAt);
   slider.value=String(Math.round(Math.min(1,elapsed/max)*100));
   const sample=snap.cups[0]||{gone:true,flying:false,t:0};
@@ -78,8 +80,8 @@ function drawElapsed(ms){
   return snap;
 }
 function stop(){++token;cancelAnimationFrame(raf);kind='idle'}
-function play(){stop();kind='cleanup';const rows=demoRows(deskN),sched=CleanupMotion.schedule(M,rows),t=token,t0=performance.now();function step(now){if(t!==token)return;const ms=now-t0;drawElapsed(ms);if(ms>=sched.reactionAt){kind='done';drawElapsed(sched.closedAt);return}raf=requestAnimationFrame(step)}raf=requestAnimationFrame(step)}
-function skipToComplete(){stop();kind='done';const s=CleanupMotion.schedule(M,demoRows(deskN));drawElapsed(s.closedAt)}
+function play(){stop();kind='cleanup';const rows=demoRows(deskN),sched=CleanupMotion.schedule(M,rows),t=token,t0=performance.now();function step(now){if(t!==token)return;const ms=now-t0;drawElapsed(ms);if(ms>=sched.reactionAt){kind='done';drawElapsed(sched.reactionAt);return}raf=requestAnimationFrame(step)}raf=requestAnimationFrame(step)}
+function skipToComplete(){stop();kind='done';const s=CleanupMotion.schedule(M,demoRows(deskN));drawElapsed(s.reactionAt)}
 function resetQA(){stop();kind='idle';drawElapsed(0)}
 document.getElementById('play').onclick=play;
 document.getElementById('skip').onclick=skipToComplete;

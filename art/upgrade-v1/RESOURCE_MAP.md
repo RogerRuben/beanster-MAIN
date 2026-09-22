@@ -13,10 +13,11 @@
 ## 已接入仪表盘旁小仓鼠（ui-safe）
 
 - 空桌 / 未记录：`character_wave`
-- 今日有记录且未接近上限：`character_coffee`
-- 接近日上限（≥80%）：`character_goal`
-- 已超上限：`character_late_night`
-- 夜间：`character_idle`
+- 今日有记录且低于 80%：`character_coffee`
+- 80–99%：`character_idle`（放下杯子，轻提醒，不用庆祝勋章）
+- ≥100%：`character_late_night`（无奈 / 到上限）
+- 夜间且未到 80%：`character_idle`
+- `character_goal` 只留在成就页，不表示咖啡因上限
 - 可在「自定义仪表盘」关闭显示
 
 ## 已接入互动 / 表情 / 反馈
@@ -30,8 +31,10 @@
 
 ## App 图标
 
-- `icon.png` — 启动器、关于页、顶栏品牌标、favicon
-- 打进 APK：`res/drawable/icon.png` 与 `assets/icon.png`
+这是两件事。
+
+- 启动器图标：`icon.png` 打进 APK 的 `res/drawable/icon.png` 和 `assets/icon.png`。安装后的桌面图标走这条。
+- 页内品牌标：`index` 顶栏 `.top` 里的 `icon.png`。咖啡角、今日仪表盘、收藏室和月报隐藏整个 `.top`，这些页面看不到顶栏品牌标。记录和设置仍显示顶栏。
 
 ## 仍未作为主流程、建议后续位置
 
