@@ -8,15 +8,15 @@ const CoffeeRoom={
   arg(id){return esc(JSON.stringify(String(id)))},
   sprite(r){return ProductionScene.cupId(r)},
   cup(r,cls=''){return `<span class="cc-cup ${cls}" aria-hidden="true"><img src="art/production-v2/cups/${this.sprite(r)}.png" alt=""></span>`},
-  cupButton(r){return `<button class="cc-desk-cup" data-record-id="${esc(r.id)}" onclick="CoffeeRoom.detail(${this.arg(r.id)})" aria-label="查看 ${esc(recordDisplayName(r))}，${pad(new Date(r.ts).getHours())}:${pad(new Date(r.ts).getMinutes())}"></button>`},
+  cupButton(r){return `<button class="cc-desk-cup" data-record-id="${esc(r.id)}" onclick="SceneLife.pokeCup(event,${this.arg(r.id)})" aria-label="看一眼 ${esc(recordDisplayName(r))}，${pad(new Date(r.ts).getHours())}:${pad(new Date(r.ts).getMinutes())}"></button>`},
   hero(){if(/^character_/.test(settings.homeCharacter||'')&&settings.homeCharacter!=='character_burger'&&Motion.asset(settings.homeCharacter))return settings.homeCharacter;const h=new Date().getHours();return h<6||h>=22?'character_idle':this.desk().length?'character_coffee':'character_wave'},
   scene(){const rs=this.desk(),night=ProductionScene.night();
-    return `<section class="cc-corner ${night?'cc-night':''}" aria-label="仓鼠咖啡角"><canvas class="cc-scene-canvas" width="768" height="1024" data-scene="true" role="img" aria-label="仓鼠咖啡角，点击播放一次动作"></canvas><button type="button" class="cc-room-sign" onclick="CoffeeRoom.open()" aria-label="打开收藏室"></button><div class="cc-speech">${rs.length?'每一杯，都有自己的故事。':'桌子留好了，今天想喝什么？'}</div><div class="cc-desk" aria-label="今天的咖啡">${rs.slice(0,4).map(r=>this.cupButton(r)).join('')}</div>${rs.length>4?`<button class="cc-more" onclick="CoffeeRoom.openToday()">更多 · 还有 ${rs.length-4} 杯 →</button>`:!rs.length?'<span class="cc-empty-desk">还没有放上今天的咖啡</span>':''}<div class="cc-ritual-slot"></div></section>`;
+    return `<section class="cc-corner ${night?'cc-night':''}" aria-label="仓鼠咖啡角"><canvas class="cc-scene-canvas" width="768" height="1024" data-scene="true" role="img" aria-label="仓鼠咖啡角"></canvas><button type="button" class="cc-hamster-hit" onclick="SceneLife.pokeHamster(event)" aria-label="和仓鼠打个招呼"></button><button type="button" class="cc-collect-hit" onclick="SceneLife.pokeButton(event)" aria-label="看看收杯按钮"></button><button type="button" class="cc-room-sign" onclick="CoffeeRoom.open()" aria-label="打开收藏室"></button><div class="cc-speech">${rs.length?'每一杯，都有自己的故事。':'桌子留好了，今天想喝什么？'}</div><div class="cc-desk" aria-label="今天的咖啡">${rs.slice(0,4).map(r=>this.cupButton(r)).join('')}</div>${rs.length>4?`<button class="cc-more" onclick="CoffeeRoom.openToday()">更多 · 还有 ${rs.length-4} 杯 →</button>`:!rs.length?'<span class="cc-empty-desk">还没有放上今天的咖啡</span>':''}<div class="cc-ritual-slot"></div></section>`;
   },
   decorateHome(){const content=$('todayContent');if(!content)return;const hero=content.querySelector('.u-hero');if(!hero)return;
     // Two independent home screens: scene first; live data and gauge on the second.
     const custom=$('uDashboardCustomize'),metrics=content.querySelector('.u-metrics'),cta=content.querySelector('.u-record-cta'),date=content.querySelector('.u-date');
-    const host=$('dashboardContent');host.innerHTML=this.screenTabs('dashboard')+'<div class="cc-data-heading"><span>看见今天的咖啡节奏</span><h1>今日仪表盘</h1></div><section class="cc-data-gauge"></section>';
+    const host=$('dashboardContent');host.innerHTML=this.screenTabs('dashboard')+`<div class="cc-data-heading"><span>看见今天的咖啡节奏</span><h1>${esc(this.dashHeadline())}</h1></div><section class="cc-data-gauge"></section>`;
     host.querySelector('.cc-data-gauge').append(hero);if(custom)host.querySelector('.cc-data-gauge').append(custom);
     Dashboard.placeCompanion(hero);
     const caf=Math.round(sum(this.desk(),'caffeine')),limit=Math.max(1,Number(settings.dailyLimit)||400);
@@ -28,9 +28,16 @@ const CoffeeRoom={
     // Only a visible desk is remembered. Backdated additions never enter this snapshot.
     if(document.querySelector('.page.active')?.id==='today'&&!AppNav.layers().length)this.checkDay();
   },
-  screenTabs(active){return `<div class="cc-page-switch"><button ${active==='today'?'aria-current="page"':''} onclick="UI.go('today')">仓鼠咖啡角</button><button ${active==='dashboard'?'aria-current="page"':''} onclick="UI.go('dashboard')">今日仪表盘</button><small>${active==='today'?'1 / 2':'2 / 2'} · 左右滑动</small></div>`},
-  open(){this.query='';this.limit=60;UI.go('collection')},
-  openToday(){this.query=this.today();this.limit=60;UI.go('collection')},
+  dashHeadline(){const cups=this.desk().length,s=Dashboard.stats();if(!cups)return '今天还没有咖啡';if(s.value>=s.limit)return '今天先停一停';if(s.fill>=.8)return '今天差不多了';return '今天喝得刚刚好'},
+  screenTabs(active){const guide=settings.homeSwipeHintSeen?(active==='today'?'● ○':'○ ●'):(active==='today'?'1 / 2':'2 / 2')+' · 左右滑动';return `<div class="cc-page-switch"><button ${active==='today'?'aria-current="page"':''} onclick="UI.go('today')">仓鼠咖啡角</button><button ${active==='dashboard'?'aria-current="page"':''} onclick="UI.go('dashboard')">今日仪表盘</button><small class="cc-page-mark">${guide}</small></div>`},
+  noteSwipe(){if(settings.homeSwipeHintSeen)return;settings.homeSwipeHintSeen=true;persist()},
+  async open(){this.query='';this.limit=60;await this.present()},
+  async openToday(){this.query=this.today();this.limit=60;await this.present()},
+  shelfUrls(){const urls=['art/production-v2/storage/storage_empty.png','art/production-v2/storage/storage_front_mask.png'];document.querySelectorAll('#collectionContent .cc-cup img').forEach(img=>{const src=img.getAttribute('src');if(src)urls.push(src)});return urls},
+  preload(urls){return Promise.all(urls.map(src=>new Promise(res=>{const im=new Image();im.onload=im.onerror=()=>res();im.src=src})))},
+  prepare(){if(!$('collectionContent'))return Promise.resolve();this.render();return this.preload(this.shelfUrls())},
+  showCollection(){document.querySelectorAll('.nav button').forEach(x=>x.classList.remove('active'));document.querySelectorAll('.page').forEach(x=>x.classList.remove('active'));document.querySelector('.nav [data-page=collection]')?.classList.add('active');$('collection').classList.add('active');document.body.dataset.page='collection';scrollTo(0,0)},
+  async present(){await this.prepare();await new Promise(res=>requestAnimationFrame(res));if(!$('collection').classList.contains('active'))this.showCollection()},
   search(value){this.query=value;this.limit=60;this.renderShelves()},
   matches(r){const q=this.query.trim().normalize('NFKC').toLowerCase();if(!q)return true;const d=new Date(r.ts),date=this.day(r.ts);const text=[recordDisplayName(r),r.brand,date,date.replaceAll('-','/'),`${d.getFullYear()}年${d.getMonth()+1}月${d.getDate()}日`,`${d.getMonth()+1}月${d.getDate()}日`].join(' ').normalize('NFKC').toLowerCase();return q.split(/\s+/).every(t=>text.includes(t))},
   render(){const host=$('collectionContent');if(!host)return;
@@ -52,12 +59,13 @@ const CoffeeRoom={
   finishRitual(){clearTimeout(this.ritualTimer);ProductionScene.paintRitual=null;Motion.stop();document.querySelectorAll('.cc-ritual').forEach(el=>el.remove());this.ritual=null;ProductionScene.rest()},
   refresh(){this.render();this.renderDetail();if($('uDayContent'))UI.renderDay()}
 };
+window.CoffeeRoom=CoffeeRoom;
 const roomToday=renderToday;renderToday=function(){roomToday();CoffeeRoom.decorateHome()};
 const roomRenderAll=renderAll;renderAll=function(){roomRenderAll();CoffeeRoom.refresh()};
 // Save already persists the record. All room views read that same record immediately.
 const roomPersist=persist;persist=function(){roomPersist();CoffeeRoom.renderShelves();CoffeeRoom.renderDetail()};
-const roomGo=UI.go;UI.go=function(id){if(id==='dashboard'){CoffeeRoom.finishRitual();document.querySelectorAll('.page,.nav button').forEach(n=>n.classList.remove('active'));$('dashboard').classList.add('active');document.querySelector('.nav [data-page=today]').classList.add('active');document.body.dataset.page='dashboard';renderAll();scrollTo(0,0);Dashboard.greet()}else if(id==='photos')CoffeeRoom.photos();else roomGo(id)};
-const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.5.1'};
+const roomGo=UI.go;UI.go=function(id){if(id==='today'||id==='dashboard')CoffeeRoom.noteSwipe();if(id==='dashboard'){CoffeeRoom.finishRitual();document.querySelectorAll('.page,.nav button').forEach(n=>n.classList.remove('active'));$('dashboard').classList.add('active');document.querySelector('.nav [data-page=today]').classList.add('active');document.body.dataset.page='dashboard';renderAll();scrollTo(0,0);Dashboard.greet()}else if(id==='photos')CoffeeRoom.photos();else if(id==='collection')CoffeeRoom.open();else roomGo(id)};
+const roomSettings=renderSettings;renderSettings=function(){roomSettings();$('settingsContent').insertAdjacentHTML('afterbegin','<button class="u-achievement-teaser" onclick="CoffeeRoom.open()"><span><b>咖啡收藏室</b><small>每一杯都有自己的位置</small></span>'+UI.arrow()+'</button>');$('settingsContent').querySelector('.about span').textContent='Beanster Sips · V19.5.2'};
 // Route existing record menus into the complete detail page.
 UI.recordMenu=id=>CoffeeRoom.detail(id);
 const roomGallery=Motion.gallery;Motion.gallery=function(){roomGallery.call(this);document.querySelectorAll('.u-expression-grid article').forEach(article=>{const img=article.querySelector('[data-motion]');if(!img?.dataset.motion.startsWith('character_'))return;const button=article.querySelector('button');if(button){button.disabled=false;button.textContent='播放表情';button.removeAttribute('onclick');button.onclick=()=>Motion.play(img)}});document.querySelectorAll('#uExpressions button[onclick^=\"Motion.choose\"]').forEach(b=>b.remove());document.querySelectorAll('#uExpressions .u-motion-hint').forEach((p,i)=>p.textContent=i?'开心、平静等头像仍可选择；咖啡角使用专属坐姿。':'点击表情，播放一次。汉堡搭配保留为扩展情绪。')};
@@ -67,3 +75,6 @@ document.addEventListener('visibilitychange',()=>{if(document.hidden)CoffeeRoom.
 // Also refresh a home left open across midnight, without a recurring background job.
 setInterval(()=>{if(!document.hidden&&document.querySelector('.page.active')?.id==='today'&&settings.coffeeDesk?.day!==CoffeeRoom.today()&&!AppNav.layers().length){renderToday();Motion.sync()}},30000);
 renderAll();Motion.scope=null;Motion.sync();
+const collectionNav=document.querySelector('.nav [data-page=collection]');if(collectionNav)collectionNav.onclick=event=>{event.preventDefault();CoffeeRoom.open()};
+const warmCollection=()=>CoffeeRoom.prepare();
+if(window.requestIdleCallback)requestIdleCallback(()=>warmCollection(),{timeout:1600});else setTimeout(warmCollection,700);

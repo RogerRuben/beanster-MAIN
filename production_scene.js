@@ -176,7 +176,7 @@ const ProductionScene={
   cupId(r){const n=String(r.productName||'')+' '+String(r.type||'')+' '+String(r.cup||'');return /抹茶/.test(n)?'cup_matcha':/生椰|轻椰|椰乳|椰拿铁/.test(n)?'cup_coconut_latte':/摩卡|巧克力/.test(n)?'cup_mocha':/澳白|馥芮白|flat white/i.test(n)?'cup_flat_white':/冷萃|冰美式/.test(n)?'cup_cold_brew':/手冲/.test(n)?'cup_pour_over':/卡布|cappuccino/i.test(n)?'cup_cappuccino':/dirty/i.test(n)?'cup_dirty':/浓缩|espresso/i.test(n)?'cup_espresso':/拿铁|latte/i.test(n)?'cup_latte':/美式|黑咖|americano/i.test(n)?'cup_americano':/外带|takeaway/i.test(n)?'cup_takeaway':r.cup&&String(r.cup).startsWith('cup_')?r.cup:'cup_latte'},
   night(){const h=new Date().getHours();return h<6||h>=20},
   sleepy(){const h=new Date().getHours();return h<6||h>=22},
-  restId(){return this.sleepy()&&this.M().assets.hamster_sleep_01?'hamster_sleep_01':'hamster_idle_base'},
+  restId(){return 'hamster_idle_base'},
   load(){return this.ready||(this.ready=Promise.all(Object.entries(this.M().assets).map(([id,a])=>new Promise((res,rej)=>{const im=new Image();im.onload=()=>{this.images[id]=im;res()};im.onerror=()=>rej(Error(a.file));im.src='art/production-v2/'+a.file}))))},
   sprite(ctx,id,x,y,scale=1,alpha=1){const a=this.M().assets[id],im=this.images[id];if(!a||!im)return;ctx.imageSmoothingEnabled=false;const prev=ctx.globalAlpha;if(alpha<1)ctx.globalAlpha=prev*alpha;ctx.drawImage(im,x-a.pivotX*scale,y-a.pivotY*scale,a.canvas[0]*scale,a.canvas[1]*scale);ctx.globalAlpha=prev},
   spriteBox(ctx,id){const a=this.M().assets[id],im=this.images[id],o=CleanupMotion.boxOrigin(this.M());if(!a||!im)return;ctx.imageSmoothingEnabled=false;ctx.drawImage(im,o.x,o.y,a.canvas[0]*o.scale,a.canvas[1]*o.scale)},
@@ -230,12 +230,12 @@ const ProductionScene={
     const hid=id||this.hamster||this.restId(), idle=this.M().scene.idle;
     this.sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
     const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],cs=.4;
-    cups.forEach((r,i)=>{const [x,y]=this.tableCup(i,cups.length),cid=this.cupId(r);this.sprite(c,'cup_shadow_medium',x,y+2,cs);this.sprite(c,cid,x,y,cs);if(this.fx)this.sprite(c,this.fx,x,y-36,.32)});
+    cups.forEach((r,i)=>{const [x,y]=this.tableCup(i,cups.length),cid=this.cupId(r),pulse=window.SceneLife?.cupScale(i)||1;this.sprite(c,'cup_shadow_medium',x,y+2,cs);this.sprite(c,cid,x,y,cs*pulse);const fx=window.SceneLife?.fxAt(i);if(fx)this.sprite(c,fx,x,y-36,.32)});
     this.drawDressing(c);this.drawButton(c,false);
     this.sprite(c,'table_front',tw.x,tw.y,tw.scale);
     this.drawIvy(c);
     this.drawSign(c,false);
-    if(this.sleepy()&&this.fx&&String(this.fx).startsWith('fx_zzz'))this.sprite(c,this.fx,idle.position[0]+70,idle.position[1]-120,.5);
+    if(window.SceneLife?.zzz){const z=this.M().animations.zzz;if(z)this.sprite(c,z.frames[Math.floor(this.nowZzz())%z.frames.length],idle.position[0]+70,idle.position[1]-120,.5)}
     if(!cups.length&&this.fx&&String(this.fx).startsWith('fx_question'))this.sprite(c,this.fx,idle.position[0]+90,idle.position[1]-80,.55);
     this.place();
   },
@@ -245,12 +245,13 @@ const ProductionScene={
     canvas.parentElement.querySelectorAll('.cc-desk-cup').forEach((btn,i)=>{if(i>=n)return;const [x,y]=this.tableCup(i,n),w=256*cs,h=256*cs;btn.style.left=((x-128*cs)/768*100).toFixed(2)+'%';btn.style.top=((y-224*cs)/1024*100).toFixed(2)+'%';btn.style.width=(w/768*100).toFixed(2)+'%';btn.style.height=(h/1024*100).toFixed(2)+'%'});
     const sign=canvas.parentElement.querySelector('.cc-room-sign');
     if(sign){const r=this.signRect();sign.style.left=((r.x+r.w/2)/768*100).toFixed(2)+'%';sign.style.top=((r.y+r.h/2)/1024*100).toFixed(2)+'%';sign.style.width=(r.w/768*100).toFixed(2)+'%';sign.style.height=(r.h/1024*100).toFixed(2)+'%'}
+    const hamster=canvas.parentElement.querySelector('.cc-hamster-hit');
+    if(hamster&&window.SceneLife){const r=SceneLife.spriteRect('hamster_idle_base');const x=r.x+r.w*.18,y=r.y,w=r.w*.64,h=r.h*.62;hamster.style.left=(x/768*100).toFixed(2)+'%';hamster.style.top=(y/1024*100).toFixed(2)+'%';hamster.style.width=(w/768*100).toFixed(2)+'%';hamster.style.height=(h/1024*100).toFixed(2)+'%'}
+    const gadget=canvas.parentElement.querySelector('.cc-collect-hit');
+    if(gadget){const b=this.btn(),a=this.M().assets[b.up];if(a){const w=a.canvas[0]*b.scale,h=a.canvas[1]*b.scale,x=b.x-a.pivotX*b.scale,y=b.y-a.pivotY*b.scale;gadget.style.left=((x+w/2)/768*100).toFixed(2)+'%';gadget.style.top=((y+h/2)/1024*100).toFixed(2)+'%';gadget.style.width=(w/768*100).toFixed(2)+'%';gadget.style.height=(h/1024*100).toFixed(2)+'%'}}
   },
-  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this._bob=0;this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();this.bob()},
-  bob(){const canvas=this.canvas;if(!canvas)return;const tok=++this.bobTok,t0=performance.now(),rest=this.restId(),blink=this.sleepy()?'hamster_sleep_02':'hamster_idle_01';
-    this._bob=0;
-    let shown=this.hamster;
-    const tick=now=>{if(tok!==this.bobTok||this.paintRitual||canvas.dataset.playing)return;const t=(now-t0)/1000;this._bob=0;const next=(t%3.6)>3.38?blink:rest;if(next!==shown){shown=next;this.hamster=next;this.paint(next)}requestAnimationFrame(tick)};requestAnimationFrame(tick)},
+  nowZzz(){return (performance.now()/140)|0},
+  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this._bob=0;this.bobTok++;this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();window.SceneLife?.wake()},
   play(name,onframe,done){
     this.bobTok++;Motion.stop();
     const canvas=this.canvas||document.querySelector('[data-scene]');if(!canvas){done?.();return}
@@ -318,10 +319,11 @@ const ProductionScene={
     this.interactionState='idle';
     this.canvas?.removeAttribute('data-playing');
     if(this.canvas)this.canvas.dataset.interaction='idle';
-    this.paint();this.bob();done?.();
+    this.paint();window.SceneLife?.wake();done?.();
   },
   cleanup(rows,done){
     const cups=(rows||[]).slice();
+    window.SceneLife?.hold();
     this.bobTok++;Motion.stop();
     const canvas=this.canvas||document.querySelector('[data-scene]');if(!canvas){done?.();return}
     this.interactionState='cleanup';
@@ -345,14 +347,13 @@ const ProductionScene={
     document.querySelectorAll('canvas[data-scene]').forEach(canvas=>{
       if(this.mounted.has(canvas)){this.canvas=canvas;this.paint();return}
       this.mounted.add(canvas);this.canvas=canvas;this.place();
-      this.load().then(()=>{if(!canvas.isConnected)return;if(typeof CoffeeRoom!=='undefined'&&CoffeeRoom.ritual)return;if(!canvas.dataset.playing){this.rest();this.nudge()}}).catch(()=>{canvas.setAttribute('aria-label','咖啡角素材暂时无法加载')});
+      this.load().then(()=>{if(!canvas.isConnected)return;if(typeof CoffeeRoom!=='undefined'&&CoffeeRoom.ritual)return;if(!canvas.dataset.playing)this.rest()}).catch(()=>{canvas.setAttribute('aria-label','咖啡角素材暂时无法加载')});
     });
   }
 };
 const prodPlay=Motion.play.bind(Motion),prodStop=Motion.stop.bind(Motion);
-Motion.play=function(el){return el?.hasAttribute('data-scene')?ProductionScene.nudge():prodPlay(el)};
+Motion.play=function(el){return el?.hasAttribute('data-scene')?undefined:prodPlay(el)};
 Motion.stop=function(){prodStop()};
-document.addEventListener('click',e=>{const el=e.target.closest('[data-scene]');if(el&&!e.target.closest('.cc-desk-cup,.cc-more,.cc-room-sign,.cc-ritual')){e.preventDefault();ProductionScene.nudge()}},true);
 new MutationObserver(()=>ProductionScene.mount()).observe(document.body,{childList:true,subtree:true});
 addEventListener('resize',()=>ProductionScene.place());
 ProductionScene.mount();

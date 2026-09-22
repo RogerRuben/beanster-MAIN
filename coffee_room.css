@@ -135,5 +135,9 @@ canvas.cc-seated{width:200px;height:175px}
 @media(max-width:350px){.cc-corner{border-radius:14px}.cc-collection-cup .cc-cup{width:52px;height:52px}.cc-shelf{padding-left:6px;padding-right:6px}}
 
 /* V19.5.1: canvas wooden sign is the only collection label. This button is its hit target. */
-.cc-room-sign{position:absolute;z-index:8;transform:translate(-50%,-50%);min-width:44px;min-height:44px;margin:0;padding:0;border:0;border-radius:8px;background:transparent;box-shadow:none;color:transparent;font-size:0}
-.cc-room-sign:focus-visible{outline:2px solid #fff1cf;outline-offset:3px}
+.cc-room-sign{position:absolute;z-index:9;transform:translate(-50%,-50%);min-width:44px;min-height:44px;margin:0;padding:0;border:0;border-radius:8px;background:transparent;box-shadow:none;color:transparent;font-size:0}
+.cc-room-sign:focus-visible,.cc-hamster-hit:focus-visible,.cc-collect-hit:focus-visible{outline:2px solid #fff1cf;outline-offset:3px}
+.cc-hamster-hit,.cc-collect-hit{position:absolute;margin:0;padding:0;border:0;background:transparent;color:transparent;min-width:44px;min-height:44px}
+.cc-hamster-hit{z-index:5}
+.cc-collect-hit{z-index:8;transform:translate(-50%,-50%)}
+#dashboard{padding-bottom:calc(88px + env(safe-area-inset-bottom))}

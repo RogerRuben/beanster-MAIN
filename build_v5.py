@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.1'
-VERSION_CODE=55
+APP_VERSION='19.5.2'
+VERSION_CODE=56
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -43,7 +43,7 @@ def build_resources_arsc():
     pkg+=type_pool+key_pool+type_spec+type_chunk
     table_size=12+len(global_pool)+len(pkg); return struct.pack('<HHII',RES_TABLE_TYPE,12,table_size,1)+global_pool+pkg
 
-base.RID.update({'icon':0x01010002,'versionCode':0x0101021b,'versionName':0x0101021c,'extractNativeLibs':0x010104ea})
+base.RID.update({'icon':0x01010002,'roundIcon':0x0101052c,'versionCode':0x0101021b,'versionName':0x0101021c,'extractNativeLibs':0x010104ea})
 class V5Axml(base.Axml):
     def build_manifest(self):
         self.s('android'); self.s(base.ANDROID_URI)
@@ -58,8 +58,9 @@ class V5Axml(base.Axml):
         for perm in ['android.permission.INTERNET','android.permission.VIBRATE','android.permission.POST_NOTIFICATIONS']:
             body.append(self.start('uses-permission',[self.attr('name',perm)])); body.append(self.end('uses-permission'))
         icon_attr=(self.s(base.ANDROID_URI),self.attr_name('icon'),base.NO_INDEX,TYPE_REFERENCE,ICON_RES_ID)
-        body.append(self.start('application',[self.attr('label','鼠鼠今天喝了啥'),self.attr('extractNativeLibs',True,'bool'),icon_attr]))
-        body.append(self.start('activity',[self.attr('name','com.sipsqueak.v7.MainActivity'),self.attr('exported',True,'bool')]))
+        round_attr=(self.s(base.ANDROID_URI),self.attr_name('roundIcon'),base.NO_INDEX,TYPE_REFERENCE,ICON_RES_ID)
+        body.append(self.start('application',[self.attr('label','鼠鼠今天喝了啥'),self.attr('extractNativeLibs',True,'bool'),icon_attr,round_attr]))
+        body.append(self.start('activity',[self.attr('name','com.sipsqueak.v7.MainActivity'),self.attr('exported',True,'bool'),icon_attr,round_attr]))
         body.append(self.start('intent-filter'))
         body.append(self.start('action',[self.attr('name','android.intent.action.MAIN')])); body.append(self.end('action'))
         body.append(self.start('category',[self.attr('name','android.intent.category.LAUNCHER')])); body.append(self.end('category'))
@@ -75,6 +76,18 @@ def ensure_key(path=None):
     if hashlib.sha256(cert).hexdigest()!=EXPECTED_SIGNER:
         raise ValueError('Signing certificate does not match the verified V17.1 certificate; refusing to sign.')
     return ks
+
+def store_aligned(zf, name, data, align=4):
+    # resources.arsc must be stored and 4-byte aligned or Android ignores the resource table and shows the default icon.
+    data=bytes(data)
+    info=zipfile.ZipInfo(filename=name, date_time=(2026,1,1,0,0,0))
+    info.compress_type=zipfile.ZIP_STORED
+    info.file_size=len(data)
+    info.CRC=zipfile.crc32(data)&0xffffffff
+    offset=zf.fp.tell()
+    pad=(align-((offset+30+len(name.encode('utf-8')))%align))%align
+    info.extra=b'\x00'*pad
+    zf.writestr(info, data)
 
 def main():
     parser=argparse.ArgumentParser(description='Build Beanster Sips with the current UI and local art assets.')
@@ -100,12 +113,12 @@ def main():
     if hashlib.sha256(aar.read_bytes()).hexdigest()!=expected: raise ValueError('Unexpected Tesseract Android AAR hash')
     unsigned=OUT/f'Beanster-Sips-V{APP_VERSION}-unsigned.apk'
     with zipfile.ZipFile(unsigned,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
-        z.writestr('AndroidManifest.xml',manifest); z.writestr('classes.dex',dex); z.writestr('resources.arsc',arsc)
+        z.writestr('AndroidManifest.xml',manifest); z.writestr('classes.dex',dex); store_aligned(z,'resources.arsc',arsc)
         z.write(reader_dex,'classes2.dex')
         z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
             z.write(OUT/name,'assets/'+name)
         for asset in sorted((OUT/'art/coffee-room').glob('*.png')):
             z.write(asset,'assets/art/coffee-room/'+asset.name,compress_type=zipfile.ZIP_STORED)
