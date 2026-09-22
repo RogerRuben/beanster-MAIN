@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.2'
-VERSION_CODE=56
+APP_VERSION='19.5.3'
+VERSION_CODE=57
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -89,6 +89,99 @@ def store_aligned(zf, name, data, align=4):
     info.extra=b'\x00'*pad
     zf.writestr(info, data)
 
+def find_exe(root, name):
+    root=Path(root)
+    if not root.exists(): return None
+    for p in root.rglob(name):
+        if p.is_file(): return p
+    return None
+
+def build_launcher_bitmaps(res):
+    from PIL import Image
+    import numpy as np
+    src=Image.open(OUT/'icon.png').convert('RGBA')
+    arr=np.array(src)
+    black=(arr[:,:,0]<28)&(arr[:,:,1]<28)&(arr[:,:,2]<28)
+    arr[black,3]=0
+    art=Image.fromarray(arr)
+    opaque=arr[~black]
+    brown=tuple(int(v) for v in np.median(opaque[:,:3],axis=0)) if len(opaque) else (196,137,74)
+    legacy={'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}
+    foreground={'mdpi':108,'hdpi':162,'xhdpi':216,'xxhdpi':324,'xxxhdpi':432}
+    for density,size in legacy.items():
+        folder=res/f'mipmap-{density}'
+        folder.mkdir(parents=True,exist_ok=True)
+        side=int(size*0.9)
+        icon=art.resize((side,side),Image.Resampling.LANCZOS)
+        canvas=Image.new('RGBA',(size,size),brown+(255,))
+        canvas.paste(icon,((size-side)//2,(size-side)//2),icon)
+        canvas.save(folder/'ic_launcher.png')
+        canvas.save(folder/'ic_launcher_round.png')
+    for density,size in foreground.items():
+        folder=res/f'mipmap-{density}'
+        folder.mkdir(parents=True,exist_ok=True)
+        side=int(round(size*66/108))
+        icon=art.resize((side,side),Image.Resampling.LANCZOS)
+        canvas=Image.new('RGBA',(size,size),(0,0,0,0))
+        canvas.paste(icon,((size-side)//2,(size-side)//2),icon)
+        canvas.save(folder/'ic_launcher_foreground.png')
+    (res/'values').mkdir(parents=True,exist_ok=True)
+    (res/'values'/'colors.xml').write_text(
+        '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
+        f'    <color name="ic_launcher_background">#{brown[0]:02X}{brown[1]:02X}{brown[2]:02X}</color>\n'
+        '</resources>\n',encoding='utf-8')
+    xml='''<?xml version="1.0" encoding="utf-8"?>
+<adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
+    <background android:drawable="@color/ic_launcher_background"/>
+    <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
+</adaptive-icon>
+'''
+    anydpi=res/'mipmap-anydpi-v26'
+    anydpi.mkdir(parents=True,exist_ok=True)
+    (anydpi/'ic_launcher.xml').write_text(xml,encoding='utf-8')
+    (anydpi/'ic_launcher_round.xml').write_text(xml,encoding='utf-8')
+
+def link_android_resources():
+    import os
+    sdk=Path(os.environ.get('BEANSTER_SDK', OUT.parent/'.build-tools'/'android-sdk'))
+    aapt2=find_exe(sdk,'aapt2.exe')
+    jar=find_exe(sdk,'android.jar')
+    if not aapt2 or not jar:
+        raise FileNotFoundError('aapt2 and android.jar are required to compile the launcher mipmaps. Set BEANSTER_SDK.')
+    res=OUT/'android'/'res'
+    build_launcher_bitmaps(res)
+    manifest_src=OUT/'android'/'AndroidManifest.xml'
+    manifest_src.parent.mkdir(parents=True,exist_ok=True)
+    manifest_src.write_text(f'''<?xml version="1.0" encoding="utf-8"?>
+<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+    package="com.beanstersips.v11"
+    android:versionCode="{VERSION_CODE}"
+    android:versionName="{APP_VERSION}">
+    <uses-sdk android:minSdkVersion="29" android:targetSdkVersion="29"/>
+    <uses-permission android:name="android.permission.INTERNET"/>
+    <uses-permission android:name="android.permission.VIBRATE"/>
+    <uses-permission android:name="android.permission.POST_NOTIFICATIONS"/>
+    <application android:label="鼠鼠今天喝了啥" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round" android:extractNativeLibs="true">
+        <activity android:name="com.sipsqueak.v7.MainActivity" android:exported="true" android:icon="@mipmap/ic_launcher" android:roundIcon="@mipmap/ic_launcher_round">
+            <intent-filter>
+                <action android:name="android.intent.action.MAIN"/>
+                <category android:name="android.intent.category.LAUNCHER"/>
+            </intent-filter>
+        </activity>
+    </application>
+</manifest>
+''',encoding='utf-8')
+    compiled=OUT/'android'/'compiled.zip'
+    linked=OUT/'android'/'linked.apk'
+    if compiled.exists(): compiled.unlink()
+    if linked.exists(): linked.unlink()
+    subprocess.run([str(aapt2),'compile','--dir',str(res),'-o',str(compiled)],check=True)
+    subprocess.run([str(aapt2),'link','-o',str(linked),'-I',str(jar),'--manifest',str(manifest_src),
+                    '--min-sdk-version','29','--target-sdk-version','29','--auto-add-overlay',str(compiled)],check=True)
+    with zipfile.ZipFile(linked) as z:
+        files={n:z.read(n) for n in z.namelist() if n.startswith('res/') and not n.endswith('/')}
+        return z.read('AndroidManifest.xml'), z.read('resources.arsc'), files
+
 def main():
     parser=argparse.ArgumentParser(description='Build Beanster Sips with the current UI and local art assets.')
     parser.add_argument('--unsigned',action='store_true',help='Build an unsigned validation artifact; cannot install over the existing app.')
@@ -103,7 +196,7 @@ def main():
     html=(OUT/'index_v5.html').read_text(encoding='utf-8')
     for script in ['app_v5.js','ui_upgrade.js','production_scene.js','art/production-v2/asset_manifest.js']:
         if f'src="{script}"' not in html: raise ValueError(f'Entrypoint must reference current {script}')
-    manifest=V5Axml().build_manifest(); dex=base.make_dex(); arsc=build_resources_arsc()
+    dex=base.make_dex(); manifest,arsc,res_files=link_android_resources()
     from tools.build_native_reader import build as build_reader
     reader_dex=build_reader()
     (OUT/'AndroidManifest.xml').write_bytes(manifest); (OUT/'classes.dex').write_bytes(dex); (OUT/'resources.arsc').write_bytes(arsc); (OUT/'index_packed.html').write_text(html,encoding='utf-8')
@@ -114,11 +207,12 @@ def main():
     unsigned=OUT/f'Beanster-Sips-V{APP_VERSION}-unsigned.apk'
     with zipfile.ZipFile(unsigned,'w',compression=zipfile.ZIP_DEFLATED,compresslevel=9) as z:
         z.writestr('AndroidManifest.xml',manifest); z.writestr('classes.dex',dex); store_aligned(z,'resources.arsc',arsc)
+        for name,data in sorted(res_files.items()): z.writestr(name,data)
         z.write(reader_dex,'classes2.dex')
-        z.write(OUT/'icon.png','res/drawable/icon.png',compress_type=zipfile.ZIP_STORED); z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
+        z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
             z.write(OUT/name,'assets/'+name)
         for asset in sorted((OUT/'art/coffee-room').glob('*.png')):
             z.write(asset,'assets/art/coffee-room/'+asset.name,compress_type=zipfile.ZIP_STORED)

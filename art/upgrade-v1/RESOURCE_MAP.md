@@ -12,11 +12,8 @@
 
 ## 已接入仪表盘旁小仓鼠（ui-safe）
 
-- 空桌 / 未记录：`character_wave`
-- 今日有记录且低于 80%：`character_coffee`
-- 80–99%：`character_idle`（放下杯子，轻提醒，不用庆祝勋章）
-- ≥100%：`character_late_night`（无奈 / 到上限）
-- 夜间且未到 80%：`character_idle`
+- 自动模式：空桌 / 未记录 `character_wave`；今日有记录且低于 80% `character_coffee`；80–99% `character_idle`；≥100% `character_late_night`；夜间且未到 80% `character_idle`
+- 自定义模式：`settings.dashboardMascotMode=custom` 时仪表盘一直用 `settings.dashboardMascotId`，不再被摄入状态换掉
 - `character_goal` 只留在成就页，不表示咖啡因上限
 - 可在「自定义仪表盘」关闭显示
 

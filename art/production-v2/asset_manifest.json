@@ -2584,6 +2584,210 @@
       "zIndex": 45,
       "sha256": "e2b7eebd6a16eea24a45dbb2dc9fd18eb770f4e387bbdfa12386da5e99e3b12b",
       "note": "Nearly-closed composite for closing in-between"
+    },
+    "hamster_seated_wipe_start": {
+      "file": "characters/hamster_seated_wipe_start.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "95216d2087ae6e89d2590e376d0bf7964fedf18b45d8b0549b8ee6847857ea08",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_seated_wipe_release": {
+      "file": "characters/hamster_seated_wipe_release.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "3ec77b85a00c8f122eb370eecba7ca4da960f1232bb74e76e9678112dcb5d1ba",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_stand_idle": {
+      "file": "characters/hamster_stand_idle.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "5c6b683e08c427e12060fa03472938709fac7f3551e54298a431ce125912ae9f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_right_01": {
+      "file": "characters/hamster_walk_right_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "1322bdf79050a3d270a608abe886d7527f5ac5d5b5f08ec9948e9a07e3367b02",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_right_02": {
+      "file": "characters/hamster_walk_right_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "7aedd53729f00120a65ca41756f838b0b52b96dfb4bf47fb486347ec98450ee0",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_right_03": {
+      "file": "characters/hamster_walk_right_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "678f404641c276e7959c5fe051876dd57990abe3e9df23823d37265187faea73",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_stand_wave": {
+      "file": "characters/hamster_stand_wave.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "49208c5213b8e2a7441d737a7eaecd5fec5250b121613ba6a529611f89235c6b",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_right_04": {
+      "file": "characters/hamster_walk_right_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "a995eba29f6c8781f2e3a8cb7825e0978d2d1b6621e7b6feef1484092b3cc745",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_left_01": {
+      "file": "characters/hamster_walk_left_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "2bbfbe5b388baf620b6dcd7a836ef2beb56edb8a437ab34f48a50959dc2c85be",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_left_02": {
+      "file": "characters/hamster_walk_left_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "8106fe058f5d62d2b82857023f4af4eb826c81cb6f7dec6d6b04359e403aa751",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_left_03": {
+      "file": "characters/hamster_walk_left_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "b54f09ae08a588241f0a30ea183ccdb7aa84fd20f4eff24800a02ed0f3922967",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
+    },
+    "hamster_walk_left_04": {
+      "file": "characters/hamster_walk_left_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "78493de45eec2421d615ee1518aba6f06c0c57a8defeac204b205326c866e77e",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
+      "containsCup": false
     }
   },
   "animations": {
@@ -2717,21 +2921,39 @@
       "fps": 10,
       "loop": false,
       "play": "after-cleanup-seated",
-      "pose": "seated"
+      "pose": "seated",
+      "durationsMs": [
+        200,
+        240,
+        280,
+        320,
+        240,
+        180
+      ]
     },
     "wipe": {
       "frames": [
         "hamster_idle_base",
+        "hamster_seated_wipe_start",
         "hamster_seated_wipe_01",
-        "hamster_seated_wipe_02",
         "hamster_seated_wipe_01",
+        "hamster_seated_wipe_release",
         "hamster_seated_glad_01",
         "hamster_idle_base"
       ],
       "fps": 10,
       "loop": false,
       "play": "after-cleanup-seated-when-busy",
-      "pose": "seated"
+      "pose": "seated",
+      "durationsMs": [
+        180,
+        240,
+        280,
+        340,
+        260,
+        200,
+        180
+      ]
     },
     "zzz": {
       "frames": [
@@ -2793,6 +3015,31 @@
       "fps": 12,
       "loop": true,
       "play": "while-cups-vacuum"
+    },
+    "walk": {
+      "frames": [
+        "hamster_walk_right_01",
+        "hamster_walk_right_02",
+        "hamster_walk_right_03",
+        "hamster_walk_right_04",
+        "hamster_walk_left_01",
+        "hamster_walk_left_02",
+        "hamster_walk_left_03",
+        "hamster_walk_left_04"
+      ],
+      "fps": 8,
+      "durationsMs": [
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180,
+        180
+      ],
+      "loop": true,
+      "pose": "roaming"
     }
   },
   "table": {
@@ -2995,7 +3242,48 @@
       ],
       "scale": 0.28
     },
-    "dressing": []
+    "dressing": [],
+    "roam": {
+      "points": {
+        "seat": [
+          390,
+          714
+        ],
+        "chairSide": [
+          300,
+          800
+        ],
+        "floorLeft": [
+          220,
+          910
+        ],
+        "floorMid": [
+          400,
+          948
+        ],
+        "floorRight": [
+          520,
+          912
+        ]
+      },
+      "scaleAt": [
+        714,
+        948
+      ],
+      "scaleSpan": [
+        0.72,
+        0.8
+      ],
+      "tableFrontY": 856,
+      "firstDelay": [
+        20000,
+        30000
+      ],
+      "interval": [
+        45000,
+        90000
+      ]
+    }
   },
   "box": {
     "layerOrder": [

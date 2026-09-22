@@ -134,7 +134,9 @@ window.CleanupMotion=(function(){
   }
   function reactionMs(M,rows){
     const a=M.animations&&M.animations[reactionName(M,rows)];
-    return a?Math.round(a.frames.length/a.fps*1000):320;
+    if(!a)return 320;
+    if(Array.isArray(a.durationsMs)&&a.durationsMs.length===a.frames.length)return a.durationsMs.reduce((sum,n)=>sum+n,0);
+    return Math.round(a.frames.length/a.fps*1000);
   }
   function totalMs(M,rows){
     const s=schedule(M,rows);

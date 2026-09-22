@@ -22,9 +22,10 @@ const life=await page.evaluate(()=>{
   SceneLife.queue=[];SceneLife.clock=0;SceneLife.played=[];SceneLife.recentHamster=[];SceneLife.recentCoffee=[];
   let n=0;const seq=[0.1,0.95,0.3,0.7,0.55,0.2,0.8,0.4,0.15,0.85];
   SceneLife.rand=()=>seq[n++%seq.length];
+  HamsterWorld.auto=false;
   SceneLife.wake();
   const ys=[];const orig=ProductionScene.sprite.bind(ProductionScene);
-  ProductionScene.sprite=function(ctx,id,x,y,scale,alpha){if(String(id).startsWith('hamster_'))ys.push(y);return orig(ctx,id,x,y,scale,alpha)};
+  ProductionScene.sprite=function(ctx,id,x,y,scale,alpha,flip){if(String(id).startsWith('hamster_')&&(!window.HamsterWorld||HamsterWorld.mode==='seated'))ys.push(y);return orig(ctx,id,x,y,scale,alpha,flip)};
   SceneLife.pump(60000);
   ProductionScene.sprite=orig;
   const idleY=BEANSTER_ASSETS.scene.idle.position[1];
