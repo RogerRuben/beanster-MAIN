@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.3'
-VERSION_CODE=57
+APP_VERSION='19.5.4'
+VERSION_CODE=58
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -98,33 +98,21 @@ def find_exe(root, name):
 
 def build_launcher_bitmaps(res):
     from PIL import Image
-    import numpy as np
-    src=Image.open(OUT/'icon.png').convert('RGBA')
-    arr=np.array(src)
-    black=(arr[:,:,0]<28)&(arr[:,:,1]<28)&(arr[:,:,2]<28)
-    arr[black,3]=0
-    art=Image.fromarray(arr)
-    opaque=arr[~black]
-    brown=tuple(int(v) for v in np.median(opaque[:,:3],axis=0)) if len(opaque) else (196,137,74)
+    # The supplied launcher tile. Scale it as-is; do not redraw or recolor it.
+    src=Image.open(OUT/'launcher_icon.png').convert('RGBA')
+    brown=src.getpixel((src.width//2, int(src.height*0.12)))[:3]
     legacy={'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}
     foreground={'mdpi':108,'hdpi':162,'xhdpi':216,'xxhdpi':324,'xxxhdpi':432}
     for density,size in legacy.items():
         folder=res/f'mipmap-{density}'
         folder.mkdir(parents=True,exist_ok=True)
-        side=int(size*0.9)
-        icon=art.resize((side,side),Image.Resampling.LANCZOS)
-        canvas=Image.new('RGBA',(size,size),brown+(255,))
-        canvas.paste(icon,((size-side)//2,(size-side)//2),icon)
-        canvas.save(folder/'ic_launcher.png')
-        canvas.save(folder/'ic_launcher_round.png')
+        icon=src.resize((size,size),Image.Resampling.LANCZOS)
+        icon.save(folder/'ic_launcher.png')
+        icon.save(folder/'ic_launcher_round.png')
     for density,size in foreground.items():
         folder=res/f'mipmap-{density}'
         folder.mkdir(parents=True,exist_ok=True)
-        side=int(round(size*66/108))
-        icon=art.resize((side,side),Image.Resampling.LANCZOS)
-        canvas=Image.new('RGBA',(size,size),(0,0,0,0))
-        canvas.paste(icon,((size-side)//2,(size-side)//2),icon)
-        canvas.save(folder/'ic_launcher_foreground.png')
+        src.resize((size,size),Image.Resampling.LANCZOS).save(folder/'ic_launcher_foreground.png')
     (res/'values').mkdir(parents=True,exist_ok=True)
     (res/'values'/'colors.xml').write_text(
         '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'

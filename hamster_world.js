@@ -8,7 +8,7 @@ const HamsterWorld={
   has(id){return !!window.BEANSTER_ASSETS?.assets?.[id]},
   cfg(){return window.BEANSTER_ASSETS?.scene?.roam||{}},
   points(){
-    return this.cfg().points||{seat:[390,714],chairSide:[300,800],floorLeft:[220,910],floorMid:[400,948],floorRight:[520,912]};
+    return this.cfg().points||{seat:[390,714],emerge:[320,910],floorLeft:[200,940],floorMid:[390,960],floorRight:[560,940]};
   },
   links(){return {seat:['chairSide'],chairSide:['seat','floorLeft'],floorLeft:['chairSide','floorMid'],floorMid:['floorLeft','floorRight'],floorRight:['floorMid']}},
   allowsAmbient(){return this.mode==='seated'&&!this.greeting&&!this.cleanupReturn},
@@ -31,16 +31,20 @@ const HamsterWorld={
   onStrong(){this.clearSchedule()},
   boot(first){
     this.clearSchedule();
-    this.greeting=false;this.cleanupReturn=false;this.hurry=false;
+    this.greeting=false;this.cleanupReturn=false;this.hurry=false;this.started=false;
     this.mode='seated';this.tracePush('seated');this.placeAt('seat');
-    if(!this.auto||this.reduced()||!window.SceneLife?.onToday())return;
-    this.schedule(!!first);
+    this.ensure(!!first);
+  },
+  ensure(first){
+    if(!this.auto||this.reduced()||!window.SceneLife?.onToday()||this.mode!=='seated'||this.roamTimer)return;
+    this.schedule(first||!this.started);
   },
   schedule(first){
     window.SceneLife?.clear(this.roamTimer);
     if(!this.auto||this.reduced()||!window.SceneLife?.onToday()||!this.allowsAmbient())return;
     const span=first?(this.cfg().firstDelay||[20000,30000]):(this.cfg().interval||[45000,90000]);
     const delay=Math.round(span[0]+this.rand()*(span[1]-span[0]));
+    this.started=true;
     this.roamTimer=SceneLife.later(()=>this.startRoam(),delay);
   },
   tracePush(mode){if(this.trace[this.trace.length-1]!==mode)this.trace.push(mode)},
@@ -52,15 +56,16 @@ const HamsterWorld={
     SceneLife.pauseLower();
     this.clearSchedule();
     const far=this.rand()<0.5?'floorMid':'floorRight';
-    const out=['chairSide','floorLeft','floorMid'].concat(far==='floorRight'?['floorRight']:[]);
+    const out=['emerge','floorLeft','floorMid'].concat(far==='floorRight'?['floorRight']:[]);
     this.path=out.concat(this.wayBack(out[out.length-1]));
-    this.pathIndex=0;this.walked=0;this.hurry=false;
+    this.pathIndex=0;this.walked=0;this.hurry=false;this._looked=false;
+    const spot=this.points().emerge;
+    this.x=spot[0];this.y=spot[1];this.scale=this.scaleFor(this.y);this.node='emerge';
     this.mode='standing-up';this.tracePush('standing-up');
-    const frames=this.has('hamster_stand_up')?['hamster_idle_base','hamster_stand_up','hamster_stand_idle']:['hamster_idle_base','hamster_stand_idle','hamster_stand_idle'];
-    this.playFrames(frames,[320,420,360],()=>{this.mode='roaming';this.tracePush('roaming');this.step()});
+    this.playFrames(['hamster_stand_idle','hamster_stand_idle'],[420,480],()=>{this.mode='roaming';this.tracePush('roaming');this.step()});
   },
   wayBack(node){
-    const order=['floorRight','floorMid','floorLeft','chairSide','seat'];
+    const order=['floorRight','floorMid','floorLeft','emerge','seat'];
     const i=order.indexOf(node);
     return i<0?['chairSide','seat']:order.slice(i+1);
   },
@@ -81,7 +86,7 @@ const HamsterWorld={
   step(){
     if(this.greeting)return;
     if(this.mode!=='roaming'&&this.mode!=='returning')return;
-    const speed=this.hurry?240:140;
+    const speed=this.hurry?220:110;
     let left=speed*0.1;
     let dxSum=0;
     while(left>0.01&&this.pathIndex<this.path.length){
@@ -117,7 +122,7 @@ const HamsterWorld={
   lookAround(done){
     this.facing=1;
     const frames=this.has('hamster_look_around')?['hamster_stand_idle','hamster_look_around','hamster_stand_idle']:['hamster_stand_idle','hamster_stand_wave','hamster_stand_idle'];
-    this.playFrames(frames,[280,420,280],()=>{
+    this.playFrames(frames,[420,780,460],()=>{
       this.mode='returning';this.tracePush('returning');
       done();
     });

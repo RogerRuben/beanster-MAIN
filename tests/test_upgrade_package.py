@@ -5,7 +5,7 @@ import zipfile
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V19.5.3-unsigned.apk') as z:
+with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V19.5.4-unsigned.apk') as z:
     assert z.testzip() is None
     names=set(z.namelist())
     for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
@@ -48,7 +48,7 @@ with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Si
     binary_manifest=z.read('AndroidManifest.xml')
     def has_text(blob, text):
         return text.encode('utf-8') in blob or text.encode('utf-16-le') in blob
-    assert has_text(binary_manifest,'com.beanstersips.v11') and has_text(binary_manifest,'19.5.3')
+    assert has_text(binary_manifest,'com.beanstersips.v11') and has_text(binary_manifest,'19.5.4')
     assert any(n.startswith('res/mipmap-anydpi-v26/ic_launcher') for n in names)
     arsc=z.getinfo('resources.arsc')
     assert arsc.compress_type==zipfile.ZIP_STORED, 'resources.arsc must be stored so the launcher can read the icon'

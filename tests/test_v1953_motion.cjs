@@ -18,9 +18,9 @@ const report=await page.evaluate(()=>{
 assert.deepEqual(report.bad,[]);
 for(const [name,total] of Object.entries(report.totals)){
   const interactive=['glad','glasses','nod','lookUser','tap','smile','lookButton'].includes(name);
-  assert.ok(total>=(interactive?1000:800),name+' '+total);
+  assert.ok(total>=(interactive?1800:1500),name+' '+total);
 }
-assert.ok(report.fx.steam>=1200&&report.fx.condensation>=900&&report.fx.sparkle>=700);
+assert.ok(report.fx.steam>=2000&&report.fx.condensation>=1500&&report.fx.sparkle>=1000);
 assert.ok(report.wipe>=1200,report.wipe);
 assert.ok(report.clap>=1100,report.clap);
 assert.equal(await page.evaluate(()=>{settings.dashboardMascotMode='custom';settings.dashboardMascotId='character_takeaway';records=[{id:'cap',ts:Date.now(),type:'拿铁',productName:'拿铁',caffeine:500}];settings.dailyLimit=400;return Dashboard.companionId()}),'character_takeaway');

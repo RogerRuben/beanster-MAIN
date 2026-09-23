@@ -30,7 +30,7 @@
 
 这是两件事。
 
-- 启动器图标：`icon.png` 打进 APK 的 `res/drawable/icon.png` 和 `assets/icon.png`。安装后的桌面图标走这条。
+- 启动器图标：用用户提供的 `launcher_icon.png` 原样缩放到各档 mipmap，不另画、不改色。页内品牌标仍是 `icon.png`。
 - 页内品牌标：`index` 顶栏 `.top` 里的 `icon.png`。咖啡角、今日仪表盘、收藏室和月报隐藏整个 `.top`，这些页面看不到顶栏品牌标。记录和设置仍显示顶栏。
 
 ## 仍未作为主流程、建议后续位置

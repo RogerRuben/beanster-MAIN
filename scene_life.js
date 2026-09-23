@@ -10,10 +10,10 @@ const SceneLife={
   base:'hamster_idle_base',
   rand:Math.random,
   fxDurations:{
-    steam:[300,360,420,360,280],
-    condensation:[200,240,280,240,180],
-    sparkle:[150,170,200,170,140],
-    shimmer:[240,280,260,200]
+    steam:[420,520,640,520,400],
+    condensation:[320,400,460,400,320],
+    sparkle:[220,280,320,280,220],
+    shimmer:[340,420,400,320]
   },
   now(){return this.useNativeTimers?performance.now():this.clock},
   later(fn,ms){
@@ -43,21 +43,21 @@ const SceneLife={
     const b=this.base;
     const clip=(frames,durationsMs)=>({frames,durationsMs});
     return {
-      blink:clip([b,'hamster_idle_08',b],[260,320,280]),
-      glance:clip([b,'hamster_look_button','hamster_idle_04','hamster_look_button',b],[180,220,260,240,180]),
-      lookCup:clip([b,'hamster_watch','hamster_idle_03','hamster_watch',b],[180,240,280,240,200]),
-      smile:clip([b,'hamster_idle_01','hamster_idle_05','hamster_idle_01',b],[200,240,300,260,200]),
-      tilt:clip([b,'hamster_idle_03','hamster_idle_06','hamster_idle_03',b],[180,240,300,240,180]),
-      slowBlink:clip([b,'hamster_sleep_02',b],[300,420,320]),
-      drowsy:clip([b,'hamster_sleep_01','hamster_sleep_02','hamster_sleep_01',b],[200,280,340,280,200]),
-      lookDown:clip([b,'hamster_sleep_03','hamster_sleep_04','hamster_sleep_03',b],[200,280,360,280,220]),
-      zzz:clip([b,'hamster_sleep_02','hamster_sleep_03','hamster_sleep_02',b],[220,280,340,280,200]),
-      glad:clip([b,'hamster_seated_glad_01','hamster_seated_glad_03','hamster_seated_glad_02','hamster_seated_glad_01',b],[180,240,300,340,280,200]),
-      glasses:clip([b,'hamster_seated_wipe_01','hamster_seated_wipe_02','hamster_seated_wipe_01',b],[200,280,360,280,220]),
-      nod:clip([b,'hamster_idle_08','hamster_idle_05','hamster_idle_08',b],[200,260,320,260,220]),
-      lookUser:clip([b,'hamster_look_button','hamster_watch','hamster_look_button',b],[200,280,360,280,220]),
-      tap:clip([b,'hamster_press',b],[280,480,360]),
-      lookButton:clip([b,'hamster_look_button',b],[260,500,360])
+      blink:clip([b,'hamster_idle_08',b],[420,700,480]),
+      glance:clip([b,'hamster_look_button','hamster_idle_04','hamster_look_button',b],[320,480,620,480,360]),
+      lookCup:clip([b,'hamster_watch','hamster_idle_03','hamster_watch',b],[340,560,700,520,380]),
+      smile:clip([b,'hamster_idle_01','hamster_idle_05','hamster_idle_01',b],[360,520,680,520,400]),
+      tilt:clip([b,'hamster_idle_03','hamster_idle_06','hamster_idle_03',b],[340,500,640,500,380]),
+      slowBlink:clip([b,'hamster_sleep_02',b],[480,860,520]),
+      drowsy:clip([b,'hamster_sleep_01','hamster_sleep_02','hamster_sleep_01',b],[360,520,680,520,400]),
+      lookDown:clip([b,'hamster_sleep_03','hamster_sleep_04','hamster_sleep_03',b],[360,540,700,540,420]),
+      zzz:clip([b,'hamster_sleep_02','hamster_sleep_03','hamster_sleep_02',b],[380,560,720,560,400]),
+      glad:clip([b,'hamster_seated_glad_01','hamster_seated_glad_03','hamster_seated_glad_02','hamster_seated_glad_01',b],[320,480,640,720,560,400]),
+      glasses:clip([b,'hamster_seated_wipe_start','hamster_seated_wipe_release','hamster_seated_glad_01',b],[360,640,720,560,420]),
+      nod:clip([b,'hamster_idle_08','hamster_idle_05','hamster_idle_08',b],[360,520,680,520,420]),
+      lookUser:clip([b,'hamster_look_button','hamster_watch','hamster_look_button',b],[380,620,760,620,440]),
+      tap:clip([b,'hamster_press',b],[420,900,620]),
+      lookButton:clip([b,'hamster_look_button',b],[400,860,560])
     };
   },
   audit(){
@@ -68,7 +68,7 @@ const SceneLife={
       if(!clip.durationsMs||clip.durationsMs.length!==frames.length)bad.push(name+':durations');
       const total=(clip.durationsMs||[]).reduce((s,n)=>s+n,0);
       const interactive=this.interactivePool().includes(name)||name==='lookButton';
-      if(total<(interactive?1000:800))bad.push(name+':short');
+      if(total<(interactive?1800:1500))bad.push(name+':short');
       for(const id of frames){
         if(!String(id).startsWith('hamster_'))continue;
         const a=window.BEANSTER_ASSETS?.assets[id];
@@ -77,7 +77,7 @@ const SceneLife={
     }
     for(const [name,dur] of Object.entries(this.fxDurations)){
       const total=dur.reduce((s,n)=>s+n,0);
-      const min=name==='steam'?1200:name==='condensation'?900:name==='sparkle'?700:650;
+      const min=name==='steam'?2000:name==='condensation'?1500:name==='sparkle'?1000:900;
       if(total<min)bad.push(name+':short');
     }
     return bad;
@@ -149,7 +149,9 @@ const SceneLife={
   wake(){
     this.strong=false;
     this.hamsterPlaying=false;this.coffeePlaying=false;
-    window.HamsterWorld?.boot(true);
+    const world=window.HamsterWorld;
+    if(world&&world.mode!=='seated')return;
+    world?.ensure();
     if(!this.onToday()||this.reduced())return;
     this.scheduleHamster();this.scheduleCoffee();
   },

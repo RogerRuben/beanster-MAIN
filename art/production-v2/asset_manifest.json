@@ -2923,20 +2923,19 @@
       "play": "after-cleanup-seated",
       "pose": "seated",
       "durationsMs": [
-        200,
-        240,
         280,
-        320,
-        240,
-        180
+        360,
+        440,
+        520,
+        400,
+        320
       ]
     },
     "wipe": {
       "frames": [
         "hamster_idle_base",
         "hamster_seated_wipe_start",
-        "hamster_seated_wipe_01",
-        "hamster_seated_wipe_01",
+        "hamster_seated_wipe_start",
         "hamster_seated_wipe_release",
         "hamster_seated_glad_01",
         "hamster_idle_base"
@@ -2946,13 +2945,12 @@
       "play": "after-cleanup-seated-when-busy",
       "pose": "seated",
       "durationsMs": [
-        180,
-        240,
-        280,
-        340,
-        260,
-        200,
-        180
+        320,
+        460,
+        620,
+        480,
+        360,
+        280
       ]
     },
     "zzz": {
@@ -3249,30 +3247,30 @@
           390,
           714
         ],
-        "chairSide": [
-          300,
-          800
-        ],
-        "floorLeft": [
-          220,
+        "emerge": [
+          320,
           910
         ],
+        "floorLeft": [
+          200,
+          940
+        ],
         "floorMid": [
-          400,
-          948
+          390,
+          960
         ],
         "floorRight": [
-          520,
-          912
+          560,
+          940
         ]
       },
       "scaleAt": [
-        714,
-        948
+        880,
+        970
       ],
       "scaleSpan": [
-        0.72,
-        0.8
+        0.66,
+        0.78
       ],
       "tableFrontY": 856,
       "firstDelay": [
