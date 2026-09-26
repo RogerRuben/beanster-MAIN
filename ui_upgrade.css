@@ -187,3 +187,7 @@ html{background:#eae1d5}body{max-width:480px;margin:0 auto;min-height:100dvh;bac
 .u-mini-cup{width:49px;height:62px;border-color:#76523d;border-radius:14px 14px 16px 16px;background:linear-gradient(to top,#634027 0%,#b47c51 44%,#f6e8d9 45%)}
 @media(max-width:350px){.u-dashboard-cup{width:180px}.u-cup-glass{width:142px;height:182px}}
 @media(prefers-reduced-motion:reduce){.u-pouring .u-cup-bubble,.u-pouring .u-cup-liquid,.u-pouring .u-cup-surface{animation:none!important}}
+.u-action-check{margin-top:14px}
+.u-action-grid{display:grid;grid-template-columns:1fr 1fr;gap:8px}
+.u-action-grid button{min-height:42px;border-radius:12px;border:1px solid var(--line);background:var(--cream-soft);color:var(--ink);font-weight:700}
+.u-action-grid button.wide{grid-column:1 / -1;background:var(--primary-grad);color:#fff;border:0}

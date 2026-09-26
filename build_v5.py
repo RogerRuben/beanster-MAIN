@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.4'
-VERSION_CODE=58
+APP_VERSION='19.5.6'
+VERSION_CODE=60
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -96,11 +96,31 @@ def find_exe(root, name):
         if p.is_file(): return p
     return None
 
+def adaptive_foreground(src, size):
+    """Fit the whole supplied tile inside the 66dp safe circle of a 108dp foreground."""
+    import numpy as np
+    from PIL import Image
+    arr=np.array(src)
+    rgb=arr[:,:,:3]
+    dark=rgb.max(axis=2)<18
+    content=arr.copy()
+    content[dark,3]=0
+    ys,xs=np.where(~dark)
+    cx,cy=src.width/2,src.height/2
+    radius=float(np.hypot(xs-cx,ys-cy).max())
+    safe=size*66/108
+    scale=(safe/2)/radius
+    fitted=Image.fromarray(content).resize((max(1,int(round(src.width*scale))),max(1,int(round(src.height*scale)))),Image.Resampling.LANCZOS)
+    canvas=Image.new('RGBA',(size,size),(0,0,0,0))
+    canvas.paste(fitted,((size-fitted.width)//2,(size-fitted.height)//2),fitted)
+    return canvas
+
 def build_launcher_bitmaps(res):
     from PIL import Image
-    # The supplied launcher tile. Scale it as-is; do not redraw or recolor it.
-    src=Image.open(OUT/'launcher_icon.png').convert('RGBA')
-    brown=src.getpixel((src.width//2, int(src.height*0.12)))[:3]
+    # Origin art only. Legacy icons keep the full tile. Adaptive foreground
+    # insets that tile so a circle mask cannot crop the hamster.
+    src=Image.open(OUT/'launcher_icon_origin.png').convert('RGBA')
+    brown=next(src.getpixel((src.width//2,y))[:3] for y in range(src.height) if max(src.getpixel((src.width//2,y))[:3])>40)
     legacy={'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}
     foreground={'mdpi':108,'hdpi':162,'xhdpi':216,'xxhdpi':324,'xxxhdpi':432}
     for density,size in legacy.items():
@@ -112,7 +132,7 @@ def build_launcher_bitmaps(res):
     for density,size in foreground.items():
         folder=res/f'mipmap-{density}'
         folder.mkdir(parents=True,exist_ok=True)
-        src.resize((size,size),Image.Resampling.LANCZOS).save(folder/'ic_launcher_foreground.png')
+        adaptive_foreground(src,size).save(folder/'ic_launcher_foreground.png')
     (res/'values').mkdir(parents=True,exist_ok=True)
     (res/'values'/'colors.xml').write_text(
         '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
@@ -200,7 +220,7 @@ def main():
         z.write(OUT/'icon.png','assets/icon.png',compress_type=zipfile.ZIP_STORED)
         for mascot in sorted((OUT/'mascots').glob('*.png')):
             z.write(mascot,'assets/mascots/'+mascot.name,compress_type=zipfile.ZIP_STORED)
-        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
+        for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','hamster_director.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
             z.write(OUT/name,'assets/'+name)
         for asset in sorted((OUT/'art/coffee-room').glob('*.png')):
             z.write(asset,'assets/art/coffee-room/'+asset.name,compress_type=zipfile.ZIP_STORED)

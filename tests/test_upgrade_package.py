@@ -5,10 +5,10 @@ import zipfile
 import sys
 
 ROOT=Path(__file__).resolve().parents[1]
-with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V19.5.4-unsigned.apk') as z:
+with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Sips-V19.5.6-unsigned.apk') as z:
     assert z.testzip() is None
     names=set(z.namelist())
-    for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
+    for name in ['app_v5.js','ui_upgrade.js','ui_upgrade.css','ocr_reader.js','motion.js','data_integrity.js','navigation.js','companion.js','local_vision.js','dashboard.js','recognition_flow.js','production_scene.js','scene_life.js','hamster_world.js','hamster_director.js','coffee_room.js','coffee_room.css','coffee_pages.js','seated_clips.js','seated_motion.js']:
         assert z.read('assets/'+name)==(ROOT/name).read_bytes(), name
     html=z.read('assets/index.html').decode('utf-8')
     assert html==(ROOT/'index_v5.html').read_text(encoding='utf-8')
@@ -44,11 +44,11 @@ with zipfile.ZipFile(Path(sys.argv[1]) if len(sys.argv)>1 else ROOT/'Beanster-Si
                 assert z.read('lib/arm64-v8a/'+Path(name).name)==aar.read(name)
     for name in ['corner.png','corner-v191.png','hamster-seated-v192.png','drinks.png','table.png','shelf.png','seated-actions-user.png','seated-expressions-user.png']:
         assert z.read('assets/art/coffee-room/'+name)==(ROOT/'art/coffee-room'/name).read_bytes()
-    assert 'src="coffee_room.js"' in html and 'href="coffee_room.css"' in html and 'src="production_scene.js"' in html and 'src="scene_life.js"' in html and 'src="hamster_world.js"' in html
+    assert 'src="coffee_room.js"' in html and 'href="coffee_room.css"' in html and 'src="production_scene.js"' in html and 'src="scene_life.js"' in html and 'src="hamster_world.js"' in html and 'src="hamster_director.js"' in html
     binary_manifest=z.read('AndroidManifest.xml')
     def has_text(blob, text):
         return text.encode('utf-8') in blob or text.encode('utf-16-le') in blob
-    assert has_text(binary_manifest,'com.beanstersips.v11') and has_text(binary_manifest,'19.5.4')
+    assert has_text(binary_manifest,'com.beanstersips.v11') and has_text(binary_manifest,'19.5.6')
     assert any(n.startswith('res/mipmap-anydpi-v26/ic_launcher') for n in names)
     arsc=z.getinfo('resources.arsc')
     assert arsc.compress_type==zipfile.ZIP_STORED, 'resources.arsc must be stored so the launcher can read the icon'

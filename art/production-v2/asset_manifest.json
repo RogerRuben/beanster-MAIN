@@ -2514,7 +2514,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "d5903100036baa368520d04ca7ded636ce225ad8da9ad9b84f47f6f412a28c4a",
+      "sha256": "742011be3e182e876412f6ad00877814f30f89a5ed1d15a5be8ceb4bc09093c7",
       "tableContact": [
         256,
         448
@@ -2594,7 +2594,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "95216d2087ae6e89d2590e376d0bf7964fedf18b45d8b0549b8ee6847857ea08",
+      "sha256": "2b91fa01dc70b2d0d6aba479349784785696fba8afd75eebf8af9abc5ae02154",
       "tableContact": [
         256,
         448
@@ -2611,7 +2611,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "3ec77b85a00c8f122eb370eecba7ca4da960f1232bb74e76e9678112dcb5d1ba",
+      "sha256": "e8413a99212d0a1732b4dbe780eb86685f38466c00c34d313639589f2f1cbe7d",
       "tableContact": [
         256,
         448
@@ -2788,6 +2788,168 @@
       ],
       "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
       "containsCup": false
+    },
+    "hamster_seat_exit_01": {
+      "file": "characters/hamster_seat_exit_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "7d9ddfb4398c53bb614b7fdc66797f1ccb86b17a0724caeb149901a4b2f336c6",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "seated"
+    },
+    "hamster_seat_exit_02": {
+      "file": "characters/hamster_seat_exit_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "9cb56d155c2629667a5c90e56842c97949cc0462fd7b3b265b29be9c732eabd2",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "transition"
+    },
+    "hamster_seat_exit_03": {
+      "file": "characters/hamster_seat_exit_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "5e06c1466ba6cc4d9a34a20e9b89e1638af54adfdaaaadf6cd9d6fb90f1195ba",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "transition"
+    },
+    "hamster_seat_exit_04": {
+      "file": "characters/hamster_seat_exit_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "5c6b683e08c427e12060fa03472938709fac7f3551e54298a431ce125912ae9f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "standing"
+    },
+    "hamster_seat_enter_01": {
+      "file": "characters/hamster_seat_enter_01.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "5c6b683e08c427e12060fa03472938709fac7f3551e54298a431ce125912ae9f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "standing"
+    },
+    "hamster_seat_enter_02": {
+      "file": "characters/hamster_seat_enter_02.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "5e06c1466ba6cc4d9a34a20e9b89e1638af54adfdaaaadf6cd9d6fb90f1195ba",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "transition"
+    },
+    "hamster_seat_enter_03": {
+      "file": "characters/hamster_seat_enter_03.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "9cb56d155c2629667a5c90e56842c97949cc0462fd7b3b265b29be9c732eabd2",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "transition"
+    },
+    "hamster_seat_enter_04": {
+      "file": "characters/hamster_seat_enter_04.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "7d9ddfb4398c53bb614b7fdc66797f1ccb86b17a0724caeb149901a4b2f336c6",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "seated"
+    },
+    "hamster_seated_wipe_hold": {
+      "file": "characters/hamster_seated_wipe_hold.png",
+      "canvas": [
+        512,
+        512
+      ],
+      "pivotX": 256,
+      "pivotY": 448,
+      "zIndex": 40,
+      "sha256": "c525e23553c997a844fcad282003462fc2a3e918f10e79c471759aacb7866d9f",
+      "tableContact": [
+        256,
+        448
+      ],
+      "source": "V19.5.5 locked transition",
+      "containsCup": false,
+      "family": "seated"
     }
   },
   "animations": {
@@ -2923,21 +3085,21 @@
       "play": "after-cleanup-seated",
       "pose": "seated",
       "durationsMs": [
-        280,
-        360,
-        440,
-        520,
-        400,
-        320
+        200,
+        250,
+        300,
+        300,
+        250,
+        200
       ]
     },
     "wipe": {
       "frames": [
         "hamster_idle_base",
         "hamster_seated_wipe_start",
-        "hamster_seated_wipe_start",
+        "hamster_seated_wipe_01",
+        "hamster_seated_wipe_hold",
         "hamster_seated_wipe_release",
-        "hamster_seated_glad_01",
         "hamster_idle_base"
       ],
       "fps": 10,
@@ -2945,12 +3107,12 @@
       "play": "after-cleanup-seated-when-busy",
       "pose": "seated",
       "durationsMs": [
-        320,
-        460,
-        620,
-        480,
-        360,
-        280
+        220,
+        280,
+        420,
+        420,
+        280,
+        180
       ]
     },
     "zzz": {
@@ -3242,45 +3404,67 @@
     },
     "dressing": [],
     "roam": {
+      "locked": true,
+      "route": [
+        [
+          320,
+          910
+        ],
+        [
+          225,
+          935
+        ],
+        [
+          390,
+          955
+        ],
+        [
+          545,
+          930
+        ],
+        [
+          390,
+          955
+        ],
+        [
+          225,
+          935
+        ],
+        [
+          320,
+          910
+        ]
+      ],
+      "scales": {
+        "exit": 0.76,
+        "left": 0.79,
+        "middle": 0.8,
+        "right": 0.79,
+        "seat": 0.72
+      },
       "points": {
         "seat": [
           390,
           714
         ],
-        "emerge": [
+        "exit": [
           320,
           910
         ],
         "floorLeft": [
-          200,
-          940
+          225,
+          935
         ],
         "floorMid": [
           390,
-          960
+          955
         ],
         "floorRight": [
-          560,
-          940
+          545,
+          930
         ]
       },
-      "scaleAt": [
-        880,
-        970
-      ],
-      "scaleSpan": [
-        0.66,
-        0.78
-      ],
-      "tableFrontY": 856,
-      "firstDelay": [
-        20000,
-        30000
-      ],
-      "interval": [
-        45000,
-        90000
-      ]
+      "tableFrontY": 856
     }
   },
   "box": {

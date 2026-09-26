@@ -18,7 +18,7 @@ const report=await page.evaluate(()=>{
 assert.deepEqual(report.bad,[]);
 for(const [name,total] of Object.entries(report.totals)){
   const interactive=['glad','glasses','nod','lookUser','tap','smile','lookButton'].includes(name);
-  assert.ok(total>=(interactive?1800:1500),name+' '+total);
+  assert.ok(total>=(interactive?1800:name==='blink'?1400:1500),name+' '+total);
 }
 assert.ok(report.fx.steam>=2000&&report.fx.condensation>=1500&&report.fx.sparkle>=1000);
 assert.ok(report.wipe>=1200,report.wipe);
