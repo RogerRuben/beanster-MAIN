@@ -35,8 +35,25 @@ window.CleanupMotion=(function(){
     return [pose.x+(rec[0]-piv.x)*pose.scale,pose.y+(rec[1]+42-piv.y)*pose.scale];
   }
   function tablePose(M){
-    const t=(M.scene&&M.scene.table)||{position:[384,830],scale:.66};
+    const t=(M.scene&&M.scene.table)||{position:[384,799],scale:.49};
     return {x:t.position[0],y:t.position[1],scale:t.scale};
+  }
+  function cupScale(M){
+    const t=tablePose(M);
+    const basis=(M.table&&M.table.scaleBasis)||0.66;
+    const base=(M.table&&M.table.cupWorldScale)!=null?Number(M.table.cupWorldScale):0.40;
+    return base*(t.scale/basis);
+  }
+  function buttonPose(M){
+    const b=(M.scene&&M.scene.button)||{};
+    const t=tablePose(M);
+    const back=(M.assets&&M.assets.table_back)||{pivotX:512,pivotY:280};
+    const anchor=b.tableAnchor;
+    if(anchor){
+      const basis=b.scaleBasis||(M.table&&M.table.scaleBasis)||0.66;
+      return {x:t.x+(anchor[0]-back.pivotX)*t.scale,y:t.y+(anchor[1]-back.pivotY)*t.scale,scale:(b.scale||0.28)*(t.scale/basis),up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'};
+    }
+    return {x:b.position?b.position[0]:500,y:b.position?b.position[1]:774,scale:b.scale||0.28,up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'};
   }
   function tableCup(M,i,n){
     const vis=Math.min(MAX_VISIBLE,Math.max(1,n||1));
@@ -110,10 +127,11 @@ window.CleanupMotion=(function(){
     if(elapsed<sched.reactionAt)return {id:hasAsset(M,watch)?watch:'hamster_idle_base',pressed:false,looking:false,watching:true};
     return {id:'hamster_idle_base',pressed:false,looking:false,watching:false};
   }
-  function cupMotion(elapsed,origin,i,sched,mouthPos,dropPos){
-    if(i>=sched.n)return {p:origin,s:.4,t:0,gone:true,flying:false,hidden:true};
+  function cupMotion(elapsed,origin,i,sched,mouthPos,dropPos,scale){
+    const s0=scale||0.4;
+    if(i>=sched.n)return {p:origin,s:s0,t:0,gone:true,flying:false,hidden:true};
     const start=sched.cupStarts[i];
-    if(elapsed<start)return {p:origin,s:.4,t:0,gone:false,flying:false};
+    if(elapsed<start)return {p:origin,s:s0,t:0,gone:false,flying:false};
     const t=ease((elapsed-start)/sched.cupMs);
     const mid=[origin[0]+(mouthPos[0]-origin[0])*.45,origin[1]+(mouthPos[1]-origin[1])*.4];
     let p;
@@ -121,7 +139,7 @@ window.CleanupMotion=(function(){
       const u=t/.7;
       p=u<.5?mix(origin,mid,u*2):mix(mid,mouthPos,(u-.5)*2);
     }else p=mix(mouthPos,dropPos,(t-.7)/.3);
-    const s=t<.7?.4:.4*(1-(t-.7)/.3*.2);
+    const s=t<.7?s0:s0*(1-(t-.7)/.3*.2);
     return {p,s,t,gone:t>=1,flying:t>0&&t<1};
   }
   function reactionName(M,rows){
@@ -148,7 +166,7 @@ window.CleanupMotion=(function(){
     const phase=boxPhase(elapsed,sched);
     const mouthPos=mouth(M);
     const dropPos=drop(M);
-    const cups=sched.visible.map((row,i)=>Object.assign({row,i},cupMotion(elapsed,origins[i]||mouthPos,i,sched,mouthPos,dropPos)));
+    const cups=sched.visible.map((row,i)=>Object.assign({row,i},cupMotion(elapsed,origins[i]||mouthPos,i,sched,mouthPos,dropPos,cupScale(M))));
     const flash=elapsed>=sched.closedAt&&elapsed<sched.closedAt+sched.archiveFlashMs&&sched.total>0;
     return {
       elapsed,sched,phase,
@@ -167,5 +185,5 @@ window.CleanupMotion=(function(){
       react:elapsed>=sched.reactionAt
     };
   }
-  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
+  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,cupScale,buttonPose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
 })();

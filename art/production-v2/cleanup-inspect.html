@@ -48,7 +48,7 @@ function drawElapsed(ms){
   const vis=CleanupMotion.visibleRows(rows);
   const origins=vis.map((_,i)=>CleanupMotion.tableCup(M,i,vis.length));
   const snap=CleanupMotion.snapshot(M,elapsed,rows,origins);
-  const c=scene.getContext('2d'),idle=M.scene.idle,ch=M.scene.chair||{},btn=M.scene.button||{},tw=CleanupMotion.tablePose(M);
+  const c=scene.getContext('2d'),idle=M.scene.idle,ch=M.scene.chair||{},btn=CleanupMotion.buttonPose(M),tw=CleanupMotion.tablePose(M);
   const room=night?(M.scene.room&&M.scene.room.night):(M.scene.room&&M.scene.room.day);
   const hid=snap.hamster.id;
   c.clearRect(0,0,768,1024);
@@ -56,9 +56,9 @@ function drawElapsed(ms){
   sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
   sprite(c,'table_back',tw.x,tw.y,tw.scale);
   if(!snap.hamster.pressed)sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
-  snap.cups.forEach(cup=>{if(cup.gone||cup.flying)return;sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,.4);sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
+  snap.cups.forEach(cup=>{if(cup.gone||cup.flying)return;sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,cup.s);sprite(c,cup.row.cup,cup.p[0],cup.p[1],cup.s)});
   (M.scene.dressing||[]).forEach(p=>sprite(c,p.id,p.position[0],p.position[1],p.scale));
-  sprite(c,snap.buttonDown?'btn_hamster_down':'btn_hamster_up',btn.position?btn.position[0]:548,(btn.position?btn.position[1]:778)+(snap.buttonDown?6:0),btn.scale||.28);
+  sprite(c,snap.buttonDown?btn.down:btn.up,btn.x,btn.y+(snap.buttonDown?6:0),btn.scale);
   if(snap.hamster.pressed)sprite(c,hid,idle.position[0],idle.position[1],idle.scale);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
   if(!(M.assets[room])&&M.assets.ivy_hanging)sprite(c,'ivy_hanging',640,8,.85);

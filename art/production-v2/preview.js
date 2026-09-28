@@ -36,9 +36,10 @@ function drawIdle(id='hamster_idle_base'){
   sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
   sprite(c,'table_back',tw.x,tw.y,tw.scale);sprite(c,id,idle.position[0],idle.position[1],idle.scale);
   const cups=desk().slice(0,CleanupMotion.MAX_VISIBLE);
-  cups.forEach((r,i)=>{const [x,y]=tableCupPosition(i,cups.length);sprite(c,'cup_shadow_medium',x,y+2,.4);sprite(c,cupOf(r),x,y,.4)});
+  const cs=CleanupMotion.cupScale(M),gadget=CleanupMotion.buttonPose(M);
+  cups.forEach((r,i)=>{const [x,y]=tableCupPosition(i,cups.length);sprite(c,'cup_shadow_medium',x,y+2,cs);sprite(c,cupOf(r),x,y,cs)});
   (M.scene.dressing||[]).forEach(p=>sprite(c,p.id,p.position[0],p.position[1],p.scale));
-  sprite(c,btn.up||'btn_hamster_up',btn.position?btn.position[0]:548,btn.position?btn.position[1]:778,btn.scale||.28);
+  sprite(c,gadget.up,gadget.x,gadget.y,gadget.scale);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
   drawIvy(c);
   sprite(c,'entrance_normal',597,255,.55);
@@ -63,9 +64,10 @@ function drawCleanup(elapsed,rows,hid){
   sprite(c,'chair',ch.position?ch.position[0]:338,ch.position?ch.position[1]:702,ch.scale||.58);
   sprite(c,'table_back',tw.x,tw.y,tw.scale);
   if(!snap.hamster.pressed)sprite(c,hamster,idle.position[0],idle.position[1],idle.scale);
-  snap.cups.forEach(cup=>{if(cup.gone||cup.flying)return;sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,.4);sprite(c,cupOf(cup.row),cup.p[0],cup.p[1],cup.s)});
+  const gadget=CleanupMotion.buttonPose(M);
+  snap.cups.forEach(cup=>{if(cup.gone||cup.flying)return;sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,cup.s);sprite(c,cupOf(cup.row),cup.p[0],cup.p[1],cup.s)});
   (M.scene.dressing||[]).forEach(p=>sprite(c,p.id,p.position[0],p.position[1],p.scale));
-  sprite(c,snap.buttonDown?btn.down||'btn_hamster_down':btn.up||'btn_hamster_up',btn.position?btn.position[0]:548,(btn.position?btn.position[1]:778)+(snap.buttonDown?6:0),btn.scale||.28);
+  sprite(c,snap.buttonDown?gadget.down:gadget.up,gadget.x,gadget.y+(snap.buttonDown?6:0),gadget.scale);
   if(snap.hamster.pressed)sprite(c,hamster,idle.position[0],idle.position[1],idle.scale);
   sprite(c,'table_front',tw.x,tw.y,tw.scale);
   drawIvy(c);

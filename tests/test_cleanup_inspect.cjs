@@ -10,7 +10,7 @@ assert.ok(await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_up&&BEANSTER_A
 assert.ok(await p.evaluate(()=>(BEANSTER_ASSETS.scene.dressing||[]).length<=1));
 assert.ok(await p.evaluate(()=>BEANSTER_ASSETS.animations.clap.pose==='seated'&&BEANSTER_ASSETS.animations.wipe.pose==='seated'));
 assert.ok(await p.evaluate(()=>!BEANSTER_ASSETS.animations.clap.frames.includes('hamster_cleanup_12')));
-assert.ok(await p.evaluate(()=>{const b=BEANSTER_ASSETS.scene.button.position,slots=BEANSTER_ASSETS.table.slots['4'];return slots.every(([sx,sy])=>{const x=384+(sx-512)*.66,y=830+(sy-280)*.66;return Math.hypot(x-b[0],y-b[1])>90})}));
+assert.ok(await p.evaluate(()=>{const t=BEANSTER_ASSETS.scene.table,b=CleanupMotion.buttonPose(BEANSTER_ASSETS),cs=CleanupMotion.cupScale(BEANSTER_ASSETS),gap=90*cs+100*b.scale+8;return BEANSTER_ASSETS.table.slots['4'].every(([sx,sy])=>{const x=t.position[0]+(sx-512)*t.scale,y=t.position[1]+(sy-280)*t.scale;return Math.hypot(x-b.x,y-b.y)>gap})}));
 assert.deepEqual(await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_up.canvas),await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_down.canvas));
 assert.equal(await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_up.pivotX),await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_down.pivotX));
 const box=await p.evaluate(()=>BEANSTER_ASSETS.scene.storageBox);
@@ -77,7 +77,7 @@ for(const n of [0,1,2,4,7]){
   assert.equal(fsm[n].phaseAtClosed,'closed');
   assert.equal(fsm[n].flyingDuringClose,false, n+' cups must not fly while lid closes');
   assert.deepEqual(fsm[n].pose,{x:560,y:955,scale:0.38});
-  assert.ok(fsm[n].pressMs>=120&&fsm[n].pressMs<=180);
+  assert.equal(fsm[n].pressMs,550);
   assert.equal(fsm[n].pressAt300,false,'press is a short tap, not the whole ritual');
   assert.ok(fsm[n].closedLayers.includes('box_lid_closed')||fsm[n].closedLayers.includes('box_closed')||fsm[n].closedLayers.includes('box_front'));
 }

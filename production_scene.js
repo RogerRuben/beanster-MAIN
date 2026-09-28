@@ -36,8 +36,25 @@ window.CleanupMotion=(function(){
     return [pose.x+(rec[0]-piv.x)*pose.scale,pose.y+(rec[1]+42-piv.y)*pose.scale];
   }
   function tablePose(M){
-    const t=(M.scene&&M.scene.table)||{position:[384,830],scale:.66};
+    const t=(M.scene&&M.scene.table)||{position:[384,799],scale:.49};
     return {x:t.position[0],y:t.position[1],scale:t.scale};
+  }
+  function cupScale(M){
+    const t=tablePose(M);
+    const basis=(M.table&&M.table.scaleBasis)||0.66;
+    const base=(M.table&&M.table.cupWorldScale)!=null?Number(M.table.cupWorldScale):0.40;
+    return base*(t.scale/basis);
+  }
+  function buttonPose(M){
+    const b=(M.scene&&M.scene.button)||{};
+    const t=tablePose(M);
+    const back=(M.assets&&M.assets.table_back)||{pivotX:512,pivotY:280};
+    const anchor=b.tableAnchor;
+    if(anchor){
+      const basis=b.scaleBasis||(M.table&&M.table.scaleBasis)||0.66;
+      return {x:t.x+(anchor[0]-back.pivotX)*t.scale,y:t.y+(anchor[1]-back.pivotY)*t.scale,scale:(b.scale||0.28)*(t.scale/basis),up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'};
+    }
+    return {x:b.position?b.position[0]:500,y:b.position?b.position[1]:774,scale:b.scale||0.28,up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'};
   }
   function tableCup(M,i,n){
     const vis=Math.min(MAX_VISIBLE,Math.max(1,n||1));
@@ -111,10 +128,11 @@ window.CleanupMotion=(function(){
     if(elapsed<sched.reactionAt)return {id:hasAsset(M,watch)?watch:'hamster_idle_base',pressed:false,looking:false,watching:true};
     return {id:'hamster_idle_base',pressed:false,looking:false,watching:false};
   }
-  function cupMotion(elapsed,origin,i,sched,mouthPos,dropPos){
-    if(i>=sched.n)return {p:origin,s:.4,t:0,gone:true,flying:false,hidden:true};
+  function cupMotion(elapsed,origin,i,sched,mouthPos,dropPos,scale){
+    const s0=scale||0.4;
+    if(i>=sched.n)return {p:origin,s:s0,t:0,gone:true,flying:false,hidden:true};
     const start=sched.cupStarts[i];
-    if(elapsed<start)return {p:origin,s:.4,t:0,gone:false,flying:false};
+    if(elapsed<start)return {p:origin,s:s0,t:0,gone:false,flying:false};
     const t=ease((elapsed-start)/sched.cupMs);
     const mid=[origin[0]+(mouthPos[0]-origin[0])*.45,origin[1]+(mouthPos[1]-origin[1])*.4];
     let p;
@@ -122,7 +140,7 @@ window.CleanupMotion=(function(){
       const u=t/.7;
       p=u<.5?mix(origin,mid,u*2):mix(mid,mouthPos,(u-.5)*2);
     }else p=mix(mouthPos,dropPos,(t-.7)/.3);
-    const s=t<.7?.4:.4*(1-(t-.7)/.3*.2);
+    const s=t<.7?s0:s0*(1-(t-.7)/.3*.2);
     return {p,s,t,gone:t>=1,flying:t>0&&t<1};
   }
   function reactionName(M,rows){
@@ -150,7 +168,7 @@ window.CleanupMotion=(function(){
     const phase=boxPhase(elapsed,sched);
     const mouthPos=mouth(M);
     const dropPos=drop(M);
-    const cups=sched.visible.map((row,i)=>Object.assign({row,i},cupMotion(elapsed,origins[i]||mouthPos,i,sched,mouthPos,dropPos)));
+    const cups=sched.visible.map((row,i)=>Object.assign({row,i},cupMotion(elapsed,origins[i]||mouthPos,i,sched,mouthPos,dropPos,cupScale(M))));
     const flash=elapsed>=sched.closedAt&&elapsed<sched.closedAt+sched.archiveFlashMs&&sched.total>0;
     return {
       elapsed,sched,phase,
@@ -169,7 +187,7 @@ window.CleanupMotion=(function(){
       react:elapsed>=sched.reactionAt
     };
   }
-  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
+  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,cupScale,buttonPose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
 })();
 }
 const ProductionScene={
@@ -199,7 +217,7 @@ const ProductionScene={
   },
   drawSeat(c){const ch=this.M().scene.chair||{},x=ch.position?ch.position[0]:338,y=ch.position?ch.position[1]:702,s=ch.scale||.58;this.sprite(c,'chair',x,y,s)},
   tableWorld(){return CleanupMotion.tablePose(this.M())},
-  btn(){const b=this.M().scene.button||{};return {x:b.position?b.position[0]:548,y:b.position?b.position[1]:778,scale:b.scale||.28,up:b.up||'btn_hamster_up',down:b.down||'btn_hamster_down'}},
+  btn(){return CleanupMotion.buttonPose(this.M())},
   drawButton(c,pressed){const b=this.btn();this.sprite(c,pressed?b.down:b.up,b.x,b.y+(pressed?6:0),b.scale)},
   drawDressing(c){(this.M().scene.dressing||[]).forEach(p=>{if(this.M().assets[p.id])this.sprite(c,p.id,p.position[0],p.position[1],p.scale)})},
   signPose(){return {id:'entrance_normal',x:597,y:255,scale:.55}},
@@ -242,7 +260,7 @@ const ProductionScene={
       if(depth==='behind')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
       this.sprite(c,'table_back',tw.x,tw.y,tw.scale);
       if(depth==='seat')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
-      const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],cs=.4;
+      const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],cs=CleanupMotion.cupScale(this.M());
       const fx=window.HamsterDirector?.fx;
       if(!cups.length&&fx){const [x,y]=this.tableCup(0,1);this.sprite(c,fx,x,y-36,.32)}
       cups.forEach((r,i)=>{const [x,y]=this.tableCup(i,cups.length),cid=this.cupId(r);this.sprite(c,'cup_shadow_medium',x,y+2,cs);this.sprite(c,cid,x,y,cs);if(fx&&i===0)this.sprite(c,fx,x,y-36,.32)});
@@ -257,7 +275,7 @@ const ProductionScene={
   },
   place(){
     const canvas=this.canvas;if(!canvas?.parentElement)return;
-    const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],n=cups.length,cs=.4;
+    const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],n=cups.length,cs=CleanupMotion.cupScale(this.M());
     canvas.parentElement.querySelectorAll('.cc-desk-cup').forEach((btn,i)=>{if(i>=n)return;const [x,y]=this.tableCup(i,n),w=256*cs,h=256*cs;btn.style.left=((x-128*cs)/768*100).toFixed(2)+'%';btn.style.top=((y-224*cs)/1024*100).toFixed(2)+'%';btn.style.width=(w/768*100).toFixed(2)+'%';btn.style.height=(h/1024*100).toFixed(2)+'%'});
     const sign=canvas.parentElement.querySelector('.cc-room-sign');
     if(sign){const r=this.signRect();sign.style.left=((r.x+r.w/2)/768*100).toFixed(2)+'%';sign.style.top=((r.y+r.h/2)/1024*100).toFixed(2)+'%';sign.style.width=(r.w/768*100).toFixed(2)+'%';sign.style.height=(r.h/1024*100).toFixed(2)+'%'}
@@ -311,7 +329,7 @@ const ProductionScene={
     if(depth==='seat'&&!snap.hamster.pressed)this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
     snap.cups.forEach(cup=>{
       if(cup.gone||cup.flying)return;
-      this.sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,.4);
+      this.sprite(c,'cup_shadow_medium',cup.p[0],cup.p[1]+2,cup.s);
       this.sprite(c,this.cupId(cup.row),cup.p[0],cup.p[1],cup.s);
     });
     this.drawDressing(c);this.drawButton(c,snap.buttonDown);
