@@ -72,6 +72,23 @@ const SceneLife={
   roll(kind){return kind==='hamster'?4000:22000},
   reduced(){return matchMedia('(prefers-reduced-motion: reduce)').matches},
   onToday(){return document.querySelector('.page.active')?.id==='today'},
+  visit:null,lastAmbient:null,
+  chooseAmbient(){
+    if(this.visit)return this.visit;
+    const all=[['windowSeat',30],['cabinetInspect',25],['floorNap',30],['tableIdle',15]];
+    const pool=all.filter(([name])=>name!==this.lastAmbient);
+    const total=pool.reduce((sum,row)=>sum+row[1],0);
+    let roll=Math.floor(this.rand()*total);
+    let pick=pool[0][0];
+    for(const [name,weight] of pool){roll-=weight;if(roll<0){pick=name;break}}
+    this.visit=pick;
+    return pick;
+  },
+  leaveAmbient(){
+    if(this.visit)this.lastAmbient=this.visit;
+    this.visit=null;
+    window.HamsterDirector?.pause();
+  },
   hold(){
     this.strong=true;
     this.hamsterPlaying=false;this.coffeePlaying=false;this.fxFrame=null;this.zzz=null;this.pulses={};this.queuedCup=null;

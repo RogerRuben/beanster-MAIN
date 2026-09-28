@@ -3506,6 +3506,116 @@
         "y1": 330
       },
       "buttonPad": 28
+    },
+    "interactionAnchors": {
+      "cleanupHome": {
+        "nx": 0.5078,
+        "ny": 0.7539,
+        "scale": 0.5,
+        "depth": "seat",
+        "sprite": "hamster_idle_base"
+      },
+      "tableIdle": {
+        "nx": 0.5078,
+        "ny": 0.7539,
+        "scale": 0.5,
+        "depth": "seat",
+        "sprite": "hamster_idle_base"
+      },
+      "behindLeft": {
+        "nx": 0.3125,
+        "ny": 0.7422,
+        "scale": 0.4,
+        "depth": "behind",
+        "sprite": "hamster_walk_left_01"
+      },
+      "windowSeat": {
+        "nx": 0.4167,
+        "ny": 0.5957,
+        "scale": 0.4,
+        "depth": "behind",
+        "sprite": "hamster_idle_base"
+      },
+      "windowExit": {
+        "nx": 0.2865,
+        "ny": 0.957,
+        "scale": 0.4,
+        "depth": "front",
+        "sprite": "hamster_walk_left_01"
+      },
+      "centerFloor": {
+        "nx": 0.5078,
+        "ny": 0.957,
+        "scale": 0.4,
+        "depth": "front",
+        "sprite": "hamster_walk_right_01"
+      },
+      "cabinetInspect": {
+        "nx": 0.8073,
+        "ny": 0.9277,
+        "scale": 0.4,
+        "depth": "front",
+        "sprite": "hamster_stand_idle"
+      },
+      "cabinetExit": {
+        "nx": 0.7292,
+        "ny": 0.957,
+        "scale": 0.4,
+        "depth": "front",
+        "sprite": "hamster_walk_right_01"
+      },
+      "floorNap": {
+        "nx": 0.5208,
+        "ny": 0.957,
+        "scale": 0.42,
+        "depth": "front",
+        "sprite": "hamster_sleep_01"
+      }
+    },
+    "ambientRoutes": {
+      "windowSeat": {
+        "out": [
+          "behindLeft",
+          "windowSeat"
+        ],
+        "back": [
+          "windowExit",
+          "centerFloor",
+          "behindLeft",
+          "cleanupHome"
+        ]
+      },
+      "cabinetInspect": {
+        "out": [
+          "centerFloor",
+          "cabinetInspect"
+        ],
+        "back": [
+          "cabinetExit",
+          "centerFloor",
+          "behindLeft",
+          "cleanupHome"
+        ]
+      },
+      "floorNap": {
+        "out": [
+          "centerFloor",
+          "floorNap"
+        ],
+        "back": [
+          "centerFloor",
+          "behindLeft",
+          "cleanupHome"
+        ]
+      },
+      "tableIdle": {
+        "out": [
+          "cleanupHome"
+        ],
+        "back": [
+          "cleanupHome"
+        ]
+      }
     }
   },
   "box": {

@@ -146,6 +146,123 @@ const HamsterDirector={
     this.cutCoffee();
     this.onRoute=false;
   },
+  worldAnchor(name){
+    const M=window.BEANSTER_ASSETS;
+    const src=M&&M.scene&&M.scene.interactionAnchors&&M.scene.interactionAnchors[name];
+    const canvas=M&&M.scene&&M.scene.canvas||[768,1024];
+    if(!src)return null;
+    return {name,x:src.nx*canvas[0],y:src.ny*canvas[1],scale:src.scale,depth:src.depth||'front',sprite:src.sprite||this.BASE};
+  },
+  tableSpan(){
+    const M=window.BEANSTER_ASSETS;
+    const t=M&&M.scene&&M.scene.table||{position:[384,799],scale:0.46};
+    const pivot=M&&M.assets&&M.assets.table_back||{pivotX:512,pivotY:280};
+    const s=t.scale;
+    return {
+      left:t.position[0]+(10-pivot.pivotX)*s,
+      right:t.position[0]+(1013-pivot.pivotX)*s,
+      top:t.position[1]+(21-pivot.pivotY)*s,
+      bottom:t.position[1]+(320-pivot.pivotY)*s
+    };
+  },
+  depthAlong(p){
+    const span=this.tableSpan();
+    const top=p.y-340*Math.min(p.scale||0.4,0.45);
+    const overX=p.x>span.left-8&&p.x<span.right+8;
+    const overY=top<span.bottom&&p.y>span.top+8;
+    if(overX&&overY)return 'behind';
+    if(Math.hypot(p.x-this.SEAT.x,p.y-this.SEAT.y)<28&&p.scale>this.SEAT.scale-0.06)return 'seat';
+    return 'front';
+  },
+  outbound(name){
+    const routes=window.BEANSTER_ASSETS&&BEANSTER_ASSETS.scene&&BEANSTER_ASSETS.scene.ambientRoutes;
+    return (routes&&routes[name]&&routes[name].out)||['cleanupHome'];
+  },
+  inbound(name){
+    const routes=window.BEANSTER_ASSETS&&BEANSTER_ASSETS.scene&&BEANSTER_ASSETS.scene.ambientRoutes;
+    return (routes&&routes[name]&&routes[name].back)||['cleanupHome'];
+  },
+  walkRoute(names,done){
+    this.route=(names||[]).map(n=>this.worldAnchor(n)).filter(Boolean);
+    this.routeAt=0;
+    this.routeDone=done||null;
+    this.onRoute=true;
+    this.phase='return';
+    if(this.rank<70)this.rank=70;
+    if(window.SceneLife?.reduced()){
+      const last=this.route[this.route.length-1];
+      if(last)this.setPose(last.sprite,last,last.depth==='front','seated');
+      this.onRoute=false;this.phase='idle';
+      const finish=this.routeDone;this.routeDone=null;
+      if(this.rank<100)this.rank=20;
+      finish&&finish();
+      return;
+    }
+    this.tickRoute();
+  },
+  tickRoute(){
+    if(!this.onRoute)return;
+    const target=this.route[this.routeAt];
+    if(!target){
+      this.onRoute=false;
+      const finish=this.routeDone;this.routeDone=null;
+      if(this.rank<100)this.rank=20;
+      this.phase='idle';
+      finish&&finish();
+      return;
+    }
+    const from={x:this.pose.x,y:this.pose.y,scale:this.pose.scale};
+    const dist=Math.hypot(target.x-from.x,target.y-from.y);
+    if(dist<10&&Math.abs(target.scale-from.scale)<0.03){
+      const stay=target.depth==='seat'||target.name==='windowSeat'||target.name==='cabinetInspect'||target.name==='floorNap';
+      this.setPose(target.sprite,target,target.depth==='front',stay?'seated':'roaming');
+      this.routeAt++;
+      this.arm(100,()=>this.tickRoute());
+      return;
+    }
+    const step=Math.min(1,16/Math.max(dist,1));
+    const p=this.lerp(from,target,step);
+    p.depth=this.depthAlong(p);
+    const frames=target.x<from.x-0.5?this.ACTIONS.walkLeft.frames:this.ACTIONS.walkRight.frames;
+    const sprite=p.depth==='seat'?this.BASE:frames[Math.floor((this.routeAt*10+dist)/40)%4];
+    this.setPose(sprite,p,p.depth==='front',p.depth==='seat'?'sitting-down':'roaming');
+    this.arm(100,()=>this.tickRoute());
+  },
+  beginAmbient(name){
+    this.ambientName=name||'tableIdle';
+    this.loopIndex=0;
+    if(window.SceneLife?.reduced()){
+      const pose=this.worldAnchor(this.ambientName==='tableIdle'?'cleanupHome':this.ambientName)||this.SEAT;
+      this.setPose(pose.sprite||this.BASE,pose,pose.depth==='front','seated');
+      return;
+    }
+    if(this.ambientName==='tableIdle'){this.placeSeat();this.ambientLoop();return}
+    this.walkRoute(this.outbound(this.ambientName),()=>this.ambientLoop());
+  },
+  ambientLoop(){
+    if(this.check||this.paused||this.rank>=70||this.onRoute)return;
+    const name=this.ambientName||'tableIdle';
+    if(name==='tableIdle'){
+      const list=[{kind:'idle',ms:5000},{kind:'action',name:'blink'},{kind:'idle',ms:7000},{kind:'action',name:'lookCup'},{kind:'idle',ms:6000},{kind:'action',name:'smile'}];
+      const step=list[this.loopIndex%list.length];
+      this.loopIndex++;
+      if(step.kind==='idle'){this.phase='idle';this.rank=20;this.placeSeat();this.arm(step.ms,()=>this.ambientLoop())}
+      else this.playAction(step.name,()=>this.ambientLoop());
+      return;
+    }
+    const poses={
+      windowSeat:['hamster_idle_base','hamster_look_button','hamster_idle_08','hamster_idle_base'],
+      cabinetInspect:['hamster_stand_idle','hamster_watch','hamster_stand_idle','hamster_stand_wave'],
+      floorNap:['hamster_sleep_01','hamster_sleep_02','hamster_sleep_base','hamster_sleep_01']
+    };
+    const frames=poses[name]||poses.windowSeat;
+    const pose=this.worldAnchor(name)||this.SEAT;
+    const frame=frames[this.loopIndex%frames.length];
+    this.loopIndex++;
+    this.phase='idle';this.rank=20;
+    this.setPose(frame,pose,pose.depth==='front','seated');
+    this.arm(2200,()=>this.ambientLoop());
+  },
   applyManifest(){
     const M=window.BEANSTER_ASSETS;if(!M)return;
     const copy=(key)=>{const a=this.ACTIONS[key];if(!M.animations[key])return;M.animations[key].frames=a.frames.slice();M.animations[key].durationsMs=a.durations.slice()};
@@ -167,7 +284,10 @@ const HamsterDirector={
     this.stopMotion();
     this.placeSeat();
     if(!window.SceneLife?.onToday())return;
-    this.stepLoop();
+    if(this.auto){
+      const name=window.SceneLife.chooseAmbient();
+      this.beginAmbient(name);
+    }else this.stepLoop();
     this.scheduleCoffee();
   },
   pause(){this.paused=true;this.stopMotion();window.SceneLife?.clear(this.coffeeTimer);this.coffeeTimer=0;this.coffeeToken++},
@@ -176,7 +296,9 @@ const HamsterDirector={
     if(this.check||this.onRoute||this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
     if(this.timer)return;
     if(!window.SceneLife?.onToday())return;
-    this.rank=20;this.stepLoop();
+    this.rank=20;
+    if(this.auto&&window.SceneLife.visit)this.beginAmbient(SceneLife.visit);
+    else this.stepLoop();
     if(!this.coffeeTimer)this.scheduleCoffee();
   },
   stepLoop(){
@@ -272,7 +394,7 @@ const HamsterDirector={
     this.playAction(name,()=>{this.rank=20;if(!this.check)this.stepLoop()});
   },
   requestCleanup(rows,done){
-    this.rank=60;this.phase='return';
+    this.rank=100;this.phase='return';
     this.cleanupRows=(rows||[]).slice();
     this.cleanupDone=done||null;
     this.stopMotion();
@@ -281,11 +403,9 @@ const HamsterDirector={
     const scene=window.ProductionScene;
     if(scene){scene.interactionState='cleanup';if(scene.canvas)scene.canvas.dataset.interaction='cleanup'}
     this.enterThen='ritual';
-    if(this.atSeat()||!this.roamT){this.placeSeat();this.beginRitual();return}
-    if(this.roamT>=this.roamEnd()-this.ENTER_MS){this.onRoute=true;this.afterRoute='ritual';this.showRoam();return}
-    if(this.roamT<this.EXIT_MS){this.unwindExit();return}
-    this.mode='returning';
-    this.tickBack();
+    const home=this.ambientName&&this.ambientName!=='tableIdle'?this.ambientName:null;
+    if(!home||this.atSeat()){this.placeSeat();this.beginRitual();return}
+    this.walkRoute(this.inbound(home),()=>{this.placeSeat();this.beginRitual()});
   },
   unwindExit(){
     this.roamT=Math.max(0,this.roamT-100);
@@ -352,7 +472,11 @@ const HamsterDirector={
     this.placeSeat();
     const done=this.cleanupDone;this.cleanupDone=null;this.cleanupRows=null;
     if(done)done();
-    if(!this.check){this.stepLoop();this.scheduleCoffee()}
+    if(!this.check){
+      if(this.auto&&this.ambientName)this.beginAmbient(this.ambientName);
+      else this.stepLoop();
+      this.scheduleCoffee();
+    }
   },
   cups(){return (window.CoffeeRoom?.desk?.()||[]).slice(0,window.CleanupMotion?.MAX_VISIBLE||4)},
   scheduleCoffee(){
@@ -479,7 +603,44 @@ const HamsterDirector={
       ['walkLeft','向左走'],['walkRight','向右走'],['lookAround','张望'],['seatEnter','坐下'],
       ['clap','鼓掌'],['wipe','擦汗'],['fullRoam','完整漫游'],['fullCleanup','完整收杯']
     ];
-    host.insertAdjacentHTML('beforeend',`<div class="card u-action-check"><div class="section-title">动作检查</div><div class="u-action-grid">${buttons.map(([id,label])=>`<button type="button" onclick="HamsterDirector.playSolo('${id}')">${label}</button>`).join('')}<button type="button" class="wide" onclick="HamsterDirector.runFullScene()">完整剧情检查</button></div></div>`);
+    const scenes=[['tableIdle','桌边待机'],['windowSeat','窗边'],['cabinetInspect','收藏柜'],['floorNap','地板睡觉']];
+    const paths=[['windowSeat','A → 收杯'],['cabinetInspect','B → 收杯'],['floorNap','C → 收杯']];
+    const cups=[0,1,2,3,4];
+    const sceneButtons=scenes.map(([id,label])=>`<button type="button" onclick="HamsterDirector.debugAmbient('${id}')">${label}</button>`).join('');
+    const pathButtons=paths.map(([id,label])=>`<button type="button" onclick="HamsterDirector.debugCleanup('${id}')">${label}</button>`).join('');
+    const cupButtons=cups.map(n=>`<button type="button" onclick="HamsterDirector.debugCups(${n})">${n} 杯</button>`).join('');
+    host.insertAdjacentHTML('beforeend',`<div class="card u-action-check"><div class="section-title">动作检查</div><div class="u-action-grid">${buttons.map(([id,label])=>`<button type="button" onclick="HamsterDirector.playSolo('${id}')">${label}</button>`).join('')}<button type="button" class="wide" onclick="HamsterDirector.runFullScene()">完整剧情检查</button></div><div class="section-title">场景</div><div class="u-action-grid">${sceneButtons}</div><div class="section-title">路径</div><div class="u-action-grid">${pathButtons}</div><div class="section-title">咖啡</div><div class="u-action-grid">${cupButtons}<button type="button" class="wide" onclick="HamsterDirector.debugCycle()">完整环境循环</button></div></div>`);
+  },
+  debugAmbient(name){
+    this.check=true;this.rank=20;this.stopMotion();
+    if(window.SceneLife){SceneLife.visit=name;SceneLife.lastAmbient=null}
+    this.showHome(()=>this.beginAmbient(name));
+  },
+  debugCleanup(name){
+    this.check=true;this.rank=20;this.stopMotion();
+    this.ambientName=name;
+    this.showHome(()=>{
+      const pose=this.worldAnchor(name);
+      if(pose)this.setPose(pose.sprite,pose,pose.depth==='front',pose.depth==='seat'?'seated':'roaming');
+      this.requestCleanup(this.demoRows(),()=>{this.check=false});
+    });
+  },
+  debugCups(n){
+    const scene=window.ProductionScene;if(!scene)return;
+    scene.previewDesk=n;
+    this.showHome(()=>scene.paint());
+  },
+  debugCycle(){
+    this.check=true;this.rank=20;this.stopMotion();
+    const names=['windowSeat','cabinetInspect','floorNap','tableIdle'];
+    const next=()=>{
+      const name=names.shift();
+      if(!name){this.check=false;this.beginAmbient('tableIdle');return}
+      this.ambientName=name;
+      if(name==='tableIdle'){this.placeSeat();this.arm(600,next);return}
+      this.walkRoute(this.outbound(name),()=>this.arm(600,next));
+    };
+    this.showHome(next);
   }
 };
 window.HamsterDirector=HamsterDirector;

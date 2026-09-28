@@ -12,9 +12,10 @@ const life=await page.evaluate(()=>{
   SceneLife.queue=[];SceneLife.clock=0;SceneLife.played=[];
   SceneLife.rand=()=>0;
   HamsterWorld.auto=true;HamsterWorld.trace=[];HamsterWorld.samples=[];
+  SceneLife.visit='windowSeat';SceneLife.lastAmbient=null;
   HamsterWorld.boot(true);
-  SceneLife.pump(180000);
-  const order=['seated','standing-up','roaming','returning','sitting-down','seated'];
+  SceneLife.pump(8000);
+  const order=['seated','roaming','seated'];
   let at=0;
   for(const mode of HamsterWorld.trace){if(mode===order[at])at++;if(at===order.length)break}
   let jump=0;
@@ -23,16 +24,17 @@ const life=await page.evaluate(()=>{
     if(a.mode==='seated'||b.mode==='seated')continue;
     jump=Math.max(jump,Math.hypot(a.x-b.x,a.y-b.y));
   }
-  const off=HamsterWorld.samples.filter(s=>s.x<60||s.x>700||s.y<680||s.y>990);
+  const off=HamsterWorld.samples.filter(s=>s.x<40||s.x>740||s.y<520||s.y>1000);
   const front=HamsterWorld.samples.filter(s=>s.y>=970);
   const frontBad=front.filter(s=>!s.inFront);
   const tableCut=HamsterWorld.samples.filter(s=>s.x>140&&s.x<630&&s.y>810&&s.y<856&&s.inFront);
-  return {order:at===order.length,trace:HamsterWorld.trace,jump,off:off.length,front:front.length,frontBad:frontBad.length,tableCut:tableCut.length,records:JSON.stringify(records)===before,sprites:[...new Set(HamsterWorld.samples.map(s=>s.sprite))]};
+  const atWindow=HamsterWorld.samples.some(s=>s.y<700&&s.x>260&&s.x<360);
+  return {order:at===order.length,trace:HamsterWorld.trace,jump,off:off.length,front:front.length,frontBad:frontBad.length,tableCut:tableCut.length,atWindow,records:JSON.stringify(records)===before,sprites:[...new Set(HamsterWorld.samples.map(s=>s.sprite))]};
 });
 assert.equal(life.order,true,life.trace.join('>'));
 assert.ok(life.jump<30,'jump '+life.jump);
 assert.equal(life.off,0);
-assert.ok(life.front>0);
+assert.equal(life.atWindow,true,life.trace.join('>'));
 assert.equal(life.frontBad,0);
 assert.equal(life.tableCut,0);
 assert.equal(life.records,true);
@@ -40,18 +42,26 @@ assert.ok(life.sprites.some(id=>String(id).startsWith('hamster_walk_')));
 
 const cleanup=await page.evaluate(()=>{
   SceneLife.queue=[];SceneLife.clock=0;SceneLife.strong=false;SceneLife.rand=()=>0;
-  HamsterWorld.trace=[];HamsterWorld.samples=[];HamsterWorld.boot(true);
-  SceneLife.pump(25000);
+  HamsterWorld.trace=[];HamsterWorld.samples=[];
+  SceneLife.visit='windowSeat';SceneLife.lastAmbient=null;
+  HamsterWorld.boot(true);
+  SceneLife.pump(8000);
   const during=HamsterWorld.mode;
-  let ran=false;
+  let ran=false,near=999,ritual=false;
   ProductionScene.cleanup([],()=>{ran=true});
-  SceneLife.pump(20000);
-  const seat=BEANSTER_ASSETS.scene.roam.points.seat;
-  return {during,mode:HamsterWorld.mode,ran,x:HamsterWorld.x,y:HamsterWorld.y,seat,state:ProductionScene.interactionState};
+  for(let i=0;i<40;i++){
+    SceneLife.pump(500);
+    const seat=BEANSTER_ASSETS.scene.tableContact;
+    near=Math.min(near,Math.hypot(HamsterDirector.pose.x-seat.x,HamsterDirector.pose.y-seat.y));
+    if(HamsterDirector.phase==='ritual'||HamsterDirector.phase==='ending')ritual=true;
+  }
+  return {during,mode:HamsterWorld.mode,ran,near,ritual,x:HamsterWorld.x,y:HamsterWorld.y,state:ProductionScene.interactionState};
 });
-assert.equal(cleanup.during,'roaming');
-assert.ok(Math.hypot(cleanup.x-cleanup.seat[0],cleanup.y-cleanup.seat[1])<30,JSON.stringify(cleanup));
-assert.ok(cleanup.state==='cleanup'||cleanup.ran);
+assert.equal(cleanup.during,'seated');
+assert.equal(cleanup.ran,true,JSON.stringify(cleanup));
+assert.equal(cleanup.ritual,true,JSON.stringify(cleanup));
+assert.ok(cleanup.near<30,JSON.stringify(cleanup));
+assert.equal(cleanup.state,'idle');
 
 await page.emulateMedia({reducedMotion:'reduce'});
 const quiet=await page.evaluate(()=>{

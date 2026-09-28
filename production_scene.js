@@ -229,6 +229,15 @@ const ProductionScene={
   signRect(){const p=this.signPose(),a=this.M().assets[p.id]||{pivotX:176,pivotY:56,canvas:[352,112]};const w=a.canvas[0]*p.scale,h=a.canvas[1]*p.scale;return {x:p.x-a.pivotX*p.scale,y:p.y-a.pivotY*p.scale,w,h}},
   drawSign(c,glow){const p=this.signPose();this.sprite(c,p.id,p.x,p.y,p.scale);c.save();c.fillStyle=glow?'#fff8dc':'#fff1cf';c.font='700 20px system-ui';c.textAlign='center';c.fillText('收藏室 →',p.x,p.y+7);c.restore()},
   drawIvy(c){if(!this.bakedRoom()&&this.M().assets.ivy_hanging)this.sprite(c,'ivy_hanging',640,8,.85)},
+  deskRows(){
+    if(this.previewDesk!=null)return Array.from({length:this.previewDesk},(_,i)=>({id:'preview-'+i,type:'拿铁',productName:'拿铁',caffeine:80,ts:Date.now()}));
+    return typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk():[];
+  },
+  drawMat(c){
+    const nap=window.HamsterDirector?.worldAnchor?.('floorNap');
+    if(!nap||!this.images.floor_rug)return;
+    this.sprite(c,'floor_rug',nap.x,nap.y+8,0.22);
+  },
   drawStorage(c,snap,cupSprite){
     snap.layers.forEach(id=>{
       if(id==='liveCup'){
@@ -265,12 +274,13 @@ const ProductionScene={
       if(depth==='behind')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
       this.sprite(c,'table_back',tw.x,tw.y,tw.scale);
       if(depth==='seat')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
-      const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],cs=CleanupMotion.cupScale(this.M());
+      const cups=this.deskRows().slice(0,CleanupMotion.MAX_VISIBLE),cs=CleanupMotion.cupScale(this.M());
       const fx=window.HamsterDirector?.fx;
       if(!cups.length&&fx){const [x,y]=this.tableCup(0,1);this.sprite(c,fx,x,y-36,.32)}
       cups.forEach((r,i)=>{const [x,y]=this.tableCup(i,cups.length),cid=this.cupId(r);this.sprite(c,'cup_shadow_medium',x,y+2,cs);this.sprite(c,cid,x,y,cs);if(fx&&i===0)this.sprite(c,fx,x,y-36,.32)});
       this.drawDressing(c);this.drawButton(c,false);
       this.sprite(c,'table_front',tw.x,tw.y,tw.scale);
+      this.drawMat(c);
       if(depth==='front')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
       this.drawIvy(c);
       this.drawSign(c,false);
@@ -280,7 +290,7 @@ const ProductionScene={
   },
   place(){
     const canvas=this.canvas;if(!canvas?.parentElement)return;
-    const cups=typeof CoffeeRoom!=='undefined'?CoffeeRoom.desk().slice(0,CleanupMotion.MAX_VISIBLE):[],n=cups.length,cs=CleanupMotion.cupScale(this.M());
+    const cups=this.deskRows().slice(0,CleanupMotion.MAX_VISIBLE),n=cups.length,cs=CleanupMotion.cupScale(this.M());
     canvas.parentElement.querySelectorAll('.cc-desk-cup').forEach((btn,i)=>{if(i>=n)return;const [x,y]=this.tableCup(i,n),w=256*cs,h=256*cs;btn.style.left=((x-128*cs)/768*100).toFixed(2)+'%';btn.style.top=((y-224*cs)/1024*100).toFixed(2)+'%';btn.style.width=(w/768*100).toFixed(2)+'%';btn.style.height=(h/1024*100).toFixed(2)+'%'});
     const sign=canvas.parentElement.querySelector('.cc-room-sign');
     if(sign){const r=this.signRect();sign.style.left=((r.x+r.w/2)/768*100).toFixed(2)+'%';sign.style.top=((r.y+r.h/2)/1024*100).toFixed(2)+'%';sign.style.width=(r.w/768*100).toFixed(2)+'%';sign.style.height=(r.h/1024*100).toFixed(2)+'%'}
@@ -340,6 +350,7 @@ const ProductionScene={
     this.drawDressing(c);this.drawButton(c,snap.buttonDown);
     if(depth==='seat'&&snap.hamster.pressed)this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
     this.sprite(c,'table_front',tw.x,tw.y,tw.scale);
+    this.drawMat(c);
     if(depth==='front')this.sprite(c,pose.id,pose.x,pose.y,pose.scale,1,pose.flip);
     this.drawIvy(c);
     this.drawSign(c,snap.phase!=='closed');
