@@ -44,6 +44,11 @@ window.CleanupMotion=(function(){
     const base=(M.table&&M.table.cupWorldScale)!=null?Number(M.table.cupWorldScale):0.40;
     return base*(t.scale/basis);
   }
+  function contactShift(M,id,scale){
+    const a=M.assets&&M.assets[id];
+    if(!a||a.contactY==null)return 0;
+    return (a.pivotY-a.contactY)*scale;
+  }
   function buttonPose(M){
     const b=(M.scene&&M.scene.button)||{};
     const t=tablePose(M);
@@ -185,5 +190,5 @@ window.CleanupMotion=(function(){
       react:elapsed>=sched.reactionAt
     };
   }
-  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,cupScale,buttonPose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
+  return {MAX_VISIBLE,DEFAULTS,timing,boxPose,boxPivot,boxOrigin,mouth,drop,tablePose,cupScale,contactShift,buttonPose,tableCup,visibleRows,hiddenCount,schedule,boxPhase,boxStateKey,boxLayers,boxVisible,hamster,cupMotion,reactionName,reactionMs,totalMs,snapshot,ease,mix,clamp01};
 })();

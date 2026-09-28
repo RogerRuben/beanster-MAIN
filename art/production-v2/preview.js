@@ -2,7 +2,7 @@
 const M=window.BEANSTER_ASSETS,images={},scene=document.getElementById('scene'),inspect=document.getElementById('inspect'),shelf=document.getElementById('shelf');
 let records=[],serial=0,selected=null,night=false,showAnchors=true,raf=0,token=0,ritual=null,consumed=false,hamsterId='hamster_idle_base',fxId=null,interactionState='idle';
 const types=Object.keys(M.assets).filter(id=>id.startsWith('cup_')&&!id.includes('shadow'));
-function sprite(ctx,id,x,y,scale=1){const a=M.assets[id],im=images[id];if(!a||!im)return;ctx.imageSmoothingEnabled=false;ctx.drawImage(im,x-a.pivotX*scale,y-a.pivotY*scale,a.canvas[0]*scale,a.canvas[1]*scale)}
+function sprite(ctx,id,x,y,scale=1){const a=M.assets[id],im=images[id];if(!a||!im)return;const dy=CleanupMotion.contactShift(M,id,scale);ctx.imageSmoothingEnabled=false;ctx.drawImage(im,x-a.pivotX*scale,y+dy-a.pivotY*scale,a.canvas[0]*scale,a.canvas[1]*scale)}
 function spriteBox(ctx,id){const a=M.assets[id],im=images[id],o=CleanupMotion.boxOrigin(M);if(!a||!im)return;ctx.imageSmoothingEnabled=false;ctx.drawImage(im,o.x,o.y,a.canvas[0]*o.scale,a.canvas[1]*o.scale)}
 function drawTop(ctx,id,x,y,w){const a=M.assets[id];if(!a)return;sprite(ctx,id,x+a.pivotX*w/a.canvas[0],y+a.pivotY*w/a.canvas[0],w/a.canvas[0])}
 function halt(){++token;cancelAnimationFrame(raf);raf=0}

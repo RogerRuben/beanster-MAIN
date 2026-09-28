@@ -1,7 +1,7 @@
 /* Sole owner of coffee-corner motion. Other modules only send requests. */
 const HamsterDirector={
   BASE:'hamster_idle_base',
-  SEAT:{x:390,y:800,scale:0.50,depth:'seat'},
+  SEAT:{x:390,y:772,scale:0.50,depth:'seat'},
   BEHIND:{x:390,y:730,scale:0.40},
   BEHIND_LEFT:{x:240,y:760,scale:0.40},
   LIP:{x:240,y:960,scale:0.40},
@@ -65,7 +65,7 @@ const HamsterDirector={
   rank:20,phase:'boot',mode:'seated',check:false,paused:false,auto:true,
   loopIndex:0,clickIndex:0,coffeeIndex:0,stepToken:0,coffeeToken:0,
   timer:0,coffeeTimer:0,coffeeFrame:0,roamT:0,onRoute:false,
-  pose:{spriteId:'hamster_idle_base',x:390,y:800,scale:0.50,inFront:false,depth:'seat',layer:'hamster'},
+  pose:{spriteId:'hamster_idle_base',x:390,y:772,scale:0.50,inFront:false,depth:'seat',layer:'hamster'},
   fx:null,fxIndex:-1,cleanupRows:null,cleanupDone:null,ritualElapsed:0,forceEnding:null,
   roamEnd(){return this.EXIT_MS+this.SEGS.reduce((s,seg)=>s+seg.ms,0)+this.ENTER_MS},
   cycleMs(list){return list.reduce((s,step)=>s+(step.kind==='idle'?step.ms:step.name?this.total(step.name):0),0)},
@@ -152,7 +152,9 @@ const HamsterDirector={
     copy('wipe');copy('clap');
     const idle=M.scene&&M.scene.idle;
     if(idle&&idle.position)this.SEAT={x:idle.position[0],y:idle.position[1],scale:idle.scale,depth:'seat'};
-    M.scene.roam=Object.assign({},M.scene.roam,{locked:true,route:[this.LEFT,this.MID,this.RIGHT].map(p=>[p.x,p.y]),tableFrontY:819,floorScale:0.40});
+    const table=M.scene.table||{position:[384,799],scale:0.46};
+    const lip=table.position[1]+(320-280)*table.scale;
+    M.scene.roam=Object.assign({},M.scene.roam,{locked:true,route:[this.LEFT,this.MID,this.RIGHT].map(p=>[p.x,p.y]),tableFrontY:Math.round(lip),floorScale:0.40});
   },
   boot(){
     this.paused=false;this.check=false;this.rank=20;this.phase='idle';this.loopIndex=0;this.usedFirst=false;this.roamT=0;this.onRoute=false;

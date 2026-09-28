@@ -11,6 +11,18 @@ assert.ok(await p.evaluate(()=>(BEANSTER_ASSETS.scene.dressing||[]).length<=1));
 assert.ok(await p.evaluate(()=>BEANSTER_ASSETS.animations.clap.pose==='seated'&&BEANSTER_ASSETS.animations.wipe.pose==='seated'));
 assert.ok(await p.evaluate(()=>!BEANSTER_ASSETS.animations.clap.frames.includes('hamster_cleanup_12')));
 assert.ok(await p.evaluate(()=>{const t=BEANSTER_ASSETS.scene.table,b=CleanupMotion.buttonPose(BEANSTER_ASSETS),cs=CleanupMotion.cupScale(BEANSTER_ASSETS),gap=90*cs+100*b.scale+8;return BEANSTER_ASSETS.table.slots['4'].every(([sx,sy])=>{const x=t.position[0]+(sx-512)*t.scale,y=t.position[1]+(sy-280)*t.scale;return Math.hypot(x-b.x,y-b.y)>gap})}));
+assert.equal(await p.evaluate(()=>BEANSTER_ASSETS.scene.table.scale),0.46);
+assert.equal(await p.evaluate(()=>BEANSTER_ASSETS.scene.tableContact.y),772);
+assert.ok(await p.evaluate(()=>{
+  const M=BEANSTER_ASSETS,seat=M.scene.idle,face=M.scene.deskSafe.hamsterFace,a=M.assets.hamster_idle_base,s=seat.scale,contact=a.contactY;
+  const zone={x0:seat.position[0]+(face.x0-a.pivotX)*s,x1:seat.position[0]+(face.x1-a.pivotX)*s,y0:seat.position[1]+(face.y0-contact)*s,y1:seat.position[1]+(face.y1-contact)*s};
+  const b=CleanupMotion.buttonPose(M),cs=CleanupMotion.cupScale(M),cupR=80*cs,btnR=90*b.scale+M.scene.deskSafe.buttonPad,t=M.scene.table;
+  return ['1','2','3','4'].every(n=>M.table.slots[n].every(([sx,sy])=>{
+    const x=t.position[0]+(sx-512)*t.scale,y=t.position[1]+(sy-280)*t.scale;
+    const faceHit=x+cupR>zone.x0&&x-cupR<zone.x1&&y+cupR>zone.y0&&y-cupR<zone.y1;
+    return !faceHit&&Math.hypot(x-b.x,y-b.y)>cupR+btnR;
+  }));
+}),'cup slots stay outside the hamster face and the collect button');
 assert.deepEqual(await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_up.canvas),await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_down.canvas));
 assert.equal(await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_up.pivotX),await p.evaluate(()=>BEANSTER_ASSETS.assets.btn_hamster_down.pivotX));
 const box=await p.evaluate(()=>BEANSTER_ASSETS.scene.storageBox);

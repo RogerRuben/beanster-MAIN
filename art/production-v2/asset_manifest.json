@@ -24,7 +24,8 @@
         448
       ],
       "source": "user atlas 0, frame 0",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_01": {
       "file": "characters/hamster_idle_01.png",
@@ -41,7 +42,8 @@
         448
       ],
       "source": "user atlas 0, frame 1",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_02": {
       "file": "characters/hamster_idle_02.png",
@@ -58,7 +60,8 @@
         448
       ],
       "source": "user atlas 0, frame 2",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_03": {
       "file": "characters/hamster_idle_03.png",
@@ -75,7 +78,8 @@
         448
       ],
       "source": "user atlas 0, frame 3",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_04": {
       "file": "characters/hamster_idle_04.png",
@@ -92,7 +96,8 @@
         448
       ],
       "source": "user atlas 0, frame 4",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 448
     },
     "hamster_idle_05": {
       "file": "characters/hamster_idle_05.png",
@@ -109,7 +114,8 @@
         448
       ],
       "source": "user atlas 0, frame 5",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_06": {
       "file": "characters/hamster_idle_06.png",
@@ -126,7 +132,8 @@
         448
       ],
       "source": "user atlas 0, frame 6",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_idle_07": {
       "file": "characters/hamster_idle_07.png",
@@ -143,7 +150,8 @@
         448
       ],
       "source": "user atlas 0, frame 7",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 448
     },
     "hamster_idle_08": {
       "file": "characters/hamster_idle_08.png",
@@ -160,7 +168,8 @@
         448
       ],
       "source": "user atlas 1, frame 0",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 450
     },
     "hamster_idle_09": {
       "file": "characters/hamster_idle_09.png",
@@ -2419,7 +2428,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 442
     },
     "prop_napkin": {
       "file": "scene/prop_napkin.png",
@@ -2469,7 +2479,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 442
     },
     "hamster_seated_glad_02": {
       "file": "characters/hamster_seated_glad_02.png",
@@ -2486,7 +2497,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 449
     },
     "hamster_seated_glad_03": {
       "file": "characters/hamster_seated_glad_03.png",
@@ -2503,7 +2515,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 441
     },
     "hamster_seated_wipe_01": {
       "file": "characters/hamster_seated_wipe_01.png",
@@ -2520,7 +2533,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 441
     },
     "hamster_seated_wipe_02": {
       "file": "characters/hamster_seated_wipe_02.png",
@@ -2554,7 +2568,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 449
     },
     "hamster_watch": {
       "file": "characters/hamster_watch.png",
@@ -2571,7 +2586,8 @@
         448
       ],
       "containsCup": false,
-      "seated": true
+      "seated": true,
+      "contactY": 455
     },
     "box_almost": {
       "file": "storage/box_almost.png",
@@ -2600,7 +2616,8 @@
         448
       ],
       "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_seated_wipe_release": {
       "file": "characters/hamster_seated_wipe_release.png",
@@ -2617,7 +2634,8 @@
         448
       ],
       "source": "V19.5.3 keyed from the seated hamster, feet or paws locked to 256,448",
-      "containsCup": false
+      "containsCup": false,
+      "contactY": 449
     },
     "hamster_stand_idle": {
       "file": "characters/hamster_stand_idle.png",
@@ -2949,7 +2967,8 @@
       ],
       "source": "V19.5.5 locked transition",
       "containsCup": false,
-      "family": "seated"
+      "family": "seated",
+      "contactY": 436
     }
   },
   "animations": {
@@ -3212,50 +3231,50 @@
     "slots": {
       "1": [
         [
-          402,
-          217
+          260,
+          174
         ]
       ],
       "2": [
         [
-          239,
-          164
+          177,
+          147
         ],
         [
-          749,
-          135
+          895,
+          126
         ]
       ],
       "3": [
         [
-          177,
-          170
+          123,
+          117
         ],
         [
-          361,
-          217
+          308,
+          184
         ],
         [
-          841,
-          129
+          884,
+          104
         ]
       ],
       "4": [
         [
-          116,
-          149
+          101,
+          104
         ],
         [
-          290,
-          205
+          264,
+          169
         ],
         [
-          810,
-          94
+          840,
+          82
         ],
         [
-          932,
-          164
+          982,
+          156
         ]
       ]
     },
@@ -3318,12 +3337,12 @@
         384,
         799
       ],
-      "scale": 0.49
+      "scale": 0.46
     },
     "idle": {
       "position": [
         390,
-        800
+        772
       ],
       "scale": 0.5
     },
@@ -3453,7 +3472,7 @@
       "points": {
         "seat": [
           390,
-          800
+          772
         ],
         "exit": [
           320,
@@ -3472,7 +3491,21 @@
           930
         ]
       },
-      "tableFrontY": 819
+      "tableFrontY": 817
+    },
+    "tableContact": {
+      "x": 390,
+      "y": 772,
+      "scale": 0.5
+    },
+    "deskSafe": {
+      "hamsterFace": {
+        "x0": 150,
+        "y0": 144,
+        "x1": 400,
+        "y1": 330
+      },
+      "buttonPad": 28
     }
   },
   "box": {
