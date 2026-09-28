@@ -131,6 +131,7 @@ canvas.cc-seated{width:200px;height:175px}
 .cc-ritual-banner[hidden]{display:none}
 .cc-ritual-banner button{min-width:44px;min-height:36px;border:0;background:transparent;color:#89694a;font-weight:700}
 .cc-empty-desk,.cc-more{position:static;transform:none;display:block;margin:8px auto 0;text-align:center;z-index:auto}
+.cc-empty-desk{margin-top:6px;padding:3px 8px;border:1px solid #eadcc8;border-radius:10px;background:#fff8efcc;color:#8a6a4c;font-size:12px;font-weight:450}
 .cc-corner.cc-ritual-active .cc-speech,
 .cc-corner.cc-ritual-active ~ .cc-empty-desk,
 .cc-corner.cc-ritual-active ~ .cc-more{display:none}
