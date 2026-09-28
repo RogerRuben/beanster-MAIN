@@ -1,7 +1,7 @@
 /* Single vacuum cleanup FSM. Production, preview, and inspect all read this. */
 window.CleanupMotion=(function(){
   const MAX_VISIBLE=4;
-  const DEFAULTS={lookMs:120,pressMs:140,releaseMs:80,openingMs:200,openHoldMs:100,cupMs:460,staggerMs:200,waitCloseMs:100,closingMs:200,closedHoldMs:100,archiveFlashMs:700};
+  const DEFAULTS={lookMs:350,pressMs:300,holdMs:250,releaseMs:250,openingMs:450,openHoldMs:300,cupMs:650,staggerMs:250,waitCloseMs:300,closingMs:450,closedHoldMs:350,archiveFlashMs:700};
   function clamp01(t){return t<=0?0:t>=1?1:t}
   function ease(t){t=clamp01(t);return t*t*(3-2*t)}
   function mix(a,b,t){return [a[0]+(b[0]-a[0])*t,a[1]+(b[1]-a[1])*t]}
@@ -56,7 +56,7 @@ window.CleanupMotion=(function(){
     const n=visible.length;
     const total=all.length;
     const pressAt=T.lookMs;
-    const releaseAt=pressAt+T.pressMs;
+    const releaseAt=pressAt+T.pressMs+(T.holdMs||0);
     const openingAt=releaseAt+T.releaseMs;
     const openAt=openingAt+T.openingMs;
     const firstCupAt=openAt+T.openHoldMs;

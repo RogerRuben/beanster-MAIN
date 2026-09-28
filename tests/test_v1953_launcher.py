@@ -3,7 +3,7 @@ from pathlib import Path
 import os, subprocess, sys, zipfile
 
 ROOT = Path(__file__).resolve().parents[1]
-APK = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'Beanster-Sips-V19.5.6-unsigned.apk'
+APK = Path(sys.argv[1]) if len(sys.argv) > 1 else ROOT / 'Beanster-Sips-V19.5.7-unsigned.apk'
 SDK = Path(os.environ.get('BEANSTER_SDK', ROOT.parent / '.build-tools' / 'android-sdk'))
 
 def find(name):
@@ -30,7 +30,7 @@ aapt2 = find('aapt2.exe')
 assert aapt2, 'aapt2 is required'
 badging = subprocess.run([str(aapt2), 'dump', 'badging', str(APK)], check=True, capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
 assert "package: name='com.beanstersips.v11'" in badging
-assert "versionName='19.5.6'" in badging
+assert "versionName='19.5.7'" in badging
 assert 'ic_launcher' in badging
 xml = subprocess.run([str(aapt2), 'dump', 'xmltree', str(APK), '--file', 'AndroidManifest.xml'], check=True, capture_output=True, text=True, encoding='utf-8', errors='replace').stdout
 assert 'icon(0x01010002)' in xml and 'roundIcon(0x0101052c)' in xml

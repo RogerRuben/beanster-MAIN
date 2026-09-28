@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.6'
-VERSION_CODE=60
+APP_VERSION='19.5.7'
+VERSION_CODE=61
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -97,20 +97,29 @@ def find_exe(root, name):
     return None
 
 def adaptive_foreground(src, size):
-    """Fit the whole supplied tile inside the 66dp safe circle of a 108dp foreground."""
+    """Fit the supplied tile inside the 66dp safe circle. Only corner-connected background is cleared."""
     import numpy as np
     from PIL import Image
-    arr=np.array(src)
-    rgb=arr[:,:,:3]
-    dark=rgb.max(axis=2)<18
-    content=arr.copy()
-    content[dark,3]=0
-    ys,xs=np.where(~dark)
-    cx,cy=src.width/2,src.height/2
+    arr=np.array(src.convert('RGBA'))
+    h,w=arr.shape[:2]
+    bg=arr[0,0,:3].astype(int)
+    dist=np.abs(arr[:,:,:3].astype(int)-bg).sum(axis=2)
+    candidate=dist<48
+    seen=np.zeros((h,w),dtype=bool)
+    stack=[(0,0),(0,w-1),(h-1,0),(h-1,w-1)]
+    while stack:
+        y,x=stack.pop()
+        if y<0 or x<0 or y>=h or x>=w or seen[y,x] or not candidate[y,x]:
+            continue
+        seen[y,x]=True
+        arr[y,x,3]=0
+        stack.extend(((y-1,x),(y+1,x),(y,x-1),(y,x+1)))
+    ys,xs=np.where(arr[:,:,3]>0)
+    cx,cy=(xs.min()+xs.max())/2,(ys.min()+ys.max())/2
     radius=float(np.hypot(xs-cx,ys-cy).max())
     safe=size*66/108
     scale=(safe/2)/radius
-    fitted=Image.fromarray(content).resize((max(1,int(round(src.width*scale))),max(1,int(round(src.height*scale)))),Image.Resampling.LANCZOS)
+    fitted=Image.fromarray(arr).resize((max(1,int(round(w*scale))),max(1,int(round(h*scale)))),Image.Resampling.LANCZOS)
     canvas=Image.new('RGBA',(size,size),(0,0,0,0))
     canvas.paste(fitted,((size-fitted.width)//2,(size-fitted.height)//2),fitted)
     return canvas

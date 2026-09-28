@@ -84,21 +84,22 @@ const SceneLife={
   },
   fxAt(index){return window.HamsterDirector?.fxAt?.(index)||null},
   cupScale(){return 1},
+  sceneLocked(){return !!document.querySelector('.cc-corner.cc-ritual-active')},
   pokeHamster(event){
     event?.preventDefault();event?.stopPropagation();
-    if(this.strong||this.reduced())return;
+    if(this.strong||this.reduced()||this.sceneLocked())return;
     window.HamsterDirector?.click();
   },
   pokeButton(event){
     event?.preventDefault();event?.stopPropagation();
-    if(this.strong)return;
+    if(this.strong||this.sceneLocked())return;
     const dir=window.HamsterDirector;
     if(!dir||dir.onRoute||dir.mode!=='seated')return;
     dir.playAction('lookButton',()=>{dir.rank=20;dir.stepLoop()});
   },
   pokeCup(event,id){
     event?.preventDefault();event?.stopPropagation();
-    if(this.strong)return;
+    if(this.strong||this.sceneLocked())return;
     const buttons=[...event.currentTarget.parentElement.querySelectorAll('.cc-desk-cup')];
     const index=Math.max(0,buttons.indexOf(event.currentTarget));
     window.HamsterDirector?.playCoffee(true);

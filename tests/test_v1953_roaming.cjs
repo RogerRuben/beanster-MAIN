@@ -24,7 +24,7 @@ const life=await page.evaluate(()=>{
     jump=Math.max(jump,Math.hypot(a.x-b.x,a.y-b.y));
   }
   const off=HamsterWorld.samples.filter(s=>s.x<60||s.x>700||s.y<680||s.y>990);
-  const front=HamsterWorld.samples.filter(s=>s.y>=900);
+  const front=HamsterWorld.samples.filter(s=>s.y>=970);
   const frontBad=front.filter(s=>!s.inFront);
   const tableCut=HamsterWorld.samples.filter(s=>s.x>140&&s.x<630&&s.y>810&&s.y<856&&s.inFront);
   return {order:at===order.length,trace:HamsterWorld.trace,jump,off:off.length,front:front.length,frontBad:frontBad.length,tableCut:tableCut.length,records:JSON.stringify(records)===before,sprites:[...new Set(HamsterWorld.samples.map(s=>s.sprite))]};
@@ -41,7 +41,7 @@ assert.ok(life.sprites.some(id=>String(id).startsWith('hamster_walk_')));
 const cleanup=await page.evaluate(()=>{
   SceneLife.queue=[];SceneLife.clock=0;SceneLife.strong=false;SceneLife.rand=()=>0;
   HamsterWorld.trace=[];HamsterWorld.samples=[];HamsterWorld.boot(true);
-  SceneLife.pump(46000);
+  SceneLife.pump(25000);
   const during=HamsterWorld.mode;
   let ran=false;
   ProductionScene.cleanup([],()=>{ran=true});

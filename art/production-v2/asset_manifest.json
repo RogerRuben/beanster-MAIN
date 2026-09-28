@@ -3371,16 +3371,17 @@
         "animations.cleanup"
       ],
       "timing": {
-        "lookMs": 120,
-        "pressMs": 140,
-        "releaseMs": 80,
-        "openingMs": 200,
-        "openHoldMs": 100,
-        "cupMs": 460,
-        "staggerMs": 200,
-        "waitCloseMs": 100,
-        "closingMs": 200,
-        "closedHoldMs": 100,
+        "lookMs": 350,
+        "pressMs": 300,
+        "holdMs": 250,
+        "releaseMs": 250,
+        "openingMs": 450,
+        "openHoldMs": 300,
+        "cupMs": 650,
+        "staggerMs": 250,
+        "waitCloseMs": 300,
+        "closingMs": 450,
+        "closedHoldMs": 350,
         "archiveFlashMs": 700
       },
       "ending": {

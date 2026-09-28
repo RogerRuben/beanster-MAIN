@@ -127,7 +127,17 @@ canvas.cc-seated{width:200px;height:175px}
 .cc-cup{background-image:none;width:64px;height:64px}
 .cc-cup img{display:block;width:100%;height:100%;object-fit:contain;image-rendering:pixelated;pointer-events:none}
 .cc-scene-heading,.cc-speech,.cc-more,.cc-empty-desk,.cc-ritual-slot{z-index:7}
-.cc-ritual{inset:auto;top:auto;bottom:12px;left:12px;right:12px;height:auto;background:#fff8edec;z-index:6}
+.cc-ritual-banner{display:flex;align-items:center;justify-content:space-between;gap:8px;margin:8px 2px 0;padding:8px 12px;border:1px solid #e4d3bc;border-radius:12px;background:#fff8ed;color:#795236;font-size:13px}
+.cc-ritual-banner[hidden]{display:none}
+.cc-ritual-banner button{min-width:44px;min-height:36px;border:0;background:transparent;color:#89694a;font-weight:700}
+.cc-empty-desk,.cc-more{position:static;transform:none;display:block;margin:8px auto 0;text-align:center;z-index:auto}
+.cc-corner.cc-ritual-active .cc-speech,
+.cc-corner.cc-ritual-active ~ .cc-empty-desk,
+.cc-corner.cc-ritual-active ~ .cc-more{display:none}
+.cc-corner.cc-ritual-active .cc-hamster-hit,
+.cc-corner.cc-ritual-active .cc-collect-hit,
+.cc-corner.cc-ritual-active .cc-room-sign,
+.cc-corner.cc-ritual-active .cc-desk-cup{pointer-events:none}
 .cc-scene-heading{z-index:8}
 .cc-shelf{grid-template-columns:repeat(4,minmax(0,1fr));background-image:url('art/production-v2/storage/storage_empty.png');position:relative}
 .cc-shelf::after{content:'';position:absolute;inset:0;background:url('art/production-v2/storage/storage_front_mask.png') center/100% 100%;pointer-events:none;image-rendering:pixelated}

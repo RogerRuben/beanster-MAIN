@@ -1,11 +1,11 @@
 const assert=require('assert/strict'),path=require('path'),fs=require('fs'),crypto=require('crypto');
 const {chromium}=require('C:/Users/HP/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const shots=[[0,'route_00_seated'],[1400,'route_01_behind'],[4300,'route_02_left'],[5800,'route_03_mid'],[7300,'route_04_right'],[16600,'route_06_seated']];
+const shots=[[0,'route_00_seated'],[2800,'route_01_behind'],[4600,'route_02_left'],[6200,'route_03_mid'],[7800,'route_04_right'],[17600,'route_06_seated']];
 (async()=>{const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});try{
 const page=await browser.newPage({viewport:{width:390,height:844}});
 await page.goto('file:///'+path.resolve(__dirname,'../index_v5.html').replaceAll('\\','/'));
 await page.waitForFunction(()=>window.HamsterDirector&&ProductionScene.images.hamster_walk_right_01);
-const dir=path.resolve(__dirname,'../qa/v1956');
+const dir=path.resolve(__dirname,'../qa/v1957');
 fs.mkdirSync(dir,{recursive:true});
 await page.evaluate(()=>{
   SceneLife.hold();SceneLife.strong=false;SceneLife.useNativeTimers=false;SceneLife.queue=[];SceneLife.clock=0;

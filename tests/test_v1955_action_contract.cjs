@@ -24,11 +24,12 @@ const report=await page.evaluate(()=>{
   if(A.wipe.frames.join()!==['hamster_idle_base','hamster_seated_wipe_start','hamster_seated_wipe_01','hamster_seated_wipe_hold','hamster_seated_wipe_release','hamster_idle_base'].join())bad.push('wipe:order');
   if(A.wipe.frames.includes('hamster_seated_glad_01'))bad.push('wipe:glad');
   const scene=400+D.total('blink')+D.total('lookCup')+D.total('smile')+D.roamEnd()+D.total('steam')+1500+D.total('wipe');
-  return {bad,depart:D.departMs(),roam:D.roamEnd(),scene,clicks:D.CLICKS.join()};
+  return {bad,depart:D.departMs(),repeat:D.repeatMs(),roam:D.roamEnd(),scene,clicks:D.CLICKS.join()};
 });
 assert.deepEqual(report.bad,[]);
-assert.equal(report.depart,39900);
-assert.equal(report.roam,16600);
+assert.equal(report.depart,17700);
+assert.equal(report.roam,17600);
+assert.equal(report.repeat,59900);
 assert.ok(report.scene>=25000&&report.scene<=35000,report.scene);
 assert.equal(report.clicks,'glad,nod,lookUser,glasses');
 const saved=await page.evaluate(()=>{
