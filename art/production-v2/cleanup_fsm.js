@@ -124,13 +124,20 @@ window.CleanupMotion=(function(){
   }
   function hamster(elapsed,sched,M){
     const c=(M.scene&&M.scene.cleanup)||{};
-    const look=c.look||'hamster_look_button';
-    const press=c.press||'hamster_press';
-    const watch=c.watch||'hamster_watch';
-    if(elapsed<sched.pressAt)return {id:hasAsset(M,look)?look:'hamster_idle_base',pressed:false,looking:true,watching:false};
-    if(elapsed<sched.releaseAt)return {id:hasAsset(M,press)?press:'hamster_press',pressed:true,looking:false,watching:false};
-    if(elapsed<sched.reactionAt)return {id:hasAsset(M,watch)?watch:'hamster_idle_base',pressed:false,looking:false,watching:true};
-    return {id:'hamster_idle_base',pressed:false,looking:false,watching:false};
+    const home=hasAsset(M,'hamster_pose_table_idle')?'hamster_pose_table_idle':(c.watch||'hamster_watch');
+    const reach=hasAsset(M,'hamster_pose_press_reach')?'hamster_pose_press_reach':(c.look||'hamster_look_button');
+    const tap=hasAsset(M,'hamster_pose_press_tap')?'hamster_pose_press_tap':(c.press||'hamster_press');
+    const blink=hasAsset(M,'hamster_pose_table_blink')?'hamster_pose_table_blink':home;
+    if(elapsed<sched.pressAt*0.5)return {id:home,pressed:false,looking:true,watching:false};
+    if(elapsed<sched.pressAt)return {id:reach,pressed:false,looking:true,watching:false};
+    const down=Math.max(1,sched.releaseAt-sched.pressAt);
+    if(elapsed<sched.pressAt+down*0.65)return {id:tap,pressed:true,looking:false,watching:false};
+    if(elapsed<sched.releaseAt)return {id:reach,pressed:true,looking:false,watching:false};
+    if(elapsed<sched.reactionAt){
+      const since=elapsed-sched.releaseAt;
+      return {id:(since%2800)>2520?blink:home,pressed:false,looking:false,watching:true};
+    }
+    return {id:home,pressed:false,looking:false,watching:false};
   }
   function cupMotion(elapsed,origin,i,sched,mouthPos,dropPos,scale){
     const s0=scale||0.4;

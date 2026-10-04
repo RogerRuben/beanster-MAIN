@@ -111,8 +111,8 @@ assert.equal(fsm.zeroLook,0);
 assert.equal(fsm[0].react,'question');assert.equal(fsm[1].react,'clap');assert.equal(fsm[7].react,'wipe');
 assert.equal(fsm[7].plusMid,0);assert.equal(fsm[7].flashMid,false);assert.equal(fsm[7].flashClosed,true);
 assert.equal(fsm[7].flashText,'7 杯已收藏');
-assert.ok(fsm[1].looking);assert.ok(String(fsm[1].lookId).includes('look')||fsm[1].lookId==='hamster_look_button');
-assert.ok(fsm[1].watchId==='hamster_watch'||fsm[1].watchId==='hamster_idle_base');
+assert.ok(fsm[1].looking);assert.ok(/look|table_idle|press_reach/.test(String(fsm[1].lookId)));
+assert.ok(['hamster_watch','hamster_idle_base','hamster_pose_table_idle','hamster_pose_table_blink'].includes(fsm[1].watchId));
 assert.equal(fsm[4].closeAlmost,'close_almost');
 
 await p.locator('[data-count="4"]').click();

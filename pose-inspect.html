@@ -1,0 +1,267 @@
+<!doctype html>
+<html lang="zh-CN">
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>仓鼠咖啡角 · 动作检查</title>
+<style>
+  *{box-sizing:border-box}
+  body{margin:0;background:#efe4d4;color:#4a3424;font:15px/1.5 system-ui}
+  main{max-width:980px;margin:auto;padding:20px}
+  h1{font-size:24px;margin:0 0 6px}
+  p{margin:0 0 12px}
+  .layout{display:grid;grid-template-columns:minmax(280px,420px) 1fr;gap:18px}
+  .card{background:#fff8ee;border-radius:16px;padding:14px}
+  canvas{width:100%;height:auto;image-rendering:pixelated;background:#1c140f;border-radius:12px;display:block}
+  button{font:inherit;border:1px solid #c9ad8d;background:#fff;color:#5c4030;border-radius:9px;padding:8px 12px;cursor:pointer}
+  button.on{background:#5c4030;color:#fff8ee;border-color:#5c4030}
+  .row{display:flex;flex-wrap:wrap;gap:8px;margin:8px 0}
+  label{display:block;margin-top:8px;font-size:13px;color:#6d5342}
+  input[type=range]{width:100%}
+  #readout{font-size:13px;white-space:pre-wrap;color:#6d5342}
+  @media(max-width:760px){.layout{grid-template-columns:1fr}main{padding:12px}}
+</style>
+<main>
+  <h1>仓鼠咖啡角 · 动作检查</h1>
+  <p>这一页只预览场景，不写入饮品记录。桌边、椅子、柜子、地板按首页同一段时间循环。按按钮从坐下开始，右爪沿桌沿伸出去，按下后再收回。</p>
+  <div class="layout">
+    <section class="card">
+      <canvas id="scene" width="768" height="1024" data-scene></canvas>
+    </section>
+    <section class="card">
+      <div class="row" id="poses"></div>
+      <div class="row">
+        <button type="button" id="play">播放当前动作</button>
+        <button type="button" id="pause">暂停</button>
+        <button type="button" id="prev">上一帧</button>
+        <button type="button" id="next">下一帧</button>
+      </div>
+      <div class="row">
+        <button type="button" id="day" class="on">白天</button>
+        <button type="button" id="night">夜晚</button>
+      </div>
+      <div class="row" id="cups"></div>
+      <div class="row">
+        <button type="button" id="press">播放按按钮</button>
+      </div>
+      <div class="row" id="marks"></div>
+      <label>按按钮时间 <input id="scrub" type="range" min="0" max="1150" value="0" step="10"></label>
+      <div id="readout"></div>
+    </section>
+  </div>
+</main>
+<script src="art/production-v2/asset_manifest.js"></script>
+<script>window.Motion=window.Motion||{play(){},stop(){},token:0,raf:0,active:null};</script>
+<script src="production_scene.js"></script>
+<script src="hamster_director.js"></script>
+<script>
+(function(){
+  const poses=[['tableIdle','桌边'],['chairSit','椅子'],['cabinetLook','柜子'],['floorRest','地板']];
+  const poseHost=document.getElementById('poses');
+  const cupHost=document.getElementById('cups');
+  const markHost=document.getElementById('marks');
+  const readout=document.getElementById('readout');
+  const scrub=document.getElementById('scrub');
+  const canvas=document.getElementById('scene');
+  let poseName='tableIdle';
+  let cups=1;
+  let nightOn=false;
+  let mode='pose';
+  let playing=false;
+  let raf=0;
+  let clock=0;
+  let atMs=0;
+
+  ProductionScene.canvas=canvas;
+  ProductionScene.night=function(){return nightOn};
+  HamsterDirector.check=true;
+  HamsterDirector.auto=true;
+
+  function frameList(){return HamsterDirector.preset(poseName).frames}
+  function cycleMs(frames){return frames.reduce((sum,frame)=>sum+frame.ms,0)||1}
+  function indexAt(frames,ms){
+    const u=((ms%cycleMs(frames))+cycleMs(frames))%cycleMs(frames);
+    let acc=0;
+    for(let i=0;i<frames.length;i++){
+      if(u<acc+frames[i].ms)return i;
+      acc+=frames[i].ms;
+    }
+    return 0;
+  }
+  function rows(){return Array.from({length:cups},(_,i)=>({id:'preview-'+i,type:'拿铁',productName:'拿铁'}))}
+  function sched(){return CleanupMotion.schedule(window.BEANSTER_ASSETS,rows())}
+  function pressEnd(){return sched().openingAt}
+  function stageOf(ms,s){
+    const down=Math.max(1,s.releaseAt-s.pressAt);
+    if(ms<s.pressAt*0.5)return '坐下，看向按钮';
+    if(ms<s.pressAt)return '右爪沿桌沿伸出';
+    if(ms<s.pressAt+down*0.65)return '右爪按在按钮上';
+    if(ms<s.releaseAt)return '右爪收回，按钮仍按下';
+    return '坐回桌边';
+  }
+  function marks(){
+    const s=sched();
+    const down=Math.max(1,s.releaseAt-s.pressAt);
+    return [
+      ['坐下',40],
+      ['伸爪',Math.round(s.pressAt*0.5+40)],
+      ['按下',Math.round(s.pressAt+80)],
+      ['收回',Math.round(s.pressAt+down*0.65+40)],
+      ['坐回',Math.round(s.releaseAt+80)]
+    ];
+  }
+  function paintMarks(){
+    markHost.replaceChildren();
+    marks().forEach(([label,ms])=>{
+      const btn=document.createElement('button');
+      btn.type='button';
+      btn.textContent=label;
+      btn.onclick=()=>seekPress(ms);
+      markHost.appendChild(btn);
+    });
+  }
+  function writePose(index){
+    const frames=frameList();
+    const at=((index%frames.length)+frames.length)%frames.length;
+    HamsterDirector.ambientName=poseName;
+    HamsterDirector.phase='idle';
+    HamsterDirector.cleanupRows=null;
+    HamsterDirector.loopIndex=at;
+    ProductionScene.previewDesk=cups;
+    const frame=HamsterDirector.showPoseFrame();
+    const pose=HamsterDirector.pose;
+    readout.textContent=[
+      poses.find(item=>item[0]===poseName)[1]+'  '+frame.id,
+      '这一帧停 '+frame.ms+' 毫秒',
+      '位置 '+Math.round(pose.x)+', '+Math.round(pose.y)+'  缩放 '+pose.scale+'  层次 '+pose.depth,
+      '杯子 '+cups+'    '+(nightOn?'夜晚':'白天'),
+      '帧 '+(at+1)+' / '+frames.length+(playing?'    循环播放':'    已暂停')
+    ].join('\n');
+    scrub.value='0';
+    markButtons();
+  }
+  function writePress(ms){
+    const s=sched();
+    const end=Math.max(1,s.openingAt);
+    const t=Math.max(0,Math.min(ms,end));
+    const h=CleanupMotion.hamster(t,s,window.BEANSTER_ASSETS);
+    HamsterDirector.ambientName='tableIdle';
+    HamsterDirector.phase='ritual';
+    HamsterDirector.ritualElapsed=t;
+    HamsterDirector.cleanupRows=rows();
+    ProductionScene.previewDesk=cups;
+    HamsterDirector.setPose(h.id,HamsterDirector.tableHome(),false,'seated');
+    const pose=HamsterDirector.pose;
+    const buttonDown=t>=s.pressAt&&t<s.releaseAt;
+    readout.textContent=[
+      '按按钮  '+stageOf(t,s),
+      h.id+(h.pressed?'    右爪盖住按钮':'    右爪还在按钮旁边'),
+      '按钮'+(buttonDown?'按下':'未按')+'    '+Math.round(t)+' / '+end+' 毫秒',
+      '位置 '+Math.round(pose.x)+', '+Math.round(pose.y)+'  缩放 '+pose.scale,
+      '杯子 '+cups+'    '+(nightOn?'夜晚':'白天')+(playing?'    循环播放':'    已暂停')
+    ].join('\n');
+    scrub.max=String(end);
+    scrub.value=String(Math.round(t));
+    markButtons();
+  }
+  function markButtons(){
+    document.querySelectorAll('#poses button').forEach(btn=>btn.classList.toggle('on',mode==='pose'&&btn.dataset.id===poseName));
+    document.querySelectorAll('#cups button').forEach(btn=>btn.classList.toggle('on',Number(btn.dataset.n)===cups));
+    document.getElementById('press').classList.toggle('on',mode==='press');
+    document.getElementById('day').classList.toggle('on',!nightOn);
+    document.getElementById('night').classList.toggle('on',nightOn);
+  }
+  function showCurrent(){
+    if(mode==='press')writePress(atMs);
+    else writePose(indexAt(frameList(),atMs));
+  }
+  function stop(){
+    playing=false;
+    cancelAnimationFrame(raf);
+    showCurrent();
+  }
+  function tick(now){
+    if(!playing)return;
+    if(!clock)clock=now-atMs;
+    atMs=now-clock;
+    if(mode==='press'){
+      const end=pressEnd();
+      if(atMs>=end){atMs=0;clock=now}
+      writePress(atMs);
+    }else{
+      writePose(indexAt(frameList(),atMs));
+    }
+    raf=requestAnimationFrame(tick);
+  }
+  function play(){
+    playing=true;
+    clock=0;
+    cancelAnimationFrame(raf);
+    raf=requestAnimationFrame(tick);
+  }
+  function seekPress(ms){
+    playing=false;
+    cancelAnimationFrame(raf);
+    mode='press';
+    atMs=ms;
+    clock=0;
+    writePress(ms);
+  }
+  poses.forEach(([id,label])=>{
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.dataset.id=id;
+    btn.textContent=label;
+    btn.onclick=()=>{mode='pose';poseName=id;atMs=0;clock=0;play()};
+    poseHost.appendChild(btn);
+  });
+  for(let n=0;n<=4;n++){
+    const btn=document.createElement('button');
+    btn.type='button';
+    btn.dataset.n=String(n);
+    btn.textContent=n+' 杯';
+    btn.onclick=()=>{cups=n;paintMarks();showCurrent()};
+    cupHost.appendChild(btn);
+  }
+  document.getElementById('play').onclick=()=>{if(mode!=='pose'){mode='pose';atMs=0}play()};
+  document.getElementById('pause').onclick=stop;
+  document.getElementById('prev').onclick=()=>{
+    stop();
+    mode='pose';
+    const frames=frameList();
+    const at=(indexAt(frames,atMs)-1+frames.length)%frames.length;
+    let acc=0;
+    for(let i=0;i<at;i++)acc+=frames[i].ms;
+    atMs=acc;
+    writePose(at);
+  };
+  document.getElementById('next').onclick=()=>{
+    stop();
+    mode='pose';
+    const frames=frameList();
+    const at=(indexAt(frames,atMs)+1)%frames.length;
+    let acc=0;
+    for(let i=0;i<at;i++)acc+=frames[i].ms;
+    atMs=acc;
+    writePose(at);
+  };
+  document.getElementById('day').onclick=()=>{nightOn=false;showCurrent()};
+  document.getElementById('night').onclick=()=>{nightOn=true;showCurrent()};
+  document.getElementById('press').onclick=()=>{mode='press';atMs=0;clock=0;play()};
+  scrub.oninput=()=>seekPress(Number(scrub.value));
+  ProductionScene.load().then(()=>{
+    paintMarks();
+    writePose(0);
+    window.actionQA={
+      ready:true,
+      pose:()=>HamsterDirector.pose,
+      mode:()=>mode,
+      playing:()=>playing,
+      cups:()=>cups,
+      seekPress,
+      showPose(name,index){stop();mode='pose';poseName=name;const frames=frameList();let acc=0;const at=((index||0)%frames.length+frames.length)%frames.length;for(let i=0;i<at;i++)acc+=frames[i].ms;atMs=acc;writePose(at)},
+      play
+    };
+  }).catch(err=>{readout.textContent=String(err)});
+})();
+</script>
+</html>

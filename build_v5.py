@@ -2,8 +2,8 @@ from pathlib import Path
 import importlib.util, struct, zipfile, subprocess, shutil, hashlib, argparse
 
 OUT=Path(__file__).resolve().parent
-APP_VERSION='19.5.7'
-VERSION_CODE=61
+APP_VERSION='19.5.11'
+VERSION_CODE=65
 EXPECTED_SIGNER='84d4a0dd47064b819444131bf344d2d5c8b6e791a22652de593ce474497a7018'
 spec=importlib.util.spec_from_file_location('base_v5',OUT/'base_v5.py')
 base=importlib.util.module_from_spec(spec); spec.loader.exec_module(base)
@@ -96,40 +96,10 @@ def find_exe(root, name):
         if p.is_file(): return p
     return None
 
-def adaptive_foreground(src, size):
-    """Fit the supplied tile inside the 66dp safe circle. Only corner-connected background is cleared."""
-    import numpy as np
-    from PIL import Image
-    arr=np.array(src.convert('RGBA'))
-    h,w=arr.shape[:2]
-    bg=arr[0,0,:3].astype(int)
-    dist=np.abs(arr[:,:,:3].astype(int)-bg).sum(axis=2)
-    candidate=dist<48
-    seen=np.zeros((h,w),dtype=bool)
-    stack=[(0,0),(0,w-1),(h-1,0),(h-1,w-1)]
-    while stack:
-        y,x=stack.pop()
-        if y<0 or x<0 or y>=h or x>=w or seen[y,x] or not candidate[y,x]:
-            continue
-        seen[y,x]=True
-        arr[y,x,3]=0
-        stack.extend(((y-1,x),(y+1,x),(y,x-1),(y,x+1)))
-    ys,xs=np.where(arr[:,:,3]>0)
-    cx,cy=(xs.min()+xs.max())/2,(ys.min()+ys.max())/2
-    radius=float(np.hypot(xs-cx,ys-cy).max())
-    safe=size*66/108
-    scale=(safe/2)/radius
-    fitted=Image.fromarray(arr).resize((max(1,int(round(w*scale))),max(1,int(round(h*scale)))),Image.Resampling.LANCZOS)
-    canvas=Image.new('RGBA',(size,size),(0,0,0,0))
-    canvas.paste(fitted,((size-fitted.width)//2,(size-fitted.height)//2),fitted)
-    return canvas
-
 def build_launcher_bitmaps(res):
     from PIL import Image
-    # Origin art only. Legacy icons keep the full tile. Adaptive foreground
-    # insets that tile so a circle mask cannot crop the hamster.
+    # The launcher icon is launcher_icon_origin.png, scaled to each density and nothing else.
     src=Image.open(OUT/'launcher_icon_origin.png').convert('RGBA')
-    brown=next(src.getpixel((src.width//2,y))[:3] for y in range(src.height) if max(src.getpixel((src.width//2,y))[:3])>40)
     legacy={'mdpi':48,'hdpi':72,'xhdpi':96,'xxhdpi':144,'xxxhdpi':192}
     foreground={'mdpi':108,'hdpi':162,'xhdpi':216,'xxhdpi':324,'xxxhdpi':432}
     for density,size in legacy.items():
@@ -141,15 +111,14 @@ def build_launcher_bitmaps(res):
     for density,size in foreground.items():
         folder=res/f'mipmap-{density}'
         folder.mkdir(parents=True,exist_ok=True)
-        adaptive_foreground(src,size).save(folder/'ic_launcher_foreground.png')
-    (res/'values').mkdir(parents=True,exist_ok=True)
-    (res/'values'/'colors.xml').write_text(
-        '<?xml version="1.0" encoding="utf-8"?>\n<resources>\n'
-        f'    <color name="ic_launcher_background">#{brown[0]:02X}{brown[1]:02X}{brown[2]:02X}</color>\n'
-        '</resources>\n',encoding='utf-8')
+        layer=src.resize((size,size),Image.Resampling.LANCZOS)
+        layer.save(folder/'ic_launcher_foreground.png')
+        layer.save(folder/'ic_launcher_background.png')
+    color=res/'values'/'colors.xml'
+    if color.exists(): color.unlink()
     xml='''<?xml version="1.0" encoding="utf-8"?>
 <adaptive-icon xmlns:android="http://schemas.android.com/apk/res/android">
-    <background android:drawable="@color/ic_launcher_background"/>
+    <background android:drawable="@mipmap/ic_launcher_background"/>
     <foreground android:drawable="@mipmap/ic_launcher_foreground"/>
 </adaptive-icon>
 '''

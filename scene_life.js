@@ -75,7 +75,8 @@ const SceneLife={
   visit:null,lastAmbient:null,
   chooseAmbient(){
     if(this.visit)return this.visit;
-    const all=[['windowSeat',30],['cabinetInspect',25],['floorNap',30],['tableIdle',15]];
+    const presets=window.HamsterDirector?.scenePosePresets;
+    const all=presets?Object.entries(presets).map(([name,row])=>[name,row.weight]):[['tableIdle',40],['chairSit',25],['cabinetLook',20],['floorRest',15]];
     const pool=all.filter(([name])=>name!==this.lastAmbient);
     const total=pool.reduce((sum,row)=>sum+row[1],0);
     let roll=Math.floor(this.rand()*total);
@@ -112,7 +113,10 @@ const SceneLife={
     if(this.strong||this.sceneLocked())return;
     const dir=window.HamsterDirector;
     if(!dir||dir.onRoute||dir.mode!=='seated')return;
-    dir.playAction('lookButton',()=>{dir.rank=20;dir.stepLoop()});
+    const preset=dir.ambientName&&dir.preset?.(dir.ambientName);
+    if(preset&&preset.behavior!=='table')return;
+    if(preset)dir.playAnchored('lookButton',()=>{dir.rank=20;dir.ambientLoop()});
+    else dir.playAction('lookButton',()=>{dir.rank=20;if(dir.ambientName)dir.ambientLoop();else dir.stepLoop()});
   },
   pokeCup(event,id){
     event?.preventDefault();event?.stopPropagation();
