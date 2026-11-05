@@ -3687,6 +3687,258 @@ window.BEANSTER_ART = {
         "atlas": "source-atlases/v182/achievement_photo10.png"
       },
       "alpha": true
+    },
+    {
+      "id": "achievement_streak30",
+      "label": "连续 30 天",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_streak30@1x.png",
+        "2x": "png/achievements/achievement_streak30@2x.png",
+        "3x": "png/achievements/achievement_streak30@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_streak30.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_cups50",
+      "label": "五十杯收藏",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cups50@1x.png",
+        "2x": "png/achievements/achievement_cups50@2x.png",
+        "3x": "png/achievements/achievement_cups50@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_cups50.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_cups100",
+      "label": "百杯纪念",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cups100@1x.png",
+        "2x": "png/achievements/achievement_cups100@2x.png",
+        "3x": "png/achievements/achievement_cups100@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_cups100.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_cups365",
+      "label": "365 杯故事",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cups365@1x.png",
+        "2x": "png/achievements/achievement_cups365@2x.png",
+        "3x": "png/achievements/achievement_cups365@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_cups365.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_types3",
+      "label": "口味探索",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_types3@1x.png",
+        "2x": "png/achievements/achievement_types3@2x.png",
+        "3x": "png/achievements/achievement_types3@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_types3.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_types8",
+      "label": "风味收藏家",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_types8@1x.png",
+        "2x": "png/achievements/achievement_types8@2x.png",
+        "3x": "png/achievements/achievement_types8@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_types8.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_brands3",
+      "label": "品牌漫游",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_brands3@1x.png",
+        "2x": "png/achievements/achievement_brands3@2x.png",
+        "3x": "png/achievements/achievement_brands3@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_brands3.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_brands5",
+      "label": "城市咖啡地图",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_brands5@1x.png",
+        "2x": "png/achievements/achievement_brands5@2x.png",
+        "3x": "png/achievements/achievement_brands5@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_brands5.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_pour",
+      "label": "手冲时光",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_pour@1x.png",
+        "2x": "png/achievements/achievement_pour@2x.png",
+        "3x": "png/achievements/achievement_pour@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_pour.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_cold",
+      "label": "冷萃初体验",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_cold@1x.png",
+        "2x": "png/achievements/achievement_cold@2x.png",
+        "3x": "png/achievements/achievement_cold@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_cold.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_decaf",
+      "label": "轻松一杯",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_decaf@1x.png",
+        "2x": "png/achievements/achievement_decaf@2x.png",
+        "3x": "png/achievements/achievement_decaf@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_decaf.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_latte",
+      "label": "奶咖时刻",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_latte@1x.png",
+        "2x": "png/achievements/achievement_latte@2x.png",
+        "3x": "png/achievements/achievement_latte@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_latte.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_months6",
+      "label": "半年咖啡故事",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_months6@1x.png",
+        "2x": "png/achievements/achievement_months6@2x.png",
+        "3x": "png/achievements/achievement_months6@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_months6.png"
+      },
+      "alpha": true
+    },
+    {
+      "id": "achievement_months12",
+      "label": "四季相伴",
+      "category": "achievements",
+      "png": {
+        "1x": "png/achievements/achievement_months12@1x.png",
+        "2x": "png/achievements/achievement_months12@2x.png",
+        "3x": "png/achievements/achievement_months12@3x.png"
+      },
+      "logicalSize": [
+        128,
+        128
+      ],
+      "source": {
+        "atlas": "source-atlases/v19511/achievement_months12.png"
+      },
+      "alpha": true
     }
   ]
 };

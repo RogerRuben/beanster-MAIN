@@ -1,6 +1,6 @@
 const assert=require('assert/strict'),path=require('path');
 const {chromium}=require('C:/Users/HP/.cache/codex-runtimes/codex-primary-runtime/dependencies/node/node_modules/playwright');
-const marks=[[0,'seat'],[1400,'behind'],[4600,'behind'],[4700,'front'],[6200,'front'],[7800,'front'],[17600,'seat']];
+const marks=[[0,'front'],[1400,'front'],[2800,'front'],[4600,'front'],[6200,'front'],[7800,'front'],[17600,'front']];
 (async()=>{const browser=await chromium.launch({executablePath:'C:/Program Files (x86)/Microsoft/Edge/Application/msedge.exe'});try{
 const page=await browser.newPage();
 await page.goto('file:///'+path.resolve(__dirname,'../index_v5.html').replaceAll('\\','/'));
@@ -19,12 +19,11 @@ const live=await page.evaluate(marks=>{
   HamsterDirector.phase='roam';
   HamsterDirector.showRoam();
   const bad=[];
-  let prev=null;
   for(let ms=0;ms<=HamsterDirector.roamEnd();ms+=100){
     const p=HamsterDirector.poseAt(ms);
-    if(p.depth==='front'&&(p.y<970||p.x<230||p.x>530))bad.push(ms+' front '+Math.round(p.x)+','+Math.round(p.y));
-    if(prev&&prev.depth!==p.depth&&(prev.depth==='front'||p.depth==='front')&&(p.x>260||p.y<960))bad.push(ms+' switch '+prev.depth+'>'+p.depth+' '+Math.round(p.x)+','+Math.round(p.y));
-    prev=p;
+    if(p.depth==='behind')bad.push(ms+' behind '+Math.round(p.x)+','+Math.round(p.y));
+    if(p.y<760)bad.push(ms+' under '+Math.round(p.x)+','+Math.round(p.y));
+    if(/hamster_idle_|hamster_seated_|hamster_watch|hamster_look_button|^hamster_press$|hamster_seat_exit_0[12]|hamster_seat_enter_0[34]/.test(p.spriteId))bad.push(ms+' bust '+p.spriteId);
   }
   const out=[];
   let clock=0;

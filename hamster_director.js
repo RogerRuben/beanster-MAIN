@@ -4,22 +4,22 @@ const HamsterDirector={
   SEAT:{x:390,y:772,scale:0.50,depth:'seat'},
   BEHIND:{x:390,y:730,scale:0.40},
   BEHIND_LEFT:{x:240,y:760,scale:0.40},
-  LIP:{x:240,y:960,scale:0.40},
-  LEFT:{x:240,y:970,scale:0.40},
+  LIP:{x:390,y:848,scale:0.42},
+  LEFT:{x:210,y:970,scale:0.40},
   MID:{x:390,y:970,scale:0.40},
-  RIGHT:{x:520,y:970,scale:0.40},
+  RIGHT:{x:540,y:970,scale:0.40},
   EXIT_MS:1400,
   ENTER_MS:1400,
   SEGS:[
-    {kind:'walk',a:{x:390,y:730,scale:0.40},b:{x:240,y:760,scale:0.40},ms:1400,mode:'roaming',depth:'behind'},
-    {kind:'walk',a:{x:240,y:760,scale:0.40},b:{x:240,y:960,scale:0.40},ms:1800,mode:'roaming',depth:'behind'},
-    {kind:'walk',a:{x:240,y:970,scale:0.40},b:{x:390,y:970,scale:0.40},ms:1600,mode:'roaming',depth:'front'},
-    {kind:'walk',a:{x:390,y:970,scale:0.40},b:{x:520,y:970,scale:0.40},ms:1600,mode:'roaming',depth:'front'},
-    {kind:'look',at:{x:520,y:970,scale:0.40},ms:2000,mode:'returning',depth:'front'},
-    {kind:'walk',a:{x:520,y:970,scale:0.40},b:{x:390,y:970,scale:0.40},ms:1600,mode:'returning',depth:'front'},
-    {kind:'walk',a:{x:390,y:970,scale:0.40},b:{x:240,y:970,scale:0.40},ms:1600,mode:'returning',depth:'front'},
-    {kind:'walk',a:{x:240,y:960,scale:0.40},b:{x:240,y:760,scale:0.40},ms:1800,mode:'returning',depth:'behind'},
-    {kind:'walk',a:{x:240,y:760,scale:0.40},b:{x:390,y:730,scale:0.40},ms:1400,mode:'sitting-down',depth:'behind'}
+    {kind:'walk',a:{x:390,y:848,scale:0.42},b:{x:210,y:900,scale:0.40},ms:1400,mode:'roaming',depth:'front'},
+    {kind:'walk',a:{x:210,y:900,scale:0.40},b:{x:210,y:970,scale:0.40},ms:1800,mode:'roaming',depth:'front'},
+    {kind:'walk',a:{x:210,y:970,scale:0.40},b:{x:390,y:970,scale:0.40},ms:1600,mode:'roaming',depth:'front'},
+    {kind:'walk',a:{x:390,y:970,scale:0.40},b:{x:540,y:970,scale:0.40},ms:1600,mode:'roaming',depth:'front'},
+    {kind:'look',at:{x:540,y:970,scale:0.40},ms:2000,mode:'returning',depth:'front'},
+    {kind:'walk',a:{x:540,y:970,scale:0.40},b:{x:390,y:970,scale:0.40},ms:1600,mode:'returning',depth:'front'},
+    {kind:'walk',a:{x:390,y:970,scale:0.40},b:{x:210,y:970,scale:0.40},ms:1600,mode:'returning',depth:'front'},
+    {kind:'walk',a:{x:210,y:970,scale:0.40},b:{x:210,y:900,scale:0.40},ms:1800,mode:'returning',depth:'front'},
+    {kind:'walk',a:{x:210,y:900,scale:0.40},b:{x:390,y:848,scale:0.42},ms:1400,mode:'sitting-down',depth:'front'}
   ],
   HOME_FIRST:[
     {kind:'idle',ms:4000},
@@ -64,30 +64,37 @@ const HamsterDirector={
   },
   scenePosePresets:{
     tableIdle:{anchor:'tableIdle',behavior:'table',weight:40,frames:[
-      {id:'hamster_pose_table_idle',ms:1600},{id:'hamster_pose_table_blink',ms:280},
-      {id:'hamster_pose_table_idle',ms:800},{id:'hamster_pose_table_look_mid',ms:380},
-      {id:'hamster_pose_table_look',ms:1100},{id:'hamster_pose_table_look_mid',ms:380},
-      {id:'hamster_pose_table_idle',ms:1200},{id:'hamster_pose_table_blink',ms:240}
+      {id:'hamster_pose_idle_01',ms:400},{id:'hamster_pose_idle_02',ms:310},
+      {id:'hamster_pose_idle_03',ms:310},{id:'hamster_pose_idle_04',ms:250},
+      {id:'hamster_pose_idle_05',ms:180},{id:'hamster_pose_idle_06',ms:180},
+      {id:'hamster_pose_idle_07',ms:250},{id:'hamster_pose_idle_08',ms:310},
+      {id:'hamster_pose_idle_09',ms:310}
     ]},
     chairSit:{anchor:'chairSit',behavior:'chair',weight:25,frames:[
-      {id:'hamster_pose_chair_look',ms:1800},{id:'hamster_pose_chair_mid',ms:420},
-      {id:'hamster_pose_chair_back',ms:1100},{id:'hamster_pose_chair_mid',ms:420},
-      {id:'hamster_pose_chair_look',ms:1600}
+      {id:'hamster_pose_chair_look',ms:380},{id:'hamster_pose_chair_mid',ms:110},
+      {id:'hamster_pose_chair_back',ms:320},{id:'hamster_pose_chair_mid',ms:110},
+      {id:'hamster_pose_chair_look',ms:240},{id:'hamster_pose_chair_mid',ms:100},
+      {id:'hamster_pose_chair_back',ms:220},{id:'hamster_pose_chair_mid',ms:110},
+      {id:'hamster_pose_chair_look',ms:420}
     ]},
     cabinetLook:{anchor:'cabinetLook',behavior:'cabinet',weight:20,frames:[
-      {id:'hamster_pose_cabinet_up',ms:1500},{id:'hamster_pose_cabinet_mid',ms:420},
-      {id:'hamster_pose_cabinet_sniff',ms:1200},{id:'hamster_pose_cabinet_mid',ms:420},
-      {id:'hamster_pose_cabinet_up',ms:1300}
+      {id:'hamster_pose_cabinet_up',ms:340},{id:'hamster_pose_cabinet_mid',ms:110},
+      {id:'hamster_pose_cabinet_sniff',ms:300},{id:'hamster_pose_cabinet_mid',ms:100},
+      {id:'hamster_pose_cabinet_up',ms:220},{id:'hamster_pose_cabinet_mid',ms:100},
+      {id:'hamster_pose_cabinet_sniff',ms:260},{id:'hamster_pose_cabinet_mid',ms:110},
+      {id:'hamster_pose_cabinet_up',ms:380}
     ]},
     floorRest:{anchor:'floorRest',behavior:'floor',weight:15,zzz:true,frames:[
-      {id:'hamster_pose_floor_rest',ms:2600},{id:'hamster_pose_floor_breath',ms:1600},
-      {id:'hamster_pose_floor_rest',ms:2200}
+      {id:'hamster_pose_floor_rest',ms:420},{id:'hamster_pose_floor_breath',ms:160},
+      {id:'hamster_pose_floor_rest',ms:140},{id:'hamster_pose_floor_breath',ms:160},
+      {id:'hamster_pose_floor_rest',ms:360},{id:'hamster_pose_floor_breath',ms:180},
+      {id:'hamster_pose_floor_rest',ms:480}
     ]}
   },
   rank:20,phase:'boot',mode:'seated',check:false,paused:false,auto:true,
   loopIndex:0,clickIndex:0,coffeeIndex:0,stepToken:0,coffeeToken:0,
   timer:0,coffeeTimer:0,coffeeFrame:0,roamT:0,onRoute:false,
-  pose:{spriteId:'hamster_idle_base',x:390,y:772,scale:0.50,inFront:false,depth:'seat',layer:'hamster'},
+  pose:{spriteId:'hamster_pose_table_idle',x:390,y:772,scale:0.50,inFront:true,depth:'front',layer:'hamster'},
   fx:null,fxIndex:-1,cleanupRows:null,cleanupDone:null,ritualElapsed:0,forceEnding:null,
   roamEnd(){return this.EXIT_MS+this.SEGS.reduce((s,seg)=>s+seg.ms,0)+this.ENTER_MS},
   cycleMs(list){return list.reduce((s,step)=>s+(step.kind==='idle'?step.ms:step.name?this.total(step.name):0),0)},
@@ -110,40 +117,56 @@ const HamsterDirector={
     depth=depth||this.depthFor(p);
     return {x:p.x,y:p.y,scale:p.scale,spriteId:sprite,mode,inFront:depth==='front',depth};
   },
+  gait(t,dx){
+    const frames=dx<0?this.ACTIONS.walkLeft.frames:this.ACTIONS.walkRight.frames;
+    return frames[Math.floor(t/110)%4];
+  },
   poseAt(ms){
     const end=this.roamEnd();
     ms=Math.max(0,Math.min(ms,end));
     if(ms<this.EXIT_MS){
-      const p=this.lerp(this.SEAT,this.BEHIND,ms/this.EXIT_MS);
-      const frame=this.frameAt(this.ACTIONS.seatExit.durations,ms);
-      return this.pack(p,this.ACTIONS.seatExit.frames[frame],'standing-up',frame<2?'seat':'behind');
+      const p=this.lerp(this.SEAT,this.LIP,ms/this.EXIT_MS);
+      const sprite=ms<140?'hamster_pose_table_idle':this.gait(ms,1);
+      return this.pack(p,sprite,'standing-up','front');
     }
     let t=ms-this.EXIT_MS;
     for(const seg of this.SEGS){
       if(t<seg.ms){
-        if(seg.kind==='look')return this.pack(seg.at,this.ACTIONS.lookAround.frames[this.frameAt(this.ACTIONS.lookAround.durations,t)],seg.mode,seg.depth);
+        if(seg.kind==='look')return this.pack(seg.at,this.ACTIONS.lookAround.frames[this.frameAt(this.ACTIONS.lookAround.durations,t)],seg.mode,'front');
         const p=this.lerp(seg.a,seg.b,t/seg.ms);
-        const dx=seg.b.x-seg.a.x;
-        const frames=dx<0?this.ACTIONS.walkLeft.frames:this.ACTIONS.walkRight.frames;
-        return this.pack(p,frames[Math.floor(t/200)%4],seg.mode,seg.depth);
+        const dx=(seg.b.x-seg.a.x)||(seg.b.y-seg.a.y);
+        return this.pack(p,this.gait(t,dx),seg.mode,'front');
       }
       t-=seg.ms;
     }
-    const p=this.lerp(this.BEHIND,this.SEAT,Math.min(1,t/this.ENTER_MS));
     const seated=t>=this.ENTER_MS;
-    const frame=this.frameAt(this.ACTIONS.seatEnter.durations,t);
-    return this.pack(seated?this.SEAT:p,seated?this.BASE:this.ACTIONS.seatEnter.frames[frame],seated?'seated':'sitting-down',seated||frame>=2?'seat':'behind');
+    const p=this.lerp(this.LIP,this.SEAT,Math.min(1,t/this.ENTER_MS));
+    const sprite=seated||t<140?'hamster_pose_table_idle':this.gait(t,-1);
+    return this.pack(seated?this.SEAT:p,sprite,seated?'seated':'sitting-down','front');
+  },
+  isBust(id){
+    return /^hamster_idle_/.test(id)||/^hamster_seated_/.test(id)||/^hamster_(wipe|clap|cleanup|sleep)_/.test(id)
+      ||id==='hamster_watch'||id==='hamster_look_button'||id==='hamster_press'
+      ||/^hamster_seat_exit_0[12]$/.test(id)||/^hamster_seat_enter_0[34]$/.test(id);
+  },
+  fullBody(id){
+    if(!this.isBust(id))return id||'hamster_pose_table_idle';
+    if(/press/.test(id))return 'hamster_pose_press_tap';
+    if(/blink|idle_08/.test(id))return 'hamster_pose_table_blink';
+    if(/look|watch|wipe|glad|smile|idle_0[135]/.test(id))return 'hamster_pose_table_look';
+    return 'hamster_pose_table_idle';
   },
   output(){return this.pose},
   atSeat(){return this.mode==='seated'&&Math.hypot(this.pose.x-this.SEAT.x,this.pose.y-this.SEAT.y)<12},
   setPose(spriteId,p,inFront,mode){
     const depth=this.depthFor(p);
+    spriteId=this.fullBody(spriteId);
     this.pose={spriteId,x:p.x,y:p.y,scale:p.scale,inFront:depth==='front',depth,layer:'hamster',flip:!!p.flip,lean:p.lean||0};
     if(mode)this.mode=mode;
     this.syncWorld();
     window.ProductionScene?.paint();
   },
-  placeSeat(){this.setPose(this.BASE,this.SEAT,false,'seated')},
+  placeSeat(){this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated')},
   syncWorld(){
     const w=window.HamsterWorld;if(!w)return;
     w.mode=this.mode;w.x=this.pose.x;w.y=this.pose.y;w.scale=this.pose.scale;w.sprite=this.pose.spriteId;
@@ -189,12 +212,7 @@ const HamsterDirector={
     };
   },
   depthAlong(p){
-    const span=this.tableSpan();
-    const top=p.y-340*Math.min(p.scale||0.4,0.45);
-    const overX=p.x>span.left-8&&p.x<span.right+8;
-    const overY=top<span.bottom&&p.y>span.top+8;
-    if(overX&&overY)return 'behind';
-    if(Math.hypot(p.x-this.SEAT.x,p.y-this.SEAT.y)<28&&p.scale>this.SEAT.scale-0.06)return 'seat';
+    if(p.y<this.tableSpan().bottom-8&&Math.hypot(p.x-this.SEAT.x,p.y-this.SEAT.y)<28)return 'front';
     return 'front';
   },
   outbound(name){
@@ -247,7 +265,7 @@ const HamsterDirector={
     const p=this.lerp(from,target,step);
     p.depth=this.depthAlong(p);
     const frames=target.x<from.x-0.5?this.ACTIONS.walkLeft.frames:this.ACTIONS.walkRight.frames;
-    const sprite=p.depth==='seat'?this.BASE:frames[Math.floor((this.routeAt*10+dist)/40)%4];
+    const sprite=frames[Math.floor((this.routeAt*10+dist)/40)%4];
     this.setPose(sprite,p,p.depth==='front',p.depth==='seat'?'sitting-down':'roaming');
     this.arm(100,()=>this.tickRoute());
   },
@@ -278,8 +296,24 @@ const HamsterDirector={
     if(window.SceneLife?.reduced())return;
     this.arm(frame.ms,()=>this.ambientLoop());
   },
+  playTableLook(done){
+    const home=this.tableHome();
+    const frames=[['hamster_pose_table_look_mid',180],['hamster_pose_table_look',420],['hamster_pose_table_look_mid',180]];
+    this.cutCoffee();this.phase='action';this.actionName='look';this.mark('look');
+    let i=0;
+    const step=()=>{
+      const row=frames[i];
+      this.setPose(row[0],home,true,'seated');
+      const hold=row[1];
+      i+=1;
+      if(i<frames.length)this.arm(hold,step);
+      else this.arm(hold,()=>{this.phase='idle';this.mark('');done&&done()});
+    };
+    step();
+  },
   playAnchored(name,done){
     const preset=this.preset(this.ambientName);
+    if(preset&&preset.behavior==='table'){this.playTableLook(done);return}
     const frames=preset&&preset.frames;
     if(!frames||!frames.length){done&&done();return}
     const pose=this.worldAnchor(preset.anchor)||this.SEAT;
@@ -327,7 +361,7 @@ const HamsterDirector={
     if(this.timer)return;
     if(!window.SceneLife?.onToday())return;
     this.rank=20;
-    if(this.auto&&window.SceneLife.visit)this.beginAmbient(SceneLife.visit);
+    if(this.auto)this.beginAmbient(SceneLife.visit||this.ambientName||'tableIdle');
     else this.stepLoop();
     if(!this.coffeeTimer)this.scheduleCoffee();
   },
@@ -343,7 +377,7 @@ const HamsterDirector={
   },
   beginIdle(ms){
     this.phase='idle';this.rank=20;this.mode='seated';
-    this.setPose(this.BASE,this.SEAT,false,'seated');
+    this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated');
     this.mark('');
     this.arm(ms,()=>this.stepLoop());
   },
@@ -357,14 +391,14 @@ const HamsterDirector={
     const seated=!String(name).startsWith('walk')&&name!=='lookAround'&&name!=='wave'&&name!=='seatExit'&&name!=='seatEnter';
     if(window.SceneLife?.reduced()){
       const last=action.frames[action.frames.length-1];
-      if(seated)this.setPose(last,this.SEAT,false,'seated');
+      if(seated)this.setPose(last,this.tableHome(),false,'seated');
       this.arm(0,()=>{this.phase='idle';this.mark('');done&&done()});
       return;
     }
     let i=0;
     const step=()=>{
       const anchor=seated?this.SEAT:this.pose;
-      if(seated)this.setPose(action.frames[i],this.SEAT,false,'seated');
+      if(seated)this.setPose(action.frames[i],this.tableHome(),false,'seated');
       else this.setPose(action.frames[i],{x:anchor.x,y:anchor.y,scale:anchor.scale},this.pose.inFront);
       const hold=action.durations[i];
       i+=1;
@@ -464,7 +498,7 @@ const HamsterDirector={
     const p=this.lerp(this.BEHIND,this.SEAT,this.enterT/this.ENTER_MS);
     const sprite=this.ACTIONS.seatEnter.frames[this.frameAt(this.ACTIONS.seatEnter.durations,this.enterT)];
     const done=this.enterT>=this.ENTER_MS;
-    this.setPose(done?this.BASE:sprite,done?this.SEAT:p,!done&&p.y>=856,done?'seated':'sitting-down');
+    this.setPose(done?'hamster_pose_table_idle':this.fullBody(sprite),done?this.tableHome():p,true,done?'seated':'sitting-down');
     if(done){this.roamT=0;if(this.enterThen==='ritual'){this.enterThen=null;this.beginRitual()}else{this.phase='idle';this.check=false;this.placeSeat()}return}
     this.enterT+=100;
     this.arm(100,()=>this.tickEnter());
@@ -481,7 +515,7 @@ const HamsterDirector={
       this.forceEnding=null;
       this.phase='ending';
       this.ritualElapsed=1e9;
-      this.playAction(this.ACTIONS[name]?name:'clap',()=>this.finishCleanup());
+      this.playReaction(name,()=>this.finishCleanup());
       return;
     }
     const h=CleanupMotion.hamster(this.ritualElapsed,sched,M);
@@ -494,22 +528,34 @@ const HamsterDirector={
     if(this.phase==='return'||this.phase==='enter')return null;
     return {elapsed:this.ritualElapsed,rows:this.cleanupRows||[]};
   },
+  playReaction(name,done){
+    const home=this.tableHome();
+    const frames=name==='wipe'
+      ?[['hamster_pose_table_idle',160],['hamster_pose_table_look_mid',120],['hamster_pose_table_look',260],['hamster_pose_table_blink',90],['hamster_pose_table_look',220],['hamster_pose_table_look_mid',120],['hamster_pose_table_idle',200]]
+      :[['hamster_pose_table_idle',140],['hamster_pose_table_look_mid',110],['hamster_pose_table_look',180],['hamster_pose_table_blink',90],['hamster_pose_table_look',160],['hamster_pose_table_look_mid',110],['hamster_pose_table_idle',180]];
+    let i=0;
+    const step=()=>{
+      const row=frames[i];
+      this.setPose(row[0],home,true,'seated');
+      const hold=row[1];
+      i+=1;
+      if(i<frames.length)this.arm(hold,step);
+      else this.arm(hold,()=>{this.phase='idle';done&&done()});
+    };
+    step();
+  },
   finishCleanup(){
     this.rank=20;this.phase='idle';this.mode='seated';
     if(window.SceneLife)SceneLife.strong=false;
     const scene=window.ProductionScene;
     if(scene){scene.interactionState='idle';scene.paintRitual=null;if(scene.canvas){scene.canvas.dataset.interaction='idle';scene.canvas.removeAttribute('data-playing')}}
-    // The ritual already ended at the desk. Stay on the seated pose instead of cutting back, and do not flash the old bust.
-    if(this.auto){
-      this.ambientName='tableIdle';
-      if(window.SceneLife){SceneLife.visit='tableIdle';SceneLife.lastAmbient='tableIdle'}
-      this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated');
-    }else this.placeSeat();
+    if(this.auto&&window.SceneLife){SceneLife.visit='tableIdle';SceneLife.lastAmbient='tableIdle';this.ambientName='tableIdle'}
+    this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated');
     const done=this.cleanupDone;this.cleanupDone=null;this.cleanupRows=null;
     if(done)done();
     if(!this.check){
       if(this.auto)this.beginAmbient('tableIdle');
-      else this.stepLoop();
+      else{this.placeSeat();this.stepLoop()}
       this.scheduleCoffee();
     }
   },

@@ -45,7 +45,8 @@ const cleanup=await page.evaluate(()=>{
     if(HamsterDirector.onRoute||HamsterDirector.mode==='roaming')roaming++;
   }
   const back=HamsterDirector.worldAnchor('chairSit');
-  return {during,ran,near,ritual,roaming,state:ProductionScene.interactionState,x:HamsterDirector.pose.x,y:HamsterDirector.pose.y,bx:back.x,by:back.y,name:HamsterDirector.ambientName};
+  const bust=HamsterWorld.samples.filter(s=>/hamster_idle_|hamster_seated_|hamster_watch|hamster_look_button|^hamster_press$|hamster_seat_exit_0[12]|hamster_seat_enter_0[34]/.test(s.sprite)).map(s=>s.sprite);
+  return {during,ran,near,ritual,roaming,state:ProductionScene.interactionState,x:HamsterDirector.pose.x,y:HamsterDirector.pose.y,bx:back.x,by:back.y,name:HamsterDirector.ambientName,sprite:HamsterDirector.pose.spriteId,bust:[...new Set(bust)]};
 });
 assert.equal(cleanup.during,'seated');
 assert.equal(cleanup.ran,true,JSON.stringify(cleanup));
@@ -54,6 +55,8 @@ assert.ok(cleanup.near<8,JSON.stringify(cleanup));
 assert.equal(cleanup.roaming,0,JSON.stringify(cleanup));
 assert.equal(cleanup.state,'idle');
 assert.equal(cleanup.name,'tableIdle');
+assert.match(cleanup.sprite,/^hamster_pose_idle_0/,JSON.stringify(cleanup));
+assert.deepEqual(cleanup.bust,[],JSON.stringify(cleanup));
 assert.ok(Math.hypot(cleanup.x-390,cleanup.y-772)<8,JSON.stringify(cleanup));
 
 await page.emulateMedia({reducedMotion:'reduce'});
