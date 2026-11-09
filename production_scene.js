@@ -335,7 +335,7 @@ const ProductionScene={
     if(gadget){const b=this.btn(),a=this.M().assets[b.up];if(a){const w=a.canvas[0]*b.scale,h=a.canvas[1]*b.scale,x=b.x-a.pivotX*b.scale,y=b.y-a.pivotY*b.scale;gadget.style.left=((x+w/2)/768*100).toFixed(2)+'%';gadget.style.top=((y+h/2)/1024*100).toFixed(2)+'%';gadget.style.width=(w/768*100).toFixed(2)+'%';gadget.style.height=(h/1024*100).toFixed(2)+'%'}}
   },
   nowZzz(){return (performance.now()/140)|0},
-  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this._bob=0;this.bobTok++;this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();window.SceneLife?.wake()},
+  rest(){this.interactionState='idle';this.paintRitual=null;this.fx=null;this.hamster=this.restId();this._bob=0;this.bobTok++;this.canvas?.removeAttribute('data-playing');this.canvas&&(this.canvas.dataset.interaction='idle');this.paint();if(window.HamsterDirector?.cleaning)return;window.SceneLife?.wake()},
   play(name,onframe,done){
     this.bobTok++;Motion.stop();
     const canvas=this.canvas||document.querySelector('[data-scene]');if(!canvas){done?.();return}
@@ -412,7 +412,7 @@ const ProductionScene={
     this.interactionState='idle';
     this.canvas?.removeAttribute('data-playing');
     if(this.canvas)this.canvas.dataset.interaction='idle';
-    this.paint();window.SceneLife?.wake();done?.();
+    this.paint();if(!window.HamsterDirector?.cleaning)window.SceneLife?.wake();done?.();
   },
   cleanup(rows,done){
     const cups=(rows||[]).slice();

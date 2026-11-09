@@ -98,6 +98,7 @@ const SceneLife={
   wake(){
     this.strong=false;
     this.hamsterPlaying=false;this.coffeePlaying=false;
+    if(window.HamsterDirector?.cleaning)return;
     window.HamsterDirector?.resume();
   },
   fxAt(index){return window.HamsterDirector?.fxAt?.(index)||null},

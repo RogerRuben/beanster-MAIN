@@ -289,7 +289,7 @@ const HamsterDirector={
     this.arm(frame.ms,()=>this.ambientLoop());
   },
   ambientLoop(){
-    if(this.check||this.paused||this.rank>=70||this.onRoute)return;
+    if(this.cleaning||this.check||this.paused||this.rank>=70||this.onRoute)return;
     if(this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
     const frame=this.showPoseFrame();
     this.loopIndex++;
@@ -342,7 +342,7 @@ const HamsterDirector={
   },
   boot(){
     this.paused=false;this.check=false;this.rank=20;this.phase='idle';this.loopIndex=0;this.usedFirst=false;this.roamT=0;this.onRoute=false;
-    this.cleanupRows=null;this.cleanupDone=null;this.forceEnding=null;
+    this.cleaning=false;this.cleanupRows=null;this.cleanupDone=null;this.forceEnding=null;
     const w=window.HamsterWorld;
     if(w){w.trace.length=0;w.samples.length=0;w.auto=w.auto!==false}
     this.auto=w?w.auto!==false:true;
@@ -357,7 +357,7 @@ const HamsterDirector={
   pause(){this.paused=true;this.stopMotion();window.SceneLife?.clear(this.coffeeTimer);this.coffeeTimer=0;this.coffeeToken++},
   resume(){
     this.paused=false;
-    if(this.check||this.onRoute||this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
+    if(this.cleaning||this.check||this.onRoute||this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
     if(this.timer)return;
     if(!window.SceneLife?.onToday())return;
     this.rank=20;
@@ -366,7 +366,7 @@ const HamsterDirector={
     if(!this.coffeeTimer)this.scheduleCoffee();
   },
   stepLoop(){
-    if(this.check||this.paused||this.rank>=40)return;
+    if(this.cleaning||this.check||this.paused||this.rank>=40)return;
     const list=this.usedFirst?this.HOME:this.HOME_FIRST;
     const step=list[this.loopIndex];
     this.loopIndex++;
@@ -409,6 +409,7 @@ const HamsterDirector={
   },
   roamAllowed(){return (window.HamsterWorld?HamsterWorld.auto!==false:this.auto)&&!window.SceneLife?.reduced()},
   beginRoam(done){
+    if(this.cleaning){done&&done();return}
     if(!this.roamAllowed()){this.arm(0,()=>done&&done());return}
     this.cutCoffee();
     this.onRoute=true;this.rank=30;this.phase='roam';this.roamT=0;this.roamDone=done;
@@ -448,7 +449,7 @@ const HamsterDirector={
     step();
   },
   click(){
-    if(this.rank>=60||this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
+    if(this.cleaning||this.rank>=60||this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
     if(this.onRoute||this.phase==='wave'||this.mode==='roaming'||this.mode==='returning'||this.mode==='standing-up'||this.mode==='sitting-down'){this.floorWave();return}
     const preset=this.ambientName&&this.auto&&!this.check?this.preset(this.ambientName):null;
     const name=preset&&preset.behavior==='cabinet'?'lookAround':preset&&preset.behavior==='floor'?'nod':this.CLICKS[this.clickIndex%this.CLICKS.length];
@@ -460,15 +461,17 @@ const HamsterDirector={
     else this.playAction(name,()=>{this.rank=20;if(!this.check)this.stepLoop()});
   },
   requestCleanup(rows,done){
-    this.rank=100;this.phase='return';
+    if(this.cleaning)return;
+    this.cleaning=true;this.rank=100;this.phase='ritual';this.mode='seated';this.onRoute=false;
     this.cleanupRows=(rows||[]).slice();
     this.cleanupDone=done||null;
     this.stopMotion();
+    this.coffeeToken++;
     window.SceneLife?.clear(this.coffeeTimer);this.coffeeTimer=0;
     if(window.SceneLife)SceneLife.strong=true;
     const scene=window.ProductionScene;
-    if(scene){scene.interactionState='cleanup';if(scene.canvas)scene.canvas.dataset.interaction='cleanup'}
-    this.enterThen='ritual';
+    if(scene){scene.interactionState='cleanup';scene.paintRitual=null;if(scene.canvas)scene.canvas.dataset.interaction='cleanup'}
+    this.enterThen=null;
     this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated');
     this.beginRitual();
   },
@@ -504,10 +507,12 @@ const HamsterDirector={
     this.arm(100,()=>this.tickEnter());
   },
   beginRitual(){
+    if(!this.cleaning)return;
     this.phase='ritual';this.mode='seated';this.ritualElapsed=0;this.roamT=0;this.onRoute=false;
     this.tickRitual();
   },
   tickRitual(){
+    if(!this.cleaning)return;
     const M=window.BEANSTER_ASSETS;
     const sched=window.CleanupMotion.schedule(M,this.cleanupRows||[]);
     if(this.ritualElapsed>=sched.reactionAt){
@@ -515,7 +520,7 @@ const HamsterDirector={
       this.forceEnding=null;
       this.phase='ending';
       this.ritualElapsed=1e9;
-      this.playReaction(name,()=>this.finishCleanup());
+      this.playReaction(name,()=>this.finishCleanup('done'));
       return;
     }
     const h=CleanupMotion.hamster(this.ritualElapsed,sched,M);
@@ -540,24 +545,32 @@ const HamsterDirector={
       const hold=row[1];
       i+=1;
       if(i<frames.length)this.arm(hold,step);
-      else this.arm(hold,()=>{this.phase='idle';done&&done()});
+      else this.arm(hold,()=>{if(this.cleaning)done&&done()});
     };
     step();
   },
   finishCleanup(){
-    this.rank=20;this.phase='idle';this.mode='seated';
+    if(!this.cleaning)return false;
+    this.cleaning=false;
+    this.stopMotion();
+    this.rank=20;this.phase='idle';this.mode='seated';this.onRoute=false;this.enterThen=null;
     if(window.SceneLife)SceneLife.strong=false;
     const scene=window.ProductionScene;
-    if(scene){scene.interactionState='idle';scene.paintRitual=null;if(scene.canvas){scene.canvas.dataset.interaction='idle';scene.canvas.removeAttribute('data-playing')}}
-    if(this.auto&&window.SceneLife){SceneLife.visit='tableIdle';SceneLife.lastAmbient='tableIdle';this.ambientName='tableIdle'}
-    this.setPose('hamster_pose_table_idle',this.tableHome(),false,'seated');
-    const done=this.cleanupDone;this.cleanupDone=null;this.cleanupRows=null;
+    if(scene){scene.interactionState='idle';scene.paintRitual=null;scene.fx=null;if(scene.canvas){scene.canvas.dataset.interaction='idle';scene.canvas.removeAttribute('data-playing')}}
+    if(window.SceneLife){SceneLife.visit='tableIdle';SceneLife.lastAmbient='tableIdle'}
+    this.ambientName='tableIdle';
+    const done=this.cleanupDone;this.cleanupDone=null;this.cleanupRows=null;this.forceEnding=null;
     if(done)done();
-    if(!this.check){
-      if(this.auto)this.beginAmbient('tableIdle');
-      else{this.placeSeat();this.stepLoop()}
-      this.scheduleCoffee();
-    }
+    this.restoreAfterCleanup();
+    return true;
+  },
+  restoreAfterCleanup(){
+    if(this.check||this.cleaning)return;
+    const life=window.SceneLife;
+    const visible=!!life&&life.onToday()&&!document.hidden&&!this.paused;
+    if(!visible){this.placeSeat();return}
+    if(this.auto){this.beginAmbient('tableIdle');this.scheduleCoffee()}
+    else{this.placeSeat();this.stepLoop()}
   },
   cups(){return (window.CoffeeRoom?.desk?.()||[]).slice(0,window.CleanupMotion?.MAX_VISIBLE||4)},
   scheduleCoffee(){
@@ -571,6 +584,7 @@ const HamsterDirector={
     this.scheduleCoffee();
   },
   playCoffee(force,done){
+    if(this.cleaning){done&&done();return}
     const cups=this.cups();
     const hot=!cups.length||window.ProductionScene?.hot?.(window.ProductionScene.cupId(cups[0]));
     const cycle=hot?['steam','sparkle']:['condensation','sparkle'];
