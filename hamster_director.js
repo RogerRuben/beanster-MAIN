@@ -64,11 +64,11 @@ const HamsterDirector={
   },
   scenePosePresets:{
     tableIdle:{anchor:'tableIdle',behavior:'table',weight:40,frames:[
-      {id:'hamster_pose_idle_01',ms:400},{id:'hamster_pose_idle_02',ms:310},
-      {id:'hamster_pose_idle_03',ms:310},{id:'hamster_pose_idle_04',ms:250},
-      {id:'hamster_pose_idle_05',ms:180},{id:'hamster_pose_idle_06',ms:180},
-      {id:'hamster_pose_idle_07',ms:250},{id:'hamster_pose_idle_08',ms:310},
-      {id:'hamster_pose_idle_09',ms:310}
+      {id:'hamster_pose_idle_01',ms:4800},{id:'hamster_pose_idle_02',ms:260},
+      {id:'hamster_pose_idle_03',ms:220},{id:'hamster_pose_idle_04',ms:200},
+      {id:'hamster_pose_idle_05',ms:220},{id:'hamster_pose_idle_06',ms:260},
+      {id:'hamster_pose_idle_07',ms:360},{id:'hamster_pose_idle_08',ms:360},
+      {id:'hamster_pose_idle_09',ms:420}
     ]},
     chairSit:{anchor:'chairSit',behavior:'chair',weight:25,frames:[
       {id:'hamster_pose_chair_look',ms:380},{id:'hamster_pose_chair_mid',ms:110},
@@ -85,10 +85,9 @@ const HamsterDirector={
       {id:'hamster_pose_cabinet_up',ms:380}
     ]},
     floorRest:{anchor:'floorRest',behavior:'floor',weight:15,zzz:true,frames:[
-      {id:'hamster_pose_floor_rest',ms:420},{id:'hamster_pose_floor_breath',ms:160},
-      {id:'hamster_pose_floor_rest',ms:140},{id:'hamster_pose_floor_breath',ms:160},
-      {id:'hamster_pose_floor_rest',ms:360},{id:'hamster_pose_floor_breath',ms:180},
-      {id:'hamster_pose_floor_rest',ms:480}
+      {id:'hamster_pose_floor_rest',ms:2800},{id:'hamster_pose_floor_breath',ms:320},
+      {id:'hamster_pose_floor_rest',ms:2200},{id:'hamster_pose_floor_breath',ms:320},
+      {id:'hamster_pose_floor_rest',ms:2600}
     ]}
   },
   rank:20,phase:'boot',mode:'seated',check:false,paused:false,auto:true,

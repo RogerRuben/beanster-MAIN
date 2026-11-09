@@ -3213,7 +3213,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "6742a6d3726e9d8f21fd7c488b1ef56e042531440ef8cc498824f84a90ee22b0",
+      "sha256": "64cbf55586f81adf39f254ea6a6b1215b09392dad6ce66b944f8cf02ee64d2c6",
       "tableContact": [
         256,
         448
@@ -3231,7 +3231,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "0eeccccea17aac98fea1b14553fa96997fc12f344c34aa5f2212d5c4557546bf",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3249,7 +3249,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "dc5043f818a89960f7545539c3edae0d2a6df975c5f1a7b9a6bc0245eb910323",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3267,7 +3267,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "702f61e37e02763966c99fe90fbc8a771da590ace82a8452d55d96d0da652b4b",
+      "sha256": "cfda91dd8189d7ed281c49bfe84ca7c747f6374bcd25271a07a7b1502f73afdc",
       "tableContact": [
         256,
         321
@@ -3285,7 +3285,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "2af73f2422df5587ac551c610287282d828d6e5004373c40cdc5dd610d53e0bf",
+      "sha256": "5da10c29d78a5bdf89c7c3abdf9393306407d3e0c0b525cd10e0a73174c1c8f1",
       "tableContact": [
         256,
         321
@@ -3303,7 +3303,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "da626ebc1987ac75af661a9537353c380121023e5900a128b40190924d353628",
+      "sha256": "cfda91dd8189d7ed281c49bfe84ca7c747f6374bcd25271a07a7b1502f73afdc",
       "tableContact": [
         256,
         321
@@ -3321,7 +3321,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "0e9ce7e3b1b0f07edf8e9643a0a2222fd92b9d8b634d9e272e6e10e09a86bd69",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3339,7 +3339,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "43833775c03d0b3660a5e1862d62b69c2da684b6da4dc736db146ee8c519c3d7",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3357,7 +3357,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "85be2d6b516b9b52d7a5ffc9825fb8bebe15e4d25d05ee8b4db9c8918225ee5b",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3375,7 +3375,7 @@
       "pivotX": 256,
       "pivotY": 448,
       "zIndex": 40,
-      "sha256": "42c44392ce88abc8e007bb14b35382bf7741c5f35ce8a8fe4807c17ab83c8a3e",
+      "sha256": "547196df7924804dc77875c5c7d17456480927bf6300f19e87639c210b258938",
       "tableContact": [
         256,
         321
@@ -3648,19 +3648,19 @@
       ],
       "fps": 4,
       "durationsMs": [
-        400,
-        310,
-        310,
-        250,
-        180,
-        180,
-        250,
-        310,
-        310
+        4800,
+        260,
+        220,
+        200,
+        220,
+        260,
+        360,
+        360,
+        420
       ],
       "loop": true,
       "pose": "seated",
-      "totalMs": 2500
+      "totalMs": 7100
     }
   },
   "table": {
