@@ -64,11 +64,11 @@ const HamsterDirector={
   },
   scenePosePresets:{
     tableIdle:{anchor:'tableIdle',behavior:'table',weight:40,frames:[
-      {id:'hamster_pose_idle_01',ms:4800},{id:'hamster_pose_idle_02',ms:260},
-      {id:'hamster_pose_idle_03',ms:220},{id:'hamster_pose_idle_04',ms:200},
-      {id:'hamster_pose_idle_05',ms:220},{id:'hamster_pose_idle_06',ms:260},
-      {id:'hamster_pose_idle_07',ms:360},{id:'hamster_pose_idle_08',ms:360},
-      {id:'hamster_pose_idle_09',ms:420}
+      {id:'hamster_pose_idle_01',ms:480},{id:'hamster_pose_idle_02',ms:280},
+      {id:'hamster_pose_idle_03',ms:240},{id:'hamster_pose_idle_04',ms:220},
+      {id:'hamster_pose_idle_05',ms:240},{id:'hamster_pose_idle_06',ms:280},
+      {id:'hamster_pose_idle_07',ms:400},{id:'hamster_pose_idle_08',ms:420},
+      {id:'hamster_pose_idle_09',ms:440}
     ]},
     chairSit:{anchor:'chairSit',behavior:'chair',weight:25,frames:[
       {id:'hamster_pose_chair_look',ms:380},{id:'hamster_pose_chair_mid',ms:110},
@@ -85,9 +85,9 @@ const HamsterDirector={
       {id:'hamster_pose_cabinet_up',ms:380}
     ]},
     floorRest:{anchor:'floorRest',behavior:'floor',weight:15,zzz:true,frames:[
-      {id:'hamster_pose_floor_rest',ms:2800},{id:'hamster_pose_floor_breath',ms:320},
-      {id:'hamster_pose_floor_rest',ms:2200},{id:'hamster_pose_floor_breath',ms:320},
-      {id:'hamster_pose_floor_rest',ms:2600}
+      {id:'hamster_pose_floor_rest',ms:900},{id:'hamster_pose_floor_breath',ms:400},
+      {id:'hamster_pose_floor_rest',ms:700},{id:'hamster_pose_floor_breath',ms:400},
+      {id:'hamster_pose_floor_rest',ms:600}
     ]}
   },
   rank:20,phase:'boot',mode:'seated',check:false,paused:false,auto:true,
@@ -268,11 +268,21 @@ const HamsterDirector={
     this.setPose(sprite,p,p.depth==='front',p.depth==='seat'?'sitting-down':'roaming');
     this.arm(100,()=>this.tickRoute());
   },
+  PLAY_MS:3000,HOLD_MS:10000,
   poseKey(name){return {windowSeat:'chairSit',cabinetInspect:'cabinetLook',floorNap:'floorRest'}[name]||name||'tableIdle'},
   preset(name){return this.scenePosePresets[this.poseKey(name)]||this.scenePosePresets.tableIdle},
+  timedFrames(){
+    const frames=this.preset(this.ambientName).frames;
+    const raw=frames.reduce((sum,frame)=>sum+frame.ms,0)||1;
+    const scale=this.PLAY_MS/raw;
+    const out=frames.map(frame=>({id:frame.id,ms:Math.max(80,Math.round(frame.ms*scale)),lean:frame.lean||0}));
+    out[out.length-1].ms+=this.PLAY_MS-out.reduce((sum,frame)=>sum+frame.ms,0);
+    return out;
+  },
   showPoseFrame(){
     const preset=this.preset(this.ambientName);
-    const frame=preset.frames[this.loopIndex%preset.frames.length];
+    const frames=this.timedFrames();
+    const frame=frames[this.loopIndex%frames.length];
     const pose=this.worldAnchor(preset.anchor)||this.SEAT;
     this.phase='idle';
     this.setPose(frame.id,Object.assign({},pose,{flip:!!preset.flip,lean:frame.lean||0}),pose.depth==='front','seated');
@@ -290,6 +300,14 @@ const HamsterDirector={
   ambientLoop(){
     if(this.cleaning||this.check||this.paused||this.rank>=70||this.onRoute)return;
     if(this.phase==='ritual'||this.phase==='ending'||this.phase==='return')return;
+    const count=this.timedFrames().length;
+    if(this.loopIndex>=count){
+      this.loopIndex=0;
+      this.showPoseFrame();
+      this.loopIndex=0;
+      this.arm(this.HOLD_MS,()=>{this.loopIndex=0;this.ambientLoop()});
+      return;
+    }
     const frame=this.showPoseFrame();
     this.loopIndex++;
     if(window.SceneLife?.reduced())return;
@@ -739,10 +757,5 @@ const HamsterDirector={
   }
 };
 window.HamsterDirector=HamsterDirector;
-if(typeof renderSettings==='function'&&!renderSettings.actionCheck){
-  const prev=renderSettings;
-  renderSettings=function(){prev();HamsterDirector.mountCheck()};
-  renderSettings.actionCheck=true;
-}
 if(window.HamsterWorld)HamsterDirector.auto=HamsterWorld.auto!==false;
 if(document.querySelector('.page.active')?.id==='today')HamsterDirector.boot();

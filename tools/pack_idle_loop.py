@@ -9,9 +9,9 @@ from PIL import Image
 ROOT = Path(__file__).resolve().parents[1]
 CHAR = ROOT / "art" / "production-v2" / "characters"
 SRC = CHAR / "hamster_pose_table_idle.png"
-# Long rest, then one short blink, then rest again. 4800+260+220+200+220+260+360+360+420 = 7100
+# One blink inside a 3 second play. The director then holds the rest pose for 10 seconds.
 BLINK = [0, 0, 1, 2, 1, 0, 0, 0, 0]
-DURATIONS = [4800, 260, 220, 200, 220, 260, 360, 360, 420]
+DURATIONS = [480, 280, 240, 220, 240, 280, 400, 420, 440]
 
 
 def lenses(base):
@@ -57,24 +57,6 @@ def blink(frame, masks, amount):
     return out
 
 
-def repair_floor_ear():
-    path = CHAR / "hamster_pose_floor_breath.png"
-    im = np.array(Image.open(path).convert("RGBA"))
-    alpha = im[:, :, 3] > 40
-    fill = np.array([232, 140, 42, 255], np.uint8)
-    edge = np.array([48, 22, 12, 255], np.uint8)
-    yy, xx = np.ogrid[: im.shape[0], : im.shape[1]]
-    cx, cy, rx, ry = 196, 248, 32, 30
-    norm = ((xx - cx) / rx) ** 2 + ((yy - cy) / ry) ** 2
-    zone = np.zeros(alpha.shape, bool)
-    zone[218:278, 160:232] = True
-    add = zone & (norm <= 1) & ~alpha
-    im[add] = fill
-    im[zone & (norm <= 1) & (norm >= 0.78) & add] = edge
-    Image.fromarray(im).save(path)
-    return path
-
-
 def main():
     base = np.array(Image.open(SRC).convert("RGBA"))
     masks = lenses(base)
@@ -100,8 +82,6 @@ def main():
         manifest["assets"][name]["sha256"] = digest
         ids.append(name)
         print(name, "blink", eye, "ms", ms)
-    ear = repair_floor_ear()
-    manifest["assets"]["hamster_pose_floor_breath"]["sha256"] = hashlib.sha256(ear.read_bytes()).hexdigest()
     manifest["animations"]["seatedIdle"]["durationsMs"] = DURATIONS
     manifest["animations"]["seatedIdle"]["totalMs"] = sum(DURATIONS)
     text = json.dumps(manifest, ensure_ascii=False, indent=2) + "\n"
